@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, ScrollView, FlatList } from 'react-nativ
 import { useRoute } from '@react-navigation/native'
 
 import { useGetSingleFeatureCategoryQuery } from '../store/services/categories/categoryApi'
-import BackButton from '../resuable/BackButton'
+ 
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import Disease from './Disease'
@@ -45,7 +45,7 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
 
         <>
 
-            <BackButton />
+        
             <SafeAreaView style={styles.container}>
                 <ScrollView>
                     <View style={styles.content}>

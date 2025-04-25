@@ -374,7 +374,7 @@ const VERIFIABLE_ROLES = ['admin', 'dantasurakshaks'] as const;
 
 export default function Register({ navigation }: { navigation: any }) {
   const [step, setStep] = useState(1);
-  const [user, setUsers] = useState({    
+  const [user, setUsers] = useState({
     role: '',
     name: '',
     email: '',
@@ -403,13 +403,13 @@ export default function Register({ navigation }: { navigation: any }) {
   }, [registerError]);
 
   const roles = [
-    { key: 'user',           label: 'User',           color: '#FFA500', icon: 'people-circle-outline' },
-    { key: 'dantasurakshaks',label: 'Dantasurakshaks',color: '#FF5C5C', icon: 'alert-circle-outline' },
-    { key: 'admin',          label: 'Admin',          color: '#8A2BE2', icon: 'person-outline' }
+    { key: 'user', label: 'User', color: '#FFA500', icon: 'people-circle-outline' },
+    { key: 'dantasurakshaks', label: 'Dantasurakshaks', color: '#FF5C5C', icon: 'alert-circle-outline' },
+    { key: 'admin', label: 'Admin', color: '#8A2BE2', icon: 'person-outline' }
   ];
 
   const onChangeField = (field: keyof typeof user, val: string) => {
-    setUsers(prev => ({ ...prev, [field]: val }));  // <-- updated here
+    setUsers(prev => ({ ...prev, [field]: val }));
     if (field === 'phoneNumber') {
       setOtpSent(false);
       setOtpVerified(false);

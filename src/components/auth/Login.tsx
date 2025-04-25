@@ -6,9 +6,10 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ActivityIndicator,
-  StyleSheet,
+ 
   Dimensions,
   Animated,
+  StyleSheet,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Feather from 'react-native-vector-icons/Feather';
@@ -20,11 +21,15 @@ import {
 } from '../../store/services/user/userApi';
 import { useAuth } from '../../navigation/AuthContext';
 import { ToastMessage } from '../../resuable/Toast';
+
 import BackButton from '../../resuable/BackButton';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
+
 export default function Login({ navigation }: { navigation: any }) {
+
+ 
   const { setToken, setUser } = useAuth();
 
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -177,6 +182,7 @@ function Input({
 }) {
   return (
     <View style={styles.inputWrapper}>
+   
       <TextInput
         style={[
           styles.input,
@@ -246,3 +252,5 @@ const styles = StyleSheet.create({
     padding: 18,
   },
 });
+
+ 

@@ -11,7 +11,7 @@ import {
 import { useRoute } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import { useGetSingleHabitHealthQuery } from '../../store/services/habithealth/habithealthApi'
-import Back from '../../resuable/BackButton'
+ 
 
 
 
@@ -47,7 +47,7 @@ export default function HabitHealthDetails() {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Back />
+            
 
             <View>
                 <Text style={styles.sectionTitle}>

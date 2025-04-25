@@ -10,6 +10,7 @@ export const INPUT_BACKGROUND='#F9FAFB'
 // font
 export const FONT_SIZE=18
 export const BACK_BUTTON_ICON_SIZE=24
+export const ICON_SIZE=24
 
 
 // fucntion

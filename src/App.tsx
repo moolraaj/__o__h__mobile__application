@@ -7,6 +7,8 @@ import { store } from './store/Store/Store';
 import i18n from './i18n';
 import { AuthProvider } from './navigation/AuthContext';
 import { RootNavigator } from './navigation/RootNavigator';
+ 
+ 
 
 
 
@@ -17,6 +19,7 @@ export default function App() {
       <Provider store={store}>
         <AuthProvider>
           <RootNavigator />
+          
           <Toast position="top" autoHide visibilityTime={3000} topOffset={10} />
         </AuthProvider>
       </Provider>

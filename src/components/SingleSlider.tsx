@@ -12,7 +12,7 @@ import { useRoute, RouteProp } from '@react-navigation/native'
 
 import { useGetSingleSliderQuery } from '../store/services/slider/sliderApi'
 
-import BackButton from '../resuable/BackButton'
+ 
 import { useTranslation } from 'react-i18next'
  
 
@@ -68,9 +68,7 @@ export const SingleSlider = () => {
           />
         </View>
       )}
-      ListHeaderComponent={() => (
-        <BackButton/>
-      )}
+      
       contentContainerStyle={styles.container}
     />
 
