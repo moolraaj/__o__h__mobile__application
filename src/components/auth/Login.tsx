@@ -80,6 +80,7 @@ export default function Login({ navigation }: { navigation: any }) {
       ]);
       setToken(loginRes.token);
       setUser(loginRes.user);
+      
       ToastMessage('success', loginRes.message || 'Logged in successfully');
     } catch (err: any) {
       ToastMessage('error', err?.data?.error || 'Server error');
