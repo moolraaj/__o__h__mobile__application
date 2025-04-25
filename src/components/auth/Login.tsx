@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ActivityIndicator,
- 
   Dimensions,
   Animated,
   StyleSheet,
@@ -21,17 +20,17 @@ import {
 } from '../../store/services/user/userApi';
 import { useAuth } from '../../navigation/AuthContext';
 import { ToastMessage } from '../../resuable/Toast';
-
 import BackButton from '../../resuable/BackButton';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-
 export default function Login({ navigation }: { navigation: any }) {
-
- 
   const { setToken, setUser } = useAuth();
 
+  // NEW: which method is active?
+  const [loginMethod, setLoginMethod] = useState<'phone' | 'email'>('phone');
+
+  // PHONE flow state
   const [phoneNumber, setPhoneNumber] = useState('');
   const [otp, setOtp] = useState('');
   const [requestId, setRequestId] = useState<string | null>(null);
@@ -40,9 +39,12 @@ export default function Login({ navigation }: { navigation: any }) {
   const [verifyOtp, { isLoading: verifying }] = useVerifyOtpMutation();
   const [loginUser, { isLoading: loggingIn }] = useLoginUserMutation();
 
-  
-  const slideX = useRef(new Animated.Value(0)).current;
+  // EMAIL flow state
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
+  // for PHONE slider
+  const slideX = useRef(new Animated.Value(0)).current;
   const goToSlide = (index: number) => {
     Animated.timing(slideX, {
       toValue: -SCREEN_WIDTH * index,
@@ -51,10 +53,9 @@ export default function Login({ navigation }: { navigation: any }) {
     }).start();
   };
 
+  // PHONE handlers
   const handleSendOtp = async () => {
-    if (!phoneNumber) {
-      return ToastMessage('error', 'Please provide a valid number');
-    }
+    if (!phoneNumber) return ToastMessage('error', 'Please provide a valid number');
     try {
       const data = await sendOtp({ phoneNumber }).unwrap();
       const rid = data.requestId ?? data.request_id;
@@ -66,17 +67,12 @@ export default function Login({ navigation }: { navigation: any }) {
       ToastMessage('error', err?.data?.error || 'Failed to send OTP');
     }
   };
-
   const handleVerifyOtp = async () => {
-    if (otp.length !== 6 || !requestId) {
-      return ToastMessage('error', 'Enter the 6‑digit OTP');
-    }
+    if (otp.length !== 6 || !requestId) return ToastMessage('error', 'Enter the 6-digit OTP');
     try {
       const verifyRes = await verifyOtp({ requestId, otp }).unwrap();
-      if (!verifyRes.isOTPVerified) {
-        ToastMessage('error', 'Invalid OTP!');
-        return;
-      }
+      if (!verifyRes.isOTPVerified) return ToastMessage('error', 'Invalid OTP!');
+      // now login
       const loginRes = await loginUser({ phoneNumber }).unwrap();
       await AsyncStorage.multiSet([
         ['authToken', loginRes.token],
@@ -90,75 +86,146 @@ export default function Login({ navigation }: { navigation: any }) {
     }
   };
 
+  // EMAIL handler
+  const handleEmailLogin = async () => {
+    if (!email || !password) return ToastMessage('error', 'Email and password required');
+    try {
+      const loginRes = await loginUser({ email, password }).unwrap();
+      await AsyncStorage.multiSet([
+        ['authToken', loginRes.token],
+        ['user', JSON.stringify(loginRes.user)],
+      ]);
+      setToken(loginRes.token);
+      setUser(loginRes.user);
+      ToastMessage('success', loginRes.message || 'Logged in successfully');
+    } catch (err: any) {
+      ToastMessage('error', err?.data?.error || 'Login failed');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.wrapper}>
-      <Animated.View
-        style={[
-          styles.slider,
-          { transform: [{ translateX: slideX }] },
-        ]}
-      >
-        
-        <View style={styles.slide}>
-          <Text style={styles.title}>Login via Phone</Text>
-          <Input
-            placeholder="Phone Number"
-            keyboardType="phone-pad"
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
-            icon="smartphone"
-          />
-          <GradientButton
-            label={sending ? 'Sending OTP…' : 'Send OTP'}
-            onPress={handleSendOtp}
-          />
-        </View>
-
-    
-        <View style={styles.slide}>
-          <View style={styles.header}>
-           <BackButton/>
-            <Text style={styles.subtitle}>Enter OTP</Text>
-          </View>
-          <Input
-            placeholder="6‑digit OTP"
-            keyboardType="number-pad"
-            maxLength={6}
-            value={otp}
-            onChangeText={setOtp}
-            icon="key"
-            textCenter
-          />
-          {verifying || loggingIn ? (
-            <ActivityIndicator />
-          ) : (
-            <GradientButton
-              label="Verify OTP"
-              onPress={handleVerifyOtp}
-            />
-          )}
-
-          <TouchableOpacity
-            onPress={handleSendOtp}
-            style={{ marginTop: 10 }}
+      {/* Toggle buttons */}
+      <View style={styles.toggleContainer}>
+        <TouchableOpacity
+          style={[
+            styles.toggleButton,
+            loginMethod === 'email' && styles.toggleActive,
+          ]}
+          onPress={() => setLoginMethod('email')}
+        >
+          <Text
+            style={[
+              styles.toggleText,
+              loginMethod === 'email' && styles.toggleTextActive,
+            ]}
           >
-            <Text style={{ textAlign: 'center', color: 'black' }}>
-              Resend OTP
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </Animated.View>
-
-      <View style={styles.footerLink}>
-        <Text style={{ textAlign: 'center' }}>
-          Do you have an account?
-        </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-          <Text style={{ color: 'blue', textAlign: 'center' }}>
-            Sign Up
+            Email
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.toggleButton,
+            loginMethod === 'phone' && styles.toggleActive,
+          ]}
+          onPress={() => setLoginMethod('phone')}
+        >
+          <Text
+            style={[
+              styles.toggleText,
+              loginMethod === 'phone' && styles.toggleTextActive,
+            ]}
+          >
+            Phone
           </Text>
         </TouchableOpacity>
       </View>
+
+      {loginMethod === 'email' ? (
+        // ——————— EMAIL LOGIN ———————
+        <View style={styles.slide}>
+          <Text style={styles.title}>Login via Email</Text>
+          <Input
+            placeholder="Email"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+            icon="mail"
+          />
+          <Input
+            placeholder="Password"
+            keyboardType="default"
+            value={password}
+            onChangeText={setPassword}
+            icon="lock"
+            secureTextEntry
+          />
+          {loggingIn ? (
+            <ActivityIndicator />
+          ) : (
+            <GradientButton
+              label="Login"
+              onPress={handleEmailLogin}
+            />
+          )}
+        </View>
+      ) : (
+        // ——————— PHONE LOGIN (OTP) ———————
+        <>
+          <Animated.View
+            style={[styles.slider, { transform: [{ translateX: slideX }] }]}
+          >
+            <View style={styles.slide}>
+              <Text style={styles.title}>Login via Phone</Text>
+              <Input
+                placeholder="Phone Number"
+                keyboardType="phone-pad"
+                value={phoneNumber}
+                onChangeText={setPhoneNumber}
+                icon="smartphone"
+              />
+              <GradientButton
+                label={sending ? 'Sending OTP…' : 'Send OTP'}
+                onPress={handleSendOtp}
+              />
+            </View>
+            <View style={styles.slide}>
+              <View style={styles.header}>
+                <BackButton onPress={() => goToSlide(0)} />
+                <Text style={styles.subtitle}>Enter OTP</Text>
+              </View>
+              <Input
+                placeholder="6-digit OTP"
+                keyboardType="number-pad"
+                maxLength={6}
+                value={otp}
+                onChangeText={setOtp}
+                icon="key"
+                textCenter
+              />
+              {verifying || loggingIn ? (
+                <ActivityIndicator />
+              ) : (
+                <GradientButton
+                  label="Verify OTP"
+                  onPress={handleVerifyOtp}
+                />
+              )}
+              <TouchableOpacity onPress={handleSendOtp} style={{ marginTop: 10 }}>
+                <Text style={{ textAlign: 'center', color: 'black' }}>
+                  Resend OTP
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+          <View style={styles.footerLink}>
+            <Text style={{ textAlign: 'center' }}>Do you have an account?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+              <Text style={{ color: 'blue', textAlign: 'center' }}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </SafeAreaView>
   );
 }
@@ -171,6 +238,7 @@ function Input({
   keyboardType = 'default',
   maxLength,
   textCenter = false,
+  secureTextEntry = false,
 }: {
   placeholder: string;
   icon: string;
@@ -179,20 +247,18 @@ function Input({
   keyboardType?: any;
   maxLength?: number;
   textCenter?: boolean;
+  secureTextEntry?: boolean;
 }) {
   return (
     <View style={styles.inputWrapper}>
-   
       <TextInput
-        style={[
-          styles.input,
-          textCenter && { width: 160, textAlign: 'center' },
-        ]}
+        style={[styles.input, textCenter && { width: 160, textAlign: 'center' }]}
         placeholder={placeholder}
         keyboardType={keyboardType}
         maxLength={maxLength}
         value={value}
         onChangeText={onChangeText}
+        secureTextEntry={secureTextEntry}
       />
       <Feather name={icon} size={22} color="#555" style={styles.icon} />
     </View>
@@ -203,6 +269,31 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  toggleContainer: {
+    flexDirection: 'row',
+    margin: 16,
+    borderRadius: 8,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  toggleButton: {
+    flex: 1,
+    padding: 12,
+    backgroundColor: '#f5f5f5',
+  },
+  toggleActive: {
+    backgroundColor: '#fff',
+  },
+  toggleText: {
+    textAlign: 'center',
+    color: '#555',
+    fontWeight: '500',
+  },
+  toggleTextActive: {
+    color: '#000',
+    fontWeight: '600',
   },
   slider: {
     flexDirection: 'row',
@@ -252,5 +343,3 @@ const styles = StyleSheet.create({
     padding: 18,
   },
 });
-
- 
