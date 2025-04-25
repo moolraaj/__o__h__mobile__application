@@ -1,22 +1,26 @@
- 
 import React, { useState, useRef, useEffect } from 'react';
 import {
   View, SafeAreaView, StyleSheet, Text, TouchableOpacity,
-  Modal, Animated, Easing, Alert,
+  Modal, Animated, Easing, Alert, Image
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {   useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../navigation/AuthContext';  
+import { useAuth } from '../navigation/AuthContext';
+import appLogo from '../images/danta-logo.png';
+import GradientText from './GradientText';
+import LinearGradient from 'react-native-linear-gradient';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-export function Header() {
+export function Header({ navigation }: any) {
   const { t, i18n } = useTranslation();
-  
   const { setToken, setUser } = useAuth();
 
   const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
-  const [modalVisible, setModalVisible]       = useState(false);
-  const [userName, setUserName]               = useState<string | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [profileMenuVisible, setProfileMenuVisible] = useState(false);
 
   const slideAnim = useRef(new Animated.Value(300)).current;
   const languages = [
@@ -28,7 +32,7 @@ export function Header() {
     React.useCallback(() => {
       (async () => {
         const userJson = await AsyncStorage.getItem('user');
-        const user     = userJson ? JSON.parse(userJson) : null;
+        const user = userJson ? JSON.parse(userJson) : null;
         setUserName(user?.name ?? null);
       })();
     }, []),
@@ -45,6 +49,7 @@ export function Header() {
       useNativeDriver: true,
     }).start();
   };
+
   const closeModal = () => {
     Animated.timing(slideAnim, {
       toValue: 300,
@@ -53,6 +58,7 @@ export function Header() {
       useNativeDriver: true,
     }).start(() => setModalVisible(false));
   };
+
   const onLanguageSelect = (lang: string) => {
     setSelectedLanguage(lang);
     i18n.changeLanguage(lang);
@@ -69,30 +75,71 @@ export function Header() {
           text: t('logout', 'Logout'),
           style: 'destructive',
           onPress: async () => {
-          
             await AsyncStorage.multiRemove(['authToken', 'user']);
-           
             setToken(null);
             setUser(null);
-             
           },
         },
       ]
     );
   };
 
+  const toggleProfileMenu = () => {
+    setProfileMenuVisible(!profileMenuVisible);
+  };
+
+  const getUserInitials = (name: string | null) => {
+    if (name) {
+      const names = name.split(' ');
+      const initials = names.map((n) => n.charAt(0).toUpperCase()).join('');
+      return initials;
+    }
+    return '';
+  };
+
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
-        <Text style={styles.logo}>logo</Text>
-        {userName && <Text style={styles.greet}>{t('hi', 'Hi')} {userName}</Text>}
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        {/* Wrap Image and GradientText in a flex container */}
+        <View style={styles.logoContainer}>
+          <Image source={appLogo} style={styles.logo} />
+          <GradientText text="E-DantaSuraksha" size={18} />
+        </View>
+
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+          {/* notifications */}
+          <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
+            <FontAwesome name="bell-o" size={18} color="#56235E" />
+          </TouchableOpacity>
+
           <TouchableOpacity style={styles.selectBox} onPress={openModal}>
-            <Text style={styles.selectText}>{selectedLanguage.toUpperCase()}</Text>
+            <GradientText text={selectedLanguage.toUpperCase()} size={16} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleLogout} style={styles.logoutBtn}>
-            <Text style={styles.logoutTxt}>{t('logout', 'Logout')}</Text>
+
+          {/* Profile Circle */}
+          <TouchableOpacity
+            onPress={toggleProfileMenu}
+          >
+            <LinearGradient
+              colors={['#56235E', '#C1392D']}
+              locations={[0.2081, 1]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.profileCircle}
+            >
+              <Text style={styles.profileText}>{getUserInitials(userName)}</Text>
+            </LinearGradient>
           </TouchableOpacity>
+
+          {/* Logout menu */}
+          {profileMenuVisible && (
+            <View style={styles.profileMenu}>
+              <TouchableOpacity onPress={handleLogout} style={styles.logoutBtn}>
+                <Ionicons name="log-out-outline" size={20} color="#C1392D" />
+                <Text style={styles.logoutTxt}>{t('logout', 'Logout')}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
 
@@ -106,7 +153,7 @@ export function Header() {
             style={[styles.modalContent, { transform: [{ translateY: slideAnim }] }]}
             onStartShouldSetResponder={() => true}
           >
-            {languages.map(lang => (
+            {languages.map((lang) => (
               <TouchableOpacity
                 key={lang.value}
                 style={styles.modalItem}
@@ -123,14 +170,14 @@ export function Header() {
           </Animated.View>
         </TouchableOpacity>
       </Modal>
-    </SafeAreaView>
+    </SafeAreaView >
   );
 }
 
 const styles = StyleSheet.create({
   safe: { backgroundColor: '#fff' },
   container: {
-    height: 56,
+    height: 55,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -138,17 +185,48 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
-  logo: { fontSize: 18, fontWeight: 'bold' },
-  greet: { fontSize: 16, marginRight: 8 },
+  logoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  logo: {
+    width: 42,
+    height: 42,
+    borderRadius: 20,
+    marginRight: 8,
+  },
   selectBox: {
     width: 50,
     padding: 8,
     borderRadius: 4,
     alignItems: 'center',
-    marginRight: 6,
   },
-  selectText: { fontSize: 16 },
-  logoutBtn: { padding: 8 },
+  profileCircle: {
+    width: 30,
+    height: 30,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  profileText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  profileMenu: {
+    position: 'absolute',
+    top: 40,
+    right: 0,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#eee',
+    maxWidth: 150,
+    elevation: 10,
+    zIndex: 100,
+  },
+  logoutBtn: { padding: 12, alignItems: 'center', display: 'flex', flexDirection: 'row', gap: 8 },
   logoutTxt: { color: 'red', fontSize: 14 },
   modalOverlay: {
     flex: 1,
