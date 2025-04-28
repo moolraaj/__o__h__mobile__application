@@ -64,7 +64,8 @@ export default function Login({ navigation }: { navigation: any }) {
   const handleSendOtp = async () => {
     if (!phoneNumber) return ToastMessage('error', 'Please provide a valid number');
     try {
-      const data = await sendOtp({ phoneNumber }).unwrap();
+      // const data = await sendOtp({ phoneNumber }).unwrap();
+      const data = await sendOtp({ phoneNumber: `+91${phoneNumber}` }).unwrap();
       const rid = data.requestId ?? data.request_id;
       setRequestId(rid);
       setOtp('');
@@ -80,7 +81,7 @@ export default function Login({ navigation }: { navigation: any }) {
       const verifyRes = await verifyOtp({ requestId, otp }).unwrap();
       if (!verifyRes.isOTPVerified) return ToastMessage('error', 'Invalid OTP!');
       // now login
-      const loginRes = await loginUser({ phoneNumber }).unwrap();
+      const loginRes = await loginUser({phoneNumber: `+91${phoneNumber}` }).unwrap();
       await AsyncStorage.multiSet([
         ['authToken', loginRes.token],
         ['user', JSON.stringify(loginRes.user)],
@@ -206,13 +207,29 @@ export default function Login({ navigation }: { navigation: any }) {
               style={[styles.slider, { transform: [{ translateX: slideX }] }]}
             >
               <View style={styles.slide}>
-                <Input
+                {/* <Input
                   placeholder="Phone Number"
                   keyboardType="phone-pad"
                   value={phoneNumber}
                   onChangeText={setPhoneNumber}
                   icon="smartphone"
-                />
+                /> */}
+                <View style={styles.inputWrapper}>
+                  <GradientText text={<Feather name="smartphone" size={22} color="#56235E" />} />
+
+                  <View style={styles.phoneInputField}>
+                    <Text style={styles.prefixText}>+91</Text>
+                    <TextInput
+                      style={styles.phoneInput}
+                      placeholder="Phone Number"
+                      keyboardType="phone-pad"
+                      value={phoneNumber}
+                      onChangeText={setPhoneNumber}
+                      maxLength={10}
+                    />
+                  </View>
+                </View>
+
                 <View style={{ marginTop: 30 }}>
                   <GradientButton
                     label={sending ? 'Sending OTP…' : 'Send OTP'}
@@ -369,6 +386,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
   },
+  phoneInputField: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  prefixText: {
+    fontSize: 16,
+    color: '#56235E',
+    marginRight: 8,
+    fontWeight: '500',
+  },
+  phoneInput: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#56235E',
+  },
+  
   title: {
     fontSize: 24,
     textAlign: 'center',
@@ -423,10 +458,10 @@ const styles = StyleSheet.create({
     margin: 10,
     gap: 5,
   },
-  
+
   bottomText: {
     fontSize: 12,
     color: '#555',
     textAlign: 'center',
-  },  
+  },
 });

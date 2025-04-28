@@ -1,21 +1,27 @@
-
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { StyleSheet, ScrollView, SafeAreaView } from 'react-native'
 import { Header } from './Header'
 import Footer from './Footer'
 
-
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <View style={styles.wrapper}>
+    <SafeAreaView style={styles.wrapper}>
       <Header />
-      <View style={styles.content}>{children}</View>
+      <ScrollView contentContainerStyle={styles.content}>
+        {children}
+      </ScrollView>
       <Footer />
-    </View>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
-  wrapper: { flex: 1, backgroundColor: '#fff' },
-  content: { flex: 1, padding: 16 },
+  wrapper: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  content: {
+    flexGrow: 1,
+    padding: 16,
+  },
 })

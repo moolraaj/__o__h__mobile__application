@@ -46,7 +46,7 @@ export const Slider = ({ navigation }: { navigation: any }) => {
   if (isLoading) {
     return (
       <View style={styles.center}>
-        <Loader/>
+        <Loader />
       </View>
     );
   }
@@ -139,8 +139,24 @@ export const Slider = ({ navigation }: { navigation: any }) => {
             >
               <View style={styles.content}>
                 <View style={styles.textContainer}>
-                  <Text style={styles.title}>{item.text?.[currentLanguage]}</Text>
-                  <Text style={styles.subtitle}>{item.description?.[currentLanguage]}</Text>
+                  {/* <Text style={styles.title}>{item.text?.[currentLanguage]}</Text>
+                  <Text style={styles.subtitle}>{item.description?.[currentLanguage]}</Text> */}
+                  <Text
+                    style={styles.title}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    {item.text?.[currentLanguage]}
+                  </Text>
+
+                  <Text
+                    style={styles.subtitle}
+                    numberOfLines={2}
+                    ellipsizeMode="tail"
+                  >
+                    {item.description?.[currentLanguage]}
+                  </Text>
+
                   <TouchableOpacity
                     style={styles.button}
                     onPress={() => navigation.navigate('SliderDetails', { id: item._id })}
@@ -173,7 +189,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    height: 200,
+    height: 180,
   },
   slide: {
     width: CARD_WIDTH,
@@ -196,11 +212,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     marginBottom: 4,
+    flexShrink: 1, 
   },
   subtitle: {
     color: '#f8f8f8',
     fontSize: 13,
     marginBottom: 10,
+    flexShrink: 1, 
   },
   button: {
     backgroundColor: '#fff',

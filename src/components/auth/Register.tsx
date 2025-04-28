@@ -432,7 +432,7 @@ export default function Register({ navigation }: { navigation: any }) {
 
   const handleSendOtp = async () => {
     try {
-      const { requestId } = await sendOtp({ phoneNumber: user.phoneNumber }).unwrap();
+      const { requestId } = await sendOtp({ phoneNumber: `+91${user.phoneNumber}` }).unwrap();
       setRequestId(requestId);
       setOtpSent(true);
       setOtpVerified(false);
@@ -601,6 +601,7 @@ export default function Register({ navigation }: { navigation: any }) {
                 size={INPUT_ICON_SIZE}
                 color={INPUT_ICON_COLOR}
               />
+              <Text style={styles.prefixText}>+91</Text>
               <TextInput
                 style={styles.textInput}
                 placeholder="Phone Number"
@@ -686,6 +687,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8
   },
+  prefixText: {
+    fontSize: 16,
+    color: '#56235E',
+    fontWeight: '500',
+  },
   roleWrapper: { flexDirection: 'row', alignItems: 'center' },
   roleText: { fontSize: 16, marginLeft: 8 },
   radioOuter: {
@@ -715,6 +721,7 @@ const styles = StyleSheet.create({
     height: 50,
     paddingHorizontal: 12,
     borderRadius: 6,
+    color:"#222222"
   },
   textInput: {
     width: '100%',
