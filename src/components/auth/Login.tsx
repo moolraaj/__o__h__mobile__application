@@ -23,10 +23,15 @@ import BackButton from '../../resuable/BackButton';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
 import Loader from '../../common/Loader';
+import { API_BASE_URL } from '@env'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function Login({ navigation }: { navigation: any }) {
+
+  console.log(`API_BASE_URL`)
+  console.log(API_BASE_URL)
+
   const { setToken, setUser } = useAuth();
 
   // NEW: which method is active?

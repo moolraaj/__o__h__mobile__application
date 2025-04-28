@@ -477,7 +477,7 @@ export default function Register({ navigation }: { navigation: any }) {
       // ────────────────────────────────────────────────────────────────────
 
       // otherwise (admin/dantasurakshaks): pending email verification
-      navigation.navigate('EmailVerificationScreen', {
+      navigation.navigate('EmailVerification', {
         email: user.email,
         userId: result.id
       });
@@ -563,6 +563,27 @@ export default function Register({ navigation }: { navigation: any }) {
           <View style={styles.textInputMainWrapper}>
             {(['name', 'email', 'password'] as const).map(field => (
               <View key={field} style={styles.textInputWrapper}>
+                {field === 'name' && (
+                  <AntDesign
+                    name="user"
+                    size={INPUT_ICON_SIZE}
+                    color={INPUT_ICON_COLOR}
+                  />
+                )}
+                {field === 'email' && (
+                  <AntDesign
+                    name="mail"
+                    size={INPUT_ICON_SIZE}
+                    color={INPUT_ICON_COLOR}
+                  />
+                )}
+                {field === 'password' && (
+                  <AntDesign
+                    name="lock"
+                    size={INPUT_ICON_SIZE}
+                    color={INPUT_ICON_COLOR}
+                  />
+                )}
                 <TextInput
                   style={styles.textInput}
                   placeholder={field[0].toUpperCase() + field.slice(1)}
@@ -571,34 +592,15 @@ export default function Register({ navigation }: { navigation: any }) {
                   secureTextEntry={field === 'password'}
                   keyboardType={field === 'email' ? 'email-address' : 'default'}
                 />
-                {field === 'name' && (
-                  <AntDesign
-                    name="user"
-                    size={INPUT_ICON_SIZE}
-                    color={INPUT_ICON_COLOR}
-                    style={styles.textInputIcon}
-                  />
-                )}
-                {field === 'email' && (
-                  <AntDesign
-                    name="mail"
-                    size={INPUT_ICON_SIZE}
-                    color={INPUT_ICON_COLOR}
-                    style={styles.textInputIcon}
-                  />
-                )}
-                {field === 'password' && (
-                  <AntDesign
-                    name="lock"
-                    size={INPUT_ICON_SIZE}
-                    color={INPUT_ICON_COLOR}
-                    style={styles.textInputIcon}
-                  />
-                )}
               </View>
             ))}
 
             <View style={styles.textInputWrapper}>
+              <Feather
+                name="smartphone"
+                size={INPUT_ICON_SIZE}
+                color={INPUT_ICON_COLOR}
+              />
               <TextInput
                 style={styles.textInput}
                 placeholder="Phone Number"
@@ -606,15 +608,8 @@ export default function Register({ navigation }: { navigation: any }) {
                 onChangeText={v => onChangeField('phoneNumber', v)}
                 keyboardType="phone-pad"
               />
-              <Feather
-                name="smartphone"
-                size={INPUT_ICON_SIZE}
-                color={INPUT_ICON_COLOR}
-                style={styles.textInputIcon}
-              />
             </View>
           </View>
-
           {!otpSent && user.phoneNumber && (
             <GradientButton
               label={isSendingOtp ? 'Sending OTP...' : 'Send OTP'}
@@ -623,24 +618,28 @@ export default function Register({ navigation }: { navigation: any }) {
           )}
 
           {otpSent && (
-            <View style={{ marginTop: 20 }}>
+            <View >
               <Text style={{ marginBottom: 8 }}>Enter OTP:</Text>
-              <TextInput
-                style={[styles.textInput, { width: 120, textAlign: 'center' }]}
-                placeholder="123456"
-                value={otp}
-                onChangeText={setOtp}
-                keyboardType="number-pad"
-                maxLength={6}
-              />
+              <View style={[styles.textInputWrapper, { width: 120, margin: 0 }]}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="123456"
+                  value={otp}
+                  onChangeText={setOtp}
+                  keyboardType="number-pad"
+                  maxLength={6}
+                />
+              </View>
               {!otpVerified ? (
                 isVerifyingOtp ? (
                   <Loader />
                 ) : (
-                  <GradientButton
-                    label="Verify OTP"
-                    onPress={handleVerifyOtp}
-                  />
+                  <View style={{ marginTop: 20 }}>
+                    <GradientButton
+                      label="Verify OTP"
+                      onPress={handleVerifyOtp}
+                    />
+                  </View>
                 )
               ) : null}
               {!otpVerified && (
@@ -702,16 +701,24 @@ const styles = StyleSheet.create({
   prevButton: { padding: 8 },
   headerTitle: { fontSize: 18, fontWeight: '700', marginLeft: 10 },
   textInputMainWrapper: { marginBottom: 20 },
-  textInputWrapper: { position: 'relative', marginBottom: 15 },
-  textInput: {
-    borderColor: INPUT_BORDER_COLOR,
+  textInputWrapper: {
+    position: 'relative',
+    width: '100%',
+    marginBottom: 15,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
     borderWidth: 1,
-    paddingLeft: 45,
+    borderColor: '#ddd',
+    backgroundColor: '#f8f8f8',
+    height: 50,
+    paddingHorizontal: 12,
     borderRadius: 6,
-    backgroundColor: INPUT_BACKGROUND,
-    padding: 14
   },
-  textInputIcon: { position: 'absolute', top: 14, left: 14 },
+  textInput: {
+    width: '100%',
+  },
   buttonWrapper: { marginTop: 30 },
   footerLink: {
     padding: 18,
