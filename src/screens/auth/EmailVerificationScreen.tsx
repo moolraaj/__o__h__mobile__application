@@ -1,10 +1,10 @@
 
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import GradientButton from '../../resuable/Button';
 import { useSendEmailVerificationMutation } from '../../store/services/user/userApi';
-
+import Loader from '../../common/Loader';
 
 const EmailVerificationScreen = ({ navigation }: { navigation: any }) => {
 
@@ -34,7 +34,7 @@ const EmailVerificationScreen = ({ navigation }: { navigation: any }) => {
         An email has been sent to {email}. Please verify your account before you log in.
       </Text>
 
-      {isSendingEmail && <ActivityIndicator style={{ marginVertical: 10 }} />}
+      {isSendingEmail && <Loader />}
 
       <GradientButton label="Resend Email" onPress={handleResendEmail} />
 

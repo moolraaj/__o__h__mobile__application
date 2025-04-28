@@ -1,16 +1,17 @@
- 
+
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { ICON_SIZE } from 'src/constants/Variables';
+import { RootStackParamList } from '../constants/RootStackParamList';
 
 export default function BottomBar({
   homeScreen = 'Dashboard',
   settingsScreen = 'Setting',
   barHeight = 60,
 }) {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const canGoBack = navigation.canGoBack();
 
   return (
@@ -18,17 +19,17 @@ export default function BottomBar({
       <View style={[styles.bar, { height: barHeight }]}>
         {canGoBack && (
           <TouchableOpacity onPress={navigation.goBack} style={styles.button}>
-            <Ionicons  name="chevron-back" size={ICON_SIZE} />
+            <Ionicons name="chevron-back" size={ICON_SIZE} />
           </TouchableOpacity>
         )}
         <TouchableOpacity
-          onPress={() => navigation.navigate(homeScreen)}
+          onPress={() => navigation.navigate(homeScreen as keyof RootStackParamList)}
           style={styles.button}
         >
           <Ionicons name="home" size={ICON_SIZE} />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate(settingsScreen)}
+          onPress={() => navigation.navigate(settingsScreen as keyof RootStackParamList)}
           style={styles.button}
         >
           <Ionicons name="settings" size={ICON_SIZE} />

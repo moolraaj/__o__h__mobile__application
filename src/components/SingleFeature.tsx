@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, ScrollView, FlatList } from 'react-nativ
 import { useRoute } from '@react-navigation/native'
 
 import { useGetSingleFeatureCategoryQuery } from '../store/services/categories/categoryApi'
- 
+import Loader from '../common/Loader'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import Disease from './Disease'
@@ -22,7 +22,7 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
         return (
 
             <View style={styles.center}>
-                <Text>Loading...</Text>
+                <Loader/>
             </View>
 
         )
@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        height: 200,
     },
     container: {
         flex: 1,

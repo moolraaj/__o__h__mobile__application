@@ -11,7 +11,6 @@ const FeaturesScreen = ({ navigation }: { navigation: any }) => {
         <Features navigation={navigation} />
       </View>
 
-    
       <View style={styles.colRight}>
         <HabitHealthDisease navigation={navigation} />
       </View>
@@ -24,8 +23,7 @@ export default FeaturesScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',    
-    padding: 10,            
+    flexDirection: 'column',  
   },
   colLeft: {
     flex: 2,                 

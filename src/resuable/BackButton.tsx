@@ -6,14 +6,19 @@ import { useNavigation } from '@react-navigation/native'
 import { BACK_ARROW_COLOR, BACK_BUTTON_ICON_SIZE, ICON_SIZE } from '../constants/Variables'
 
 
-const BackButton: React.FC = () => {
+interface BackButtonProps {
+  onPress: () => void;
+}
+
+const BackButton: React.FC<BackButtonProps> = ({ onPress }) => {
   const navigation = useNavigation()
 
   const handlePress = () => {
     if (navigation.canGoBack()) {
       navigation.goBack()
-    } else {
-
+      if (onPress) {
+        onPress()
+      }
     }
   }
 

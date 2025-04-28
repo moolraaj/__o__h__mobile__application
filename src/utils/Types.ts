@@ -48,6 +48,7 @@ export interface SBody {
 }
 
 export interface Slide {
+  data: any;
   sliderImage: string;
   text: Language;
   description: Language;

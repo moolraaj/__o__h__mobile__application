@@ -4,15 +4,15 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import LinearGradient from 'react-native-linear-gradient';
 
 interface GradientTextProps {
-    text: string;
-    size: number;
+    text: any;
+    size?: number;
 }
 
 export default function GradientText({ text, size }: GradientTextProps) {
     return (
         <MaskedView
             maskElement={
-                <Text style={[styles.maskedText, { fontSize: size, color: 'black' }]}>
+                <Text style={[styles.maskedText, { fontSize: size, color: '#56235E' }]}>
                     {text}
                 </Text>
             }

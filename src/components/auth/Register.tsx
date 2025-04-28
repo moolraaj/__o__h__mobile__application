@@ -348,13 +348,14 @@ import {
   StyleSheet,
   Image,
   SafeAreaView,
-  ActivityIndicator
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import Toast from 'react-native-toast-message';
+import Loader from '../../common/Loader';
+
 import {
   BACK_ARROW_COLOR,
   FONT_SIZE,
@@ -364,6 +365,7 @@ import {
   INPUT_ICON_SIZE
 } from '../../constants/Variables';
 import GradientButton from '../../resuable/Button';
+import GradientText from '../../common/GradientText';
 import {
   useRegisterUserMutation,
   useSendOtpMutation,
@@ -496,22 +498,51 @@ export default function Register({ navigation }: { navigation: any }) {
             <TouchableOpacity
               key={r.key}
               onPress={() => onChangeField('role', r.key)}
-              style={styles.roleContainer}
+              style={[
+                styles.roleContainer,
+                user.role === r.key && { backgroundColor: r.color },
+                { borderColor: user.role === r.key ? 'white' : r.color }
+              ]}
             >
               <View style={styles.roleWrapper}>
-                <Ionicons name={r.icon} size={24} color={r.color} />
-                <Text style={styles.roleText}>{r.label}</Text>
+                <Ionicons
+                  name={r.icon}
+                  size={24}
+                  color={user.role === r.key ? 'white' : r.color}
+                />
+                <Text
+                  style={[
+                    styles.roleText,
+                    user.role === r.key && { color: 'white' },
+                  ]}
+                >
+                  {r.label}
+                </Text>
               </View>
-              <View style={[styles.radioOuter, { borderColor: r.color }]}>
+
+              <View
+                style={[
+                  styles.radioOuter,
+                  {
+                    borderColor: user.role === r.key ? 'white' : r.color,
+                    padding: user.role === r.key ? 2 : 0,
+                  },
+                ]}
+              >
                 {user.role === r.key && (
                   <View
-                    style={[styles.radioInner, { backgroundColor: r.color }]}
+                    style={[
+                      styles.radioInner,
+                      { backgroundColor: 'white', margin: 2 },
+                    ]}
                   />
                 )}
               </View>
             </TouchableOpacity>
           ))}
-          <GradientButton label="Next" onPress={handleNext} />
+          <View style={{ marginTop: 30 }}>
+            <GradientButton label="Next" onPress={handleNext} />
+          </View>
         </View>
       ) : (
         <View>
@@ -604,7 +635,7 @@ export default function Register({ navigation }: { navigation: any }) {
               />
               {!otpVerified ? (
                 isVerifyingOtp ? (
-                  <ActivityIndicator style={{ marginVertical: 10 }} />
+                  <Loader />
                 ) : (
                   <GradientButton
                     label="Verify OTP"
@@ -634,10 +665,10 @@ export default function Register({ navigation }: { navigation: any }) {
         </View>
       )}
 
-      <View style={{ marginTop: 20, alignItems: 'center' }}>
+      <View style={styles.footerLink}>
         <Text>I'm already a member</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={{ color: 'blue' }}>Login</Text>
+          <GradientText text="Login" />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -646,7 +677,7 @@ export default function Register({ navigation }: { navigation: any }) {
 
 const styles = StyleSheet.create({
   wrapper: { flex: 1, padding: 18, backgroundColor: '#fff' },
-  title: { fontSize: FONT_SIZE, marginBottom: 20, textAlign: 'center' },
+  title: { fontSize: 22, marginBottom: 20, textAlign: 'center', fontWeight: '700', },
   roleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -654,7 +685,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 8,
     borderWidth: 1,
-    borderColor: '#ddd',
     borderRadius: 8
   },
   roleWrapper: { flexDirection: 'row', alignItems: 'center' },
@@ -682,5 +712,13 @@ const styles = StyleSheet.create({
     padding: 14
   },
   textInputIcon: { position: 'absolute', top: 14, left: 14 },
-  buttonWrapper: { marginTop: 30 }
+  buttonWrapper: { marginTop: 30 },
+  footerLink: {
+    padding: 18,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 5,
+    marginTop: 20,
+  },
 });

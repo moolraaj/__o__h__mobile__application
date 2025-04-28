@@ -12,7 +12,9 @@ const GradientButton: React.FC<GradientButtonProps> = ({ label, onPress = () => 
         <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
             <LinearGradient
                 colors={['#56235E', '#C1392D']}
-                locations={[0.21, 1.0]}
+                locations={[0.2081, 1]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
                 style={styles.button}
 
             >
@@ -34,8 +36,8 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 18,
         fontWeight: 500,
-        fontFamily:'Nutio',
-        textTransform:'capitalize'
+        fontFamily: 'Nutio',
+        textTransform: 'capitalize'
     },
 });
 
