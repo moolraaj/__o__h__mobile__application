@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import User from '../screens/User';
+import SettingScreen from '../screens/SettingScreen';
 // import SliderDetails from '../screens/SliderDetails';
 // import FeaturesScreen from '../screens/FeaturesScreen';
 // import FeatureDetail from '../screens/FeatureDetail';
@@ -17,5 +18,6 @@ export const UserStack = () => (
     <Stack.Screen name="Disease" component={DiseaseScreen} />
     <Stack.Screen name="HabitHealthDetail" component={HabitHealthDetails} /> */}
     <Stack.Screen name="User" component={User} />
+    <Stack.Screen name="Setting" component={SettingScreen} />
   </Stack.Navigator>
 );

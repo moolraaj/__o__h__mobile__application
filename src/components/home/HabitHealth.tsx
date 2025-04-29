@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    padding: 10
   },
   title: {
     color: '#fff',
@@ -134,8 +135,8 @@ const styles = StyleSheet.create({
   },
   gradientBorder: {
     flex: 0.48,
-    borderRadius: 12,
-    padding: 1.1,
+    borderRadius: 10,
+    padding: 1,
   },
   button: {
     flexDirection: 'row',

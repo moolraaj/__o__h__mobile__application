@@ -19,7 +19,7 @@ export default function BottomBar({
     const canGoBack = navigation.canGoBack();
     const isRootScreen =
         route.name === homeScreen || route.name === settingsScreen || route.name === NotificationScreen;
-    const showBack = canGoBack && !isRootScreen;
+    const showBack = canGoBack && route.name !== homeScreen;
 
     return (
         <SafeAreaView style={styles.safeArea}>

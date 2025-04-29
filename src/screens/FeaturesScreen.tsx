@@ -30,6 +30,6 @@ const styles = StyleSheet.create({
     marginRight: 20,         
   },
   colRight: {
-    flex: 3,                 
+    flex: 2,                 
   },
 })

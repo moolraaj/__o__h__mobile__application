@@ -139,8 +139,6 @@ export const Slider = ({ navigation }: { navigation: any }) => {
             >
               <View style={styles.content}>
                 <View style={styles.textContainer}>
-                  {/* <Text style={styles.title}>{item.text?.[currentLanguage]}</Text>
-                  <Text style={styles.subtitle}>{item.description?.[currentLanguage]}</Text> */}
                   <Text
                     style={styles.title}
                     numberOfLines={1}
@@ -182,8 +180,8 @@ export const Slider = ({ navigation }: { navigation: any }) => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    minHeight: 180,
-    marginTop: 10,
+    height: 180,
+    overflow: 'hidden',
   },
   center: {
     flex: 1,
@@ -193,8 +191,8 @@ const styles = StyleSheet.create({
   },
   slide: {
     width: CARD_WIDTH,
+    position: 'relative',
     borderRadius: 16,
-    padding: 16,
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
@@ -202,23 +200,25 @@ const styles = StyleSheet.create({
   content: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingLeft: 5,
+    paddingVertical: 10,
   },
   textContainer: {
-    flex: 1,
-    paddingRight: 10,
+    flex: 2,
+    marginLeft: 10,
   },
   title: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '700',
     marginBottom: 4,
-    flexShrink: 1, 
+    flexShrink: 1,
   },
   subtitle: {
     color: '#f8f8f8',
     fontSize: 13,
     marginBottom: 10,
-    flexShrink: 1, 
+    flexShrink: 1,
   },
   button: {
     backgroundColor: '#fff',
@@ -228,9 +228,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   image: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
+    width: CARD_WIDTH * 0.5,
+    height: CARD_WIDTH * 0.5,
   },
   dotsWrapper: {
     flexDirection: 'row',

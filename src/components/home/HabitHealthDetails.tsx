@@ -30,7 +30,7 @@ export default function HabitHealthDetails() {
     if (isLoading || error || !data?.data) {
         return (
             <View style={styles.center}>
-                <Loader/>
+                <Loader />
                 {error && <Text>Error loading details.</Text>}
             </View>
         );
@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
     sectionIcon: {
         width: 40,
         height: 40,
+        borderRadius: 20
     },
     paragraph: {
         fontSize: 16,

@@ -1,27 +1,27 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   View, SafeAreaView, StyleSheet, Text, TouchableOpacity,
-  Modal, Animated, Easing, Alert, Image
+  Modal, Animated, Easing, Image
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
+import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../navigation/AuthContext';
 import appLogo from '../images/danta-logo.png';
 import GradientText from './GradientText';
 import LinearGradient from 'react-native-linear-gradient';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { RootStackParamList } from '../constants/RootStackParamList';
+import { useAuth } from '../navigation/AuthContext';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
-export function Header({ navigation }: any) {
-  const { t, i18n } = useTranslation();
-  const { setToken, setUser } = useAuth();
-
+export function Header() {
+  const { i18n } = useTranslation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
   const [modalVisible, setModalVisible] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
-  const [profileMenuVisible, setProfileMenuVisible] = useState(false);
-
+  const [roleModalVisible, setRoleModalVisible] = useState(false);
+  const { token, user } = useAuth();
   const slideAnim = useRef(new Animated.Value(300)).current;
   const languages = [
     { label: 'EN', value: 'en' },
@@ -29,7 +29,7 @@ export function Header({ navigation }: any) {
   ];
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       (async () => {
         const userJson = await AsyncStorage.getItem('user');
         const user = userJson ? JSON.parse(userJson) : null;
@@ -65,29 +65,6 @@ export function Header({ navigation }: any) {
     closeModal();
   };
 
-  const handleLogout = () => {
-    Alert.alert(
-      t('logoutTitle', 'Logout'),
-      t('logoutMsg', 'Are you sure?'),
-      [
-        { text: t('cancel', 'Cancel') },
-        {
-          text: t('logout', 'Logout'),
-          style: 'destructive',
-          onPress: async () => {
-            await AsyncStorage.multiRemove(['authToken', 'user']);
-            setToken(null);
-            setUser(null);
-          },
-        },
-      ]
-    );
-  };
-
-  const toggleProfileMenu = () => {
-    setProfileMenuVisible(!profileMenuVisible);
-  };
-
   const getUserInitials = (name: string | null) => {
     if (name) {
       const names = name.split(' ');
@@ -97,29 +74,51 @@ export function Header({ navigation }: any) {
     return '';
   };
 
+  const handleProfileClick = () => {
+    if (user?.role === 'user') return;
+    setRoleModalVisible(!roleModalVisible);
+  };
+
+  const getRoleBasedLinks = () => {
+    if (user?.role === 'dantasurakshaks') {
+      return [
+        { label: 'Create Lesions', screen: 'CreateLesions', icon: 'plus' },
+        { label: 'Feedback Received', screen: 'FeedbackReceived', icon: 'tooth' },
+        { label: 'Questionnaire', screen: 'Questionnaire', icon: 'question-circle' },
+      ];
+    } else if (user?.role === 'admin') {
+      return [
+        { label: 'Lesions Received', screen: 'LesionsReceived', icon: 'plus' },
+        { label: 'Create Lesions Feedback', screen: 'LesionsFeedback', icon: 'tooth' },
+        { label: 'Question Received', screen: 'QuestionReceived', icon: 'question-circle' },
+      ];
+    }
+    return [];
+  };
+
+  const roleLinks = getRoleBasedLinks();
+
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
-        {/* Wrap Image and GradientText in a flex container */}
+        {/* Logo */}
         <View style={styles.logoContainer}>
           <Image source={appLogo} style={styles.logo} />
           <GradientText text="E-DantaSuraksha" size={18} />
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-          {/* notifications */}
-          <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Notification' as keyof RootStackParamList)}>
             <FontAwesome name="bell-o" size={18} color="#56235E" />
           </TouchableOpacity>
 
+          {/* Language Selector */}
           <TouchableOpacity style={styles.selectBox} onPress={openModal}>
             <GradientText text={selectedLanguage.toUpperCase()} size={16} />
           </TouchableOpacity>
 
-          {/* Profile Circle */}
-          <TouchableOpacity
-            onPress={toggleProfileMenu}
-          >
+          {/* Profile */}
+          <TouchableOpacity onPress={handleProfileClick}>
             <LinearGradient
               colors={['#56235E', '#C1392D']}
               locations={[0.2081, 1]}
@@ -130,19 +129,10 @@ export function Header({ navigation }: any) {
               <Text style={styles.profileText}>{getUserInitials(userName)}</Text>
             </LinearGradient>
           </TouchableOpacity>
-
-          {/* Logout menu */}
-          {profileMenuVisible && (
-            <View style={styles.profileMenu}>
-              <TouchableOpacity onPress={handleLogout} style={styles.logoutBtn}>
-                <Ionicons name="log-out-outline" size={20} color="#C1392D" />
-                <Text style={styles.logoutTxt}>{t('logout', 'Logout')}</Text>
-              </TouchableOpacity>
-            </View>
-          )}
         </View>
       </View>
 
+      {/* Language Modal */}
       <Modal transparent visible={modalVisible} onRequestClose={closeModal}>
         <TouchableOpacity
           style={styles.modalOverlay}
@@ -170,7 +160,30 @@ export function Header({ navigation }: any) {
           </Animated.View>
         </TouchableOpacity>
       </Modal>
-    </SafeAreaView >
+
+      {/* Custom Role Modal */}
+      {roleModalVisible && (
+        <TouchableOpacity
+          style={styles.ProfileModalBox}
+          activeOpacity={1}
+          onPress={() => setRoleModalVisible(false)}
+        >
+          {roleLinks.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.customModalItem}
+              onPress={() => {
+                navigation.navigate(item.screen as keyof RootStackParamList);
+                setRoleModalVisible(false);
+              }}
+            >
+              <FontAwesome5 name={item.icon} size={18} color="#7c2d12" />
+              <Text style={styles.customModalText}>{item.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </TouchableOpacity>
+      )}
+    </SafeAreaView>
   );
 }
 
@@ -184,11 +197,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+    backgroundColor: '#fff',
+    zIndex: 9999,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.09,
+    shadowRadius: 16,
+    elevation: 6,
   },
   logoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
   },
   logo: {
     width: 42,
@@ -214,20 +233,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  profileMenu: {
-    position: 'absolute',
-    top: 40,
-    right: 0,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#eee',
-    maxWidth: 150,
-    elevation: 10,
-    zIndex: 100,
-  },
-  logoutBtn: { padding: 12, alignItems: 'center', display: 'flex', flexDirection: 'row', gap: 8 },
-  logoutTxt: { color: 'red', fontSize: 14 },
   modalOverlay: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -257,7 +262,41 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  radioInner: { height: 10, width: 10, borderRadius: 5, backgroundColor: '#555' },
+  radioInner: {
+    height: 10,
+    width: 10,
+    borderRadius: 5,
+    backgroundColor: '#555',
+  },
+
+  // Custom role-based modal
+  ProfileModalBox: {
+    position: 'absolute',
+    top: 55,
+    right: 10,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    width: 220,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
+    zIndex: 99999
+  },
+  customModalItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderBottomColor: '#eee',
+    borderBottomWidth: 1,
+  },
+  customModalText: {
+    fontSize: 16,
+    color: '#333',
+  },
 });
 
 export default Header;

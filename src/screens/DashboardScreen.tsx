@@ -3,12 +3,12 @@ import { Slider } from "../components/Slider";
 import { Layout } from "../common/Layout";
 import FeaturesScreen from "./FeaturesScreen";
 import { API_BASE_URL } from '@env';
-
 import '../i18n'
 import TextSliderScreen from "./TextSliderScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, View} from "react-native";
+import Searchbar from "../common/Searchbar";
 
 export const DashboardScreen = ({ navigation }: { navigation: any }) => {
 
@@ -23,12 +23,11 @@ export const DashboardScreen = ({ navigation }: { navigation: any }) => {
 
   return (
     <Layout>
-      <ScrollView>
-
-      <Slider navigation={navigation} />
-      <FeaturesScreen navigation={navigation} />
-      <TextSliderScreen navigation={navigation} />
-
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{marginBottom: 18, marginTop: 2}}><Searchbar /></View>
+        <Slider navigation={navigation} />
+        <FeaturesScreen navigation={navigation} />
+        <TextSliderScreen navigation={navigation} />
       </ScrollView>
     </Layout>
   );

@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // import HabitHealthDetails from '../screens/HabitHealthDetailsScreen';
  
 import Admin from '../screens/Admin';
+import SettingScreen from '../screens/SettingScreen';
 
 const Stack = createNativeStackNavigator();
 export const AdminStack = () => (
@@ -19,6 +20,7 @@ export const AdminStack = () => (
     <Stack.Screen name="Disease" component={DiseaseScreen} />
     <Stack.Screen name="HabitHealthDetail" component={HabitHealthDetails} /> */}
     <Stack.Screen name="Admin" component={Admin} />
+    <Stack.Screen name="Setting" component={SettingScreen} />
    
 
   </Stack.Navigator>

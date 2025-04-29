@@ -24,6 +24,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
 import Loader from '../../common/Loader';
 import { API_BASE_URL } from '@env'
+import CountryPicker, { Country } from 'react-native-country-picker-modal';
+import SuccessModal from './SuccessModal';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -33,6 +35,10 @@ export default function Login({ navigation }: { navigation: any }) {
   console.log(API_BASE_URL)
 
   const { setToken, setUser } = useAuth();
+
+  // At the top of your component:
+  const [countryCode, setCountryCode] = useState<Country['cca2']>('IN');
+  const [callingCode, setCallingCode] = useState<string>('91'); // Not string[]
 
   // NEW: which method is active?
   const [loginMethod, setLoginMethod] = useState<'phone' | 'email'>('phone');
@@ -45,6 +51,7 @@ export default function Login({ navigation }: { navigation: any }) {
   const [sendOtp, { isLoading: sending }] = useSendOtpMutation();
   const [verifyOtp, { isLoading: verifying }] = useVerifyOtpMutation();
   const [loginUser, { isLoading: loggingIn }] = useLoginUserMutation();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   // EMAIL flow state
   const [email, setEmail] = useState('');
@@ -64,8 +71,7 @@ export default function Login({ navigation }: { navigation: any }) {
   const handleSendOtp = async () => {
     if (!phoneNumber) return ToastMessage('error', 'Please provide a valid number');
     try {
-      // const data = await sendOtp({ phoneNumber }).unwrap();
-      const data = await sendOtp({ phoneNumber: `+91${phoneNumber}` }).unwrap();
+      const data = await sendOtp({ phoneNumber: `+${callingCode}${phoneNumber}` }).unwrap();
       const rid = data.requestId ?? data.request_id;
       setRequestId(rid);
       setOtp('');
@@ -81,15 +87,17 @@ export default function Login({ navigation }: { navigation: any }) {
       const verifyRes = await verifyOtp({ requestId, otp }).unwrap();
       if (!verifyRes.isOTPVerified) return ToastMessage('error', 'Invalid OTP!');
       // now login
-      const loginRes = await loginUser({phoneNumber: `+91${phoneNumber}` }).unwrap();
-      await AsyncStorage.multiSet([
-        ['authToken', loginRes.token],
-        ['user', JSON.stringify(loginRes.user)],
-      ]);
-      setToken(loginRes.token);
-      setUser(loginRes.user);
+      setShowSuccessModal(true);
+      // const loginRes = await loginUser({ phoneNumber: `+${callingCode}${phoneNumber}` }).unwrap();
+      // await AsyncStorage.multiSet([
+      //   ['authToken', loginRes.token],
+      //   ['user', JSON.stringify(loginRes.user)],
+      // ]);
+      // setToken(loginRes.token);
+      // setUser(loginRes.user);
 
-      ToastMessage('success', loginRes.message || 'Logged in successfully');
+      // ToastMessage('success', loginRes.message || 'Logged in successfully');
+
     } catch (err: any) {
       ToastMessage('error', err?.data?.error || 'Server error');
     }
@@ -107,6 +115,7 @@ export default function Login({ navigation }: { navigation: any }) {
       setToken(loginRes.token);
       setUser(loginRes.user);
       ToastMessage('success', loginRes.message || 'Logged in successfully');
+      setShowSuccessModal(true);
     } catch (err: any) {
       ToastMessage('error', err?.data?.error || 'Login failed');
     }
@@ -114,6 +123,13 @@ export default function Login({ navigation }: { navigation: any }) {
 
   return (
     <SafeAreaView style={styles.wrapper}>
+      {showSuccessModal && <SuccessModal
+        visible={showSuccessModal}
+        message="Otp Verified successful!"
+        onClose={() => setShowSuccessModal(false)}
+        phoneNumber={phoneNumber}
+        callingCode={callingCode}
+      />}
       {/* Header */}
       <View style={{ margin: 20 }}>
         {loginMethod === 'email' ?
@@ -207,18 +223,21 @@ export default function Login({ navigation }: { navigation: any }) {
               style={[styles.slider, { transform: [{ translateX: slideX }] }]}
             >
               <View style={styles.slide}>
-                {/* <Input
-                  placeholder="Phone Number"
-                  keyboardType="phone-pad"
-                  value={phoneNumber}
-                  onChangeText={setPhoneNumber}
-                  icon="smartphone"
-                /> */}
-                <View style={styles.inputWrapper}>
-                  <GradientText text={<Feather name="smartphone" size={22} color="#56235E" />} />
 
+                <View style={styles.inputWrapper}>
+                  <CountryPicker
+                    countryCode={countryCode}
+                    withFlag
+                    withCallingCode
+                    withFilter
+                    withEmoji
+                    onSelect={(country: Country) => {
+                      setCountryCode(country.cca2);
+                      setCallingCode(country.callingCode[0]); // Use the first element of the array
+                    }}
+                  />
                   <View style={styles.phoneInputField}>
-                    <Text style={styles.prefixText}>+91</Text>
+                    <Text style={styles.prefixText}>+{callingCode}</Text>
                     <TextInput
                       style={styles.phoneInput}
                       placeholder="Phone Number"
@@ -403,7 +422,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#56235E',
   },
-  
+
   title: {
     fontSize: 24,
     textAlign: 'center',
@@ -427,7 +446,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
     borderWidth: 1,
     borderColor: '#ddd',
     backgroundColor: '#f8f8f8',
@@ -440,6 +458,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     color: '#56235E',
+    marginLeft: 5,
   },
   footerLink: {
     padding: 18,
@@ -449,16 +468,14 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   bottomContainer: {
-    position: 'absolute',
-    bottom: 0,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 10,
+    marginTop: 'auto',
+    margin: 20,
     gap: 5,
   },
-
   bottomText: {
     fontSize: 12,
     color: '#555',

@@ -355,12 +355,10 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import Toast from 'react-native-toast-message';
 import Loader from '../../common/Loader';
+import CountryPicker, { Country } from 'react-native-country-picker-modal';
 
 import {
   BACK_ARROW_COLOR,
-  FONT_SIZE,
-  INPUT_BACKGROUND,
-  INPUT_BORDER_COLOR,
   INPUT_ICON_COLOR,
   INPUT_ICON_SIZE
 } from '../../constants/Variables';
@@ -387,6 +385,10 @@ export default function Register({ navigation }: { navigation: any }) {
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
   const [requestId, setRequestId] = useState<string | null>(null);
+
+  // At the top of your component:
+  const [countryCode, setCountryCode] = useState<Country['cca2']>('IN');
+  const [callingCode, setCallingCode] = useState<string>('91'); // Not string[]
 
   const [register, { isLoading: isRegistering, error: registerError }] =
     useRegisterUserMutation();
@@ -432,7 +434,7 @@ export default function Register({ navigation }: { navigation: any }) {
 
   const handleSendOtp = async () => {
     try {
-      const { requestId } = await sendOtp({ phoneNumber: `+91${user.phoneNumber}` }).unwrap();
+      const { requestId } = await sendOtp({ phoneNumber: `+${callingCode}${user.phoneNumber}` }).unwrap();
       setRequestId(requestId);
       setOtpSent(true);
       setOtpVerified(false);
@@ -596,12 +598,18 @@ export default function Register({ navigation }: { navigation: any }) {
             ))}
 
             <View style={styles.textInputWrapper}>
-              <Feather
-                name="smartphone"
-                size={INPUT_ICON_SIZE}
-                color={INPUT_ICON_COLOR}
+              <CountryPicker
+                countryCode={countryCode}
+                withFlag
+                withCallingCode
+                withFilter
+                withEmoji
+                onSelect={(country: Country) => {
+                  setCountryCode(country.cca2);
+                  setCallingCode(country.callingCode[0]); // Use the first element of the array
+                }}
               />
-              <Text style={styles.prefixText}>+91</Text>
+              <Text style={styles.prefixText}>+{callingCode}</Text>
               <TextInput
                 style={styles.textInput}
                 placeholder="Phone Number"
@@ -622,6 +630,7 @@ export default function Register({ navigation }: { navigation: any }) {
             <View >
               <Text style={{ marginBottom: 8 }}>Enter OTP:</Text>
               <View style={[styles.textInputWrapper, { width: 120, margin: 0 }]}>
+                <Feather name="key" size={22} color="#56235E" />
                 <TextInput
                   style={styles.textInput}
                   placeholder="123456"
@@ -714,17 +723,17 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
     borderWidth: 1,
     borderColor: '#ddd',
     backgroundColor: '#f8f8f8',
     height: 50,
     paddingHorizontal: 12,
     borderRadius: 6,
-    color:"#222222"
+    color: "#222222"
   },
   textInput: {
     width: '100%',
+    marginLeft: 5,
   },
   buttonWrapper: { marginTop: 30 },
   footerLink: {

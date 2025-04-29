@@ -7,7 +7,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SafeAreaView style={styles.wrapper}>
       <Header />
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {children}
       </ScrollView>
       <Footer />
