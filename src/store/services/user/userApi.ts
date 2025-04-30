@@ -1,7 +1,5 @@
-import { GetUsersQueryParams, PaginatedUsersResponse } from '../../../utils/Types';
 import { apiSlice } from '../apiSlice';
  
-
 export const userApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
 

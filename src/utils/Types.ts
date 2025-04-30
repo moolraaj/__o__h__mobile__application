@@ -1,16 +1,16 @@
 
 
 
-export type Language = { en: string; kn: string };
+type Language = { en: string; kn: string };
 
-export interface UserSearchQuery {
+interface UserSearchQuery {
   page: number;
   limit: number;
   role?: "admin" | "user" | "dantasurakshaks" | "super-admin";
   user: Users;
 }
 
-export interface Users {
+interface Users {
   _id: string;
   name: string;
   email?: string;
@@ -21,7 +21,7 @@ export interface Users {
   isVerified: boolean
 }
 
-export interface PaginatedUsersResponse {
+interface PaginatedUsersResponse {
   users: Users[];
   total: number;
   page: number;
@@ -34,20 +34,20 @@ export interface PaginatedUsersResponse {
   };
 }
 
-export interface GetUsersQueryParams {
+interface GetUsersQueryParams {
   page?: number;
   limit?: number;
   role?: "admin" | "user" | "dantasurakshaks" | "super-admin";
 }
 
-export interface SBody {
+interface SBody {
   image: string;
   text: Language;
   description: Language;
   _id?: string;
 }
 
-export interface Slide {
+interface Slide {
   data: any;
   sliderImage: string;
   text: Language;
@@ -56,33 +56,33 @@ export interface Slide {
   _id: string;
 }
 
-export interface SliderResponse {
+interface SliderResponse {
   result: Slide[];
   total: number;
   page: number;
   limit: number;
 }
 
-export interface GetSlidersQueryParams {
+interface GetSlidersQueryParams {
   page?: number;
   limit?: number;
   lang?: string;
 }
 
-export interface DentalCaries {
+interface DentalCaries {
   en: string; kn: string
 
 }
 
-export interface FaqsWrongFacts {
+interface FaqsWrongFacts {
   en: string; kn: string
 
 }
-export interface FaqsRightFacts {
+interface FaqsRightFacts {
   en: string; kn: string
 }
 
-export interface Faqs {
+interface Faqs {
   _id: string,
   myth_fact_image: string,
   myth_fact_title: Language,
@@ -96,7 +96,7 @@ export interface Faqs {
   __v: number
 }
 
-export interface CategoryType {
+interface CategoryType {
   _id: string,
   categoryImage: string,
   title: Language,
@@ -104,7 +104,7 @@ export interface CategoryType {
   updatedAt: Date,
 }
 
-export interface Lesion {
+interface Lesion {
   _id: string;
   fullname?: string;
   age?: number;
@@ -119,17 +119,28 @@ export interface Lesion {
   send_to?: string[];
   dental_images?: string[];
   status?: string,
-  adminAction?: boolean
+  adminAction?: boolean,
+  createdAt?: any;
 }
 
-export interface ConfirmationPageParams {
+interface LesionResponse {
+  status: string;
+  lesions: Lesion[];
+  page?: number;
+  limit?: number;
+  total?: number;
+  totalLesions?: number;
+}
+
+interface ConfirmationPageParams {
   recordType: string;
   action: string;
   id: string;
   redirectUrl?: string;
 }
 
-export interface QuestionnaireTypes {
+interface QuestionnaireTypes {
+  _id: string;
   demographics?: string;
   name?: string;
   age?: number;
@@ -173,15 +184,25 @@ export interface QuestionnaireTypes {
   diagnosis_notes?: string;
   recomanded_actions?: string;
   comments_or_notes?: string;
-  send_email_to_dantasurakshaks?: boolean
+  send_email_to_dantasurakshaks?: boolean;
+  createdAt?: any;
 }
 
-export interface WhatIsDiseaseDescriptionRepeater {
+interface QuestionnaireResponse{
+  status: string;
+  data: QuestionnaireTypes[];
+  page?: number;
+  limit?: number;
+  total?: number;
+  totalResults?: number;
+}
+
+interface WhatIsDiseaseDescriptionRepeater {
   what_is_disease_heading_repeat: Language;
   what_is_disease_description_repeat: Language;
 }
 
-export interface WhatIsDiseaseRepeat {
+interface WhatIsDiseaseRepeat {
   what_is_disease_repeat_images: File[] | null | string[];
   what_is_disease_heading: Language;
   what_is_disease_disease_repeat_icon: File | null | string;
@@ -189,13 +210,13 @@ export interface WhatIsDiseaseRepeat {
   what_is_disease_description_repeater: WhatIsDiseaseDescriptionRepeater[];
 }
 
-export interface CauseRepeat {
+interface CauseRepeat {
   cause_repeat_title: Language;
   cause_repeat_description: Language;
   cause_repeat_icon: File | null | string;
 }
 
-export interface Cause {
+interface Cause {
   cause_title: Language;
   cause_icon: File | null | string;
   cause_para: Language;
@@ -203,13 +224,13 @@ export interface Cause {
   cause_repeat: CauseRepeat[];
 }
 
-export interface SymptomRepeat {
+interface SymptomRepeat {
   symptoms_repeat_title: Language;
   symptoms_repeat_description: Language;
   symptoms_repeat_icon: File | null | string;
 }
 
-export interface Symptom {
+interface Symptom {
   symptoms_title: Language;
   symptoms_icon: File | null | string;
   symptoms_para: Language;
@@ -217,13 +238,13 @@ export interface Symptom {
   symptoms_repeat: SymptomRepeat[];
 }
 
-export interface PreventionTipRepeat {
+interface PreventionTipRepeat {
   prevention_tips_repeat_title: Language;
   prevention_tips_repeat_description: Language;
   prevention_tips_repeat_icon: File | null | string;
 }
 
-export interface PreventionTip {
+interface PreventionTip {
   prevention_tips_title: Language;
   prevention_tips_icon: File | null | string;
   prevention_tips_para: Language;
@@ -231,13 +252,13 @@ export interface PreventionTip {
   prevention_tips_repeat: PreventionTipRepeat[];
 }
 
-export interface TreatmentOptionRepeat {
+interface TreatmentOptionRepeat {
   treatment_option_repeat_title: Language;
   treatment_option_repeat_description: Language;
   treatment_option_repeat_icon: File | null | string;
 }
 
-export interface TreatmentOption {
+interface TreatmentOption {
   treatment_option_title: Language;
   treatment_option_icon: File | null | string;
   treatment_option_para: Language;
@@ -245,7 +266,7 @@ export interface TreatmentOption {
   treatment_option_repeat: TreatmentOptionRepeat[];
 }
 
-export interface DiseaseTypes {
+interface DiseaseTypes {
   _id: string;
   disease_main_title: Language;
   disease_main_image: string;
@@ -269,18 +290,18 @@ export interface DiseaseTypes {
   __v: number;
 }
 
-export interface MythOrFactItem {
+interface MythOrFactItem {
   para: Language;
   icon: string;
 }
 
-export interface CategoryDiseaseTypes {
+interface CategoryDiseaseTypes {
   _id: string;
   disease_main_title: Language;
   disease_main_image: string;
   disease_slug: Language;
 }
-export interface FeatureSchema {
+interface FeatureSchema {
   _id: string
   categoryImage: string
   feature_main_title: Language;
@@ -299,19 +320,19 @@ export interface FeatureSchema {
   __v: number
 }
 
-export interface RegisterEmailData {
+interface RegisterEmailData {
   role: string;
   name: string;
   email: string;
   phoneNumber: string;
 }
 
-export interface RegisterVerificationEmailData {
+interface RegisterVerificationEmailData {
   name: string;
   email: string;
 }
 
-export interface LesionEmailData {
+interface LesionEmailData {
   _id: string;
   lesion_type?: string;
   diagnosis_notes?: string;
@@ -320,11 +341,11 @@ export interface LesionEmailData {
   questionary_type?: string
 }
 
-export interface QuestionnaireEmailData {
+interface QuestionnaireEmailData {
   [key: string]: unknown;
 }
 
-export type EmailData =
+type EmailData =
   | RegisterEmailData
   | RegisterVerificationEmailData
   | LesionEmailData
@@ -334,11 +355,11 @@ export type EmailData =
 
 
 // FaqTypes
-export interface FaqsQuestion {
+interface FaqsQuestion {
   question: { en: string; kn: string };
   answer: { en: string; kn: string };
 }
-export interface FaqTypes {
+interface FaqTypes {
   _id: string;
   dental_caries_title: Language;
   dental_caries: FaqsQuestion[];
@@ -353,11 +374,11 @@ export interface FaqTypes {
 }
 
 // TextSlide
-export interface TextSlide {
+interface TextSlide {
   [lang: string]: string;
 }
 
-export interface TextSlideType {
+interface TextSlideType {
   _id: string;
   slider_text: TextSlide;
   createdAt?: Date;
@@ -367,22 +388,22 @@ export interface TextSlideType {
 
 // habit health
 
-export interface HabitHealthRepeaterItem {
+interface HabitHealthRepeaterItem {
   habit_health_suggesion_para: Language;
   habit_health_suggesion_icon: string;
 }
 
-export interface BadHabitsRepeaterItem {
+interface BadHabitsRepeaterItem {
   bad_habits_repeater_heading: Language;
   bad_habits_repeater_description: Language;
   bad_habits_repeater_icon: string;
 }
-export interface ImproveHabitsRepeaterItem {
+interface ImproveHabitsRepeaterItem {
   improve_habits_repeater_heading: Language;
   improve_habits_repeater_description: Language;
   improve_habits_repeater_icon: string;
 }
-export interface IHabitHealthTypes {
+interface IHabitHealthTypes {
   _id: string;
   habits_health_main_title: Language;
   habits_health_main_image: string;
@@ -406,16 +427,16 @@ export interface IHabitHealthTypes {
 
 // dental emergency repeater
 
-export interface DentalEmerDescriptionRepeater {
+interface DentalEmerDescriptionRepeater {
   denatl_emer_tab_heading: Language;
   denatl_emer_tab_paragraph: Language;
 }
 
-export interface DentalEmerRepeater {
+interface DentalEmerRepeater {
   dental_emer_tab_title: Language;
   denatl_emer_description_repeater: DentalEmerDescriptionRepeater[];
 }
-export interface DentalEmergencyTypes {
+interface DentalEmergencyTypes {
   _id: string;
   dental_emergency_title: Language;
   dental_emergency_image: string;
@@ -428,8 +449,8 @@ export interface DentalEmergencyTypes {
   dental_emer_title: Language;
   dental_emer_sub_title: Language;
   dental_emer_repeater: DentalEmerRepeater[];
-  createdAt: Date;  
-  updatedAt: Date;  
+  createdAt: Date;
+  updatedAt: Date;
   __v: number;
 }
 

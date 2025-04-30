@@ -6,9 +6,10 @@ import BackButton from '../resuable/BackButton'
 const DiseaseScreen = () => {
   return (
     <Layout>
-      <BackButton />
+      <BackButton onPress={function (): void {
+        throw new Error('Function not implemented.')
+      }} />
       <Text>DiseaseScreen</Text>
-
     </Layout>
 
   )

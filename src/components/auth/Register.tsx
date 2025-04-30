@@ -379,12 +379,16 @@ export default function Register({ navigation }: { navigation: any }) {
     name: '',
     email: '',
     password: '',
-    phoneNumber: ''
+    phoneNumber: '',
+    confirmPassword: ''
   });
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
   const [requestId, setRequestId] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
 
   // At the top of your component:
   const [countryCode, setCountryCode] = useState<Country['cca2']>('IN');
@@ -561,64 +565,99 @@ export default function Register({ navigation }: { navigation: any }) {
             </TouchableOpacity>
             <Text style={styles.headerTitle}>Create Account</Text>
           </View>
-
           <View style={styles.textInputMainWrapper}>
             {(['name', 'email', 'password'] as const).map(field => (
               <View key={field} style={styles.textInputWrapper}>
-                {field === 'name' && (
-                  <AntDesign
-                    name="user"
-                    size={INPUT_ICON_SIZE}
-                    color={INPUT_ICON_COLOR}
+                <Text style={styles.label}>{field[0].toUpperCase() + field.slice(1)}</Text>
+                <View style={styles.inputRow}>
+                  {field === 'name' && (
+                    <AntDesign name="user" size={INPUT_ICON_SIZE}
+                      color={INPUT_ICON_COLOR} />
+                  )}
+                  {field === 'email' && (
+                    <AntDesign name="mail" size={INPUT_ICON_SIZE} color={INPUT_ICON_COLOR} />
+                  )}
+                  {field === 'password' && (
+                    <AntDesign name="lock" size={INPUT_ICON_SIZE} color={INPUT_ICON_COLOR} />
+                  )}
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder={
+                      field === 'name'
+                        ? 'e.g. John Doe'
+                        : field === 'email'
+                          ? 'e.g. johndoe@example.com'
+                          : 'e.g. securepassword'
+                    }
+                    value={(user as any)[field]}
+                    onChangeText={v => onChangeField(field, v)}
+                    secureTextEntry={field === 'password' && !showPassword}
+                    keyboardType={field === 'email' ? 'email-address' : 'default'}
                   />
-                )}
-                {field === 'email' && (
-                  <AntDesign
-                    name="mail"
-                    size={INPUT_ICON_SIZE}
-                    color={INPUT_ICON_COLOR}
-                  />
-                )}
-                {field === 'password' && (
-                  <AntDesign
-                    name="lock"
-                    size={INPUT_ICON_SIZE}
-                    color={INPUT_ICON_COLOR}
-                  />
-                )}
-                <TextInput
-                  style={styles.textInput}
-                  placeholder={field[0].toUpperCase() + field.slice(1)}
-                  value={(user as any)[field]}
-                  onChangeText={v => onChangeField(field, v)}
-                  secureTextEntry={field === 'password'}
-                  keyboardType={field === 'email' ? 'email-address' : 'default'}
-                />
+                  {field === 'password' && (
+                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                      <Feather name={showPassword ? 'eye' : 'eye-off'} size={18} color="#666" />
+                    </TouchableOpacity>
+                  )}
+                </View>
               </View>
             ))}
 
+            {/* Confirm Password */}
             <View style={styles.textInputWrapper}>
-              <CountryPicker
-                countryCode={countryCode}
-                withFlag
-                withCallingCode
-                withFilter
-                withEmoji
-                onSelect={(country: Country) => {
-                  setCountryCode(country.cca2);
-                  setCallingCode(country.callingCode[0]); // Use the first element of the array
-                }}
-              />
-              <Text style={styles.prefixText}>+{callingCode}</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder="Phone Number"
-                value={user.phoneNumber}
-                onChangeText={v => onChangeField('phoneNumber', v)}
-                keyboardType="phone-pad"
-              />
+              <Text style={styles.label}>Confirm Password</Text>
+              <View style={styles.inputRow}>
+                <AntDesign name="lock" size={INPUT_ICON_SIZE} color={INPUT_ICON_COLOR} />
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="e.g. securepassword"
+                  value={user.confirmPassword}
+                  onChangeText={v => {
+                    onChangeField('confirmPassword', v);
+                    if (user.password && v !== user.password) {
+                      setPasswordError('Passwords do not match');
+                    } else {
+                      setPasswordError('');
+                    }
+                  }}
+                  secureTextEntry={!showConfirmPassword}
+                />
+                <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+                  <Feather name={showConfirmPassword ? 'eye' : 'eye-off'} size={18} color="#666" />
+                </TouchableOpacity>
+              </View>
+              {passwordError !== '' && (
+                <Text style={styles.errorText}>{passwordError}</Text>
+              )}
+            </View>
+
+            {/* Phone Number */}
+            <View style={styles.textInputWrapper}>
+              <Text style={styles.label}>Phone Number</Text>
+              <View style={styles.inputRow}>
+                <CountryPicker
+                  countryCode={countryCode}
+                  withFlag
+                  withCallingCode
+                  withFilter
+                  withEmoji
+                  onSelect={(country: Country) => {
+                    setCountryCode(country.cca2);
+                    setCallingCode(country.callingCode[0]);
+                  }}
+                />
+                <Text style={styles.prefixText}>+{callingCode}</Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="0000 000 000"
+                  value={user.phoneNumber}
+                  onChangeText={v => onChangeField('phoneNumber', v)}
+                  keyboardType="phone-pad"
+                />
+              </View>
             </View>
           </View>
+
           {!otpSent && user.phoneNumber && (
             <GradientButton
               label={isSendingOtp ? 'Sending OTP...' : 'Send OTP'}
@@ -629,7 +668,7 @@ export default function Register({ navigation }: { navigation: any }) {
           {otpSent && (
             <View >
               <Text style={{ marginBottom: 8 }}>Enter OTP:</Text>
-              <View style={[styles.textInputWrapper, { width: 120, margin: 0 }]}>
+              <View style={[styles.inputRow, { width: 120, margin: 0 }]}>
                 <Feather name="key" size={22} color="#56235E" />
                 <TextInput
                   style={styles.textInput}
@@ -720,20 +759,36 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: '100%',
     marginBottom: 15,
-    display: 'flex',
+    alignItems: 'flex-start',
+    color: "#222222",
+  },
+  label: {
+    marginBottom: 4,
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '500',
+  },
+  inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#ddd',
-    backgroundColor: '#f8f8f8',
-    height: 50,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-    color: "#222222"
+    borderColor: '#ccc',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    backgroundColor: '#fff',
+    position: 'relative',
+    justifyContent: 'space-between',
   },
   textInput: {
-    width: '100%',
+    flex: 1,
     marginLeft: 5,
+    textAlign: 'left'
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: 4,
   },
   buttonWrapper: { marginTop: 30 },
   footerLink: {

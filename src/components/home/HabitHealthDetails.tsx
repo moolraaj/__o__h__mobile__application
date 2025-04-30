@@ -143,9 +143,11 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
     },
     row: {
+        width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 10,
+        justifyContent: 'space-between',
+        gap: 20
     },
     sectionIcon: {
         width: 40,

@@ -1,4 +1,3 @@
-import { DiseaseTypes} from "../../../utils/Types"
 import { apiSlice } from "../apiSlice";
  
  

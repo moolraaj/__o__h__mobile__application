@@ -1,6 +1,5 @@
 import { apiSlice } from "../apiSlice";
 
- 
 export const textSliderApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getTextSlider: builder.query({

@@ -9,10 +9,12 @@ import LinearGradient from 'react-native-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type SearchbarProps = TextInputProps & {
-    placeholderText?: string;
+    placeholderText: string;
+    searchQuery?: any;
+    setSearchQuery?: (text: any) => void;
 };
 
-export default function Searchbar({ placeholderText = 'Search...', ...props }: SearchbarProps) {
+export default function Searchbar({ placeholderText, ...props }: SearchbarProps) {
     return (
         <LinearGradient
             colors={['#F8E4FF', '#FFD7D8']}

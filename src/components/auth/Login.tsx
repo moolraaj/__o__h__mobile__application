@@ -42,6 +42,7 @@ export default function Login({ navigation }: { navigation: any }) {
 
   // NEW: which method is active?
   const [loginMethod, setLoginMethod] = useState<'phone' | 'email'>('phone');
+  const [showPassword, setShowPassword] = useState(false);
 
   // PHONE flow state
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -191,20 +192,26 @@ export default function Login({ navigation }: { navigation: any }) {
           // ——————— EMAIL LOGIN ———————
           <View style={styles.slide}>
             <Input
-              placeholder="Email"
+              placeholder="e.g. johndoe@example.com"
               keyboardType="email-address"
               value={email}
               onChangeText={setEmail}
               icon="mail"
+              name='Email'
             />
             <Input
-              placeholder="Password"
+              placeholder="e.g. securepassword"
               keyboardType="default"
               value={password}
               onChangeText={setPassword}
               icon="lock"
-              secureTextEntry
+              secureTextEntry={!showPassword}
+              name='Password'
+              isPassword
+              showPassword={showPassword}
+              toggleShowPassword={() => setShowPassword(!showPassword)}
             />
+
             {loggingIn ? (
               <Loader />
             ) : (
@@ -223,29 +230,31 @@ export default function Login({ navigation }: { navigation: any }) {
               style={[styles.slider, { transform: [{ translateX: slideX }] }]}
             >
               <View style={styles.slide}>
-
                 <View style={styles.inputWrapper}>
-                  <CountryPicker
-                    countryCode={countryCode}
-                    withFlag
-                    withCallingCode
-                    withFilter
-                    withEmoji
-                    onSelect={(country: Country) => {
-                      setCountryCode(country.cca2);
-                      setCallingCode(country.callingCode[0]); // Use the first element of the array
-                    }}
-                  />
-                  <View style={styles.phoneInputField}>
-                    <Text style={styles.prefixText}>+{callingCode}</Text>
-                    <TextInput
-                      style={styles.phoneInput}
-                      placeholder="Phone Number"
-                      keyboardType="phone-pad"
-                      value={phoneNumber}
-                      onChangeText={setPhoneNumber}
-                      maxLength={10}
+                  <Text style={styles.label}>Phone Number</Text>
+                  <View style={styles.inputRow}>
+                    <CountryPicker
+                      countryCode={countryCode}
+                      withFlag
+                      withCallingCode
+                      withFilter
+                      withEmoji
+                      onSelect={(country: Country) => {
+                        setCountryCode(country.cca2);
+                        setCallingCode(country.callingCode[0]); // Use the first element of the array
+                      }}
                     />
+                    <View style={styles.phoneInputField}>
+                      <Text style={styles.prefixText}>+{callingCode}</Text>
+                      <TextInput
+                        style={styles.phoneInput}
+                        placeholder="0000 000 000"
+                        keyboardType="phone-pad"
+                        value={phoneNumber}
+                        onChangeText={setPhoneNumber}
+                        maxLength={10}
+                      />
+                    </View>
                   </View>
                 </View>
 
@@ -259,13 +268,14 @@ export default function Login({ navigation }: { navigation: any }) {
               <View style={styles.slide}>
                 <View style={styles.header}>
                   <BackButton onPress={() => goToSlide(0)} />
-                  <Text style={styles.subtitle}>Enter OTP</Text>
+                  <Text style={styles.subtitle}>OTP</Text>
                 </View>
                 <Input
                   placeholder="6-digit OTP"
                   keyboardType="number-pad"
                   maxLength={6}
                   value={otp}
+                  name='Enter Otp'
                   onChangeText={setOtp}
                   icon="key"
                   textCenter
@@ -316,8 +326,11 @@ function Input({
   onChangeText,
   keyboardType = 'default',
   maxLength,
-  textCenter = false,
   secureTextEntry = false,
+  name,
+  isPassword = false,
+  showPassword,
+  toggleShowPassword,
 }: {
   placeholder: string;
   icon: string;
@@ -327,22 +340,33 @@ function Input({
   maxLength?: number;
   textCenter?: boolean;
   secureTextEntry?: boolean;
+  name: string;
+  isPassword?: boolean;
+  showPassword?: boolean;
+  toggleShowPassword?: () => void;
 }) {
   return (
     <View style={styles.inputWrapper}>
-      <GradientText text={
-        <Feather name={icon} size={22} color="#56235E" />
-      } />
-      <TextInput
-        style={styles.input}
-        placeholder={placeholder}
-        keyboardType={keyboardType}
-        maxLength={maxLength}
-        value={value}
-        onChangeText={onChangeText}
-        secureTextEntry={secureTextEntry}
-      />
+      <Text style={styles.label}>{name}</Text>
+      <View style={styles.inputRow}>
+        <GradientText text={<Feather name={icon} size={22} color="#56235E" />} />
+        <TextInput
+          style={styles.input}
+          placeholder={placeholder}
+          keyboardType={keyboardType}
+          maxLength={maxLength}
+          value={value}
+          onChangeText={onChangeText}
+          secureTextEntry={secureTextEntry}
+        />
+        {isPassword && (
+          <TouchableOpacity onPress={toggleShowPassword}>
+            <Feather name={showPassword ? 'eye' : 'eye-off'} size={20} color="#666" />
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
+
   );
 }
 
@@ -443,18 +467,30 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: '100%',
     marginBottom: 15,
-    display: 'flex',
+    alignItems: 'flex-start',
+    color: "#222222",
+  },
+  label: {
+    marginBottom: 4,
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '500',
+  },
+  inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#ddd',
-    backgroundColor: '#f8f8f8',
-    height: 50,
-    paddingHorizontal: 12,
-    borderRadius: 6,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    backgroundColor: '#fff',
+    position: 'relative',
+    justifyContent: 'space-between',
   },
   input: {
-    width: '100%',
+    flex: 1,
+    textAlign: 'left',
     fontSize: 16,
     fontWeight: '500',
     color: '#56235E',

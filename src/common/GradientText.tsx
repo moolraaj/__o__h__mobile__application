@@ -6,9 +6,12 @@ import LinearGradient from 'react-native-linear-gradient';
 interface GradientTextProps {
     text: any;
     size?: number;
+    colors?: string[];
 }
 
-export default function GradientText({ text, size }: GradientTextProps) {
+export default function GradientText({ text, size = 16, colors }: GradientTextProps) {
+    const gradientColors = colors || ['#56235E', '#C1392D']; // fallback to default
+
     return (
         <MaskedView
             maskElement={
@@ -18,12 +21,11 @@ export default function GradientText({ text, size }: GradientTextProps) {
             }
         >
             <LinearGradient
-                colors={['#56235E', '#C1392D']}
+                colors={gradientColors}
                 locations={[0.2081, 1]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
             >
-                {/* This text is just for layout and keeps the gradient visible */}
                 <Text style={[styles.maskedText, { fontSize: size, opacity: 0 }]}>
                     {text}
                 </Text>
@@ -37,5 +39,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         fontFamily: 'Nutio',
+        textTransform: 'capitalize'
     },
 });
