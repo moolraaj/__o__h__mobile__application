@@ -55,74 +55,72 @@ export default function HabitHealthDetails() {
 
     return (
         <View style={styles.container}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                {/* Intro */}
-                <View style={styles.section}>
-                    <GradientText text={item.habits_health_heading[lang]} size={22} />
-                    <View style={styles.row}>
-                        <Text style={styles.paragraph}>{item.habits_health_para[lang]}</Text>
-                        <Image source={{ uri: item.habits_health_icon }} style={styles.sectionIcon} />
-                    </View>
+            {/* Intro */}
+            <View style={styles.section}>
+                <GradientText text={item.habits_health_heading[lang]} size={22} />
+                <View style={styles.row}>
+                    <Text style={styles.paragraph}>{item.habits_health_para[lang]}</Text>
+                    <Image source={{ uri: item.habits_health_icon }} style={styles.sectionIcon} />
                 </View>
+            </View>
 
-                {/* Habits suggestions */}
-                <View style={styles.card}>
-                    <View style={styles.cardHeader}>
-                        {renderMaskedText(<Icon name="emoji-events" size={24} color="#4CAF50" />, ['#56235E', '#C1392D'])}
-                        <Text style={styles.cardTitle}>{item.habit_health_inner_title[lang]}</Text>
-                    </View>
-                    {item.habit_health_inner_repeater.map((rep: HabitHealthInnerRepeater, i: number) => (
-                        <View key={i} style={styles.bulletRow}>
-                            {renderBulletIcon(rep.habit_health_suggesion_icon)}
-                            {renderMaskedText(rep.habit_health_suggesion_para[lang], ['#56235E', '#C1392D'])}
-                        </View>
-                    ))}
+            {/* Habits suggestions */}
+            <View style={styles.card}>
+                <View style={styles.cardHeader}>
+                    {renderMaskedText(<Icon name="emoji-events" size={24} color="#4CAF50" />, ['#56235E', '#C1392D'])}
+                    <Text style={styles.cardTitle}>{item.habit_health_inner_title[lang]}</Text>
                 </View>
+                {item.habit_health_inner_repeater.map((rep: HabitHealthInnerRepeater, i: number) => (
+                    <View key={i} style={styles.bulletRow}>
+                        {renderBulletIcon(rep.habit_health_suggesion_icon)}
+                        {renderMaskedText(rep.habit_health_suggesion_para[lang], ['#56235E', '#C1392D'])}
+                    </View>
+                ))}
+            </View>
 
-                {/* Bad Habits */}
-                <View style={styles.card}>
-                    <View style={styles.cardHeader}>
-                        {renderMaskedText(<Icon name="highlight-off" size={24} color="#FF5722" />, ['#1E90FF', '#FF69B4'])}
-                        <Text style={styles.cardTitle}>{item.bad_habits_health_title[lang]}</Text>
-                    </View>
-                    <Text style={styles.cardSubtitle}>{item.bad_habits_health_para[lang]}</Text>
-                    {item.bad_habits_health_repeater.map((rep: {
-                        bad_habits_repeater_icon: string;
-                        bad_habits_repeater_heading: { [key: string]: string };
-                        bad_habits_repeater_description: { [key: string]: string };
-                    }, i: number) => (
-                        <View key={i} style={styles.bulletRow}>
-                            {renderBulletIcon(rep.bad_habits_repeater_icon)}
-                            <View style={{ flex: 1 }}>
-                                {renderMaskedText(rep.bad_habits_repeater_heading[lang], ['#1E90FF', '#FF69B4'])}
-                                <Text style={styles.smallText}>{rep.bad_habits_repeater_description[lang]}</Text>
-                            </View>
-                        </View>
-                    ))}
+            {/* Bad Habits */}
+            <View style={styles.card}>
+                <View style={styles.cardHeader}>
+                    {renderMaskedText(<Icon name="highlight-off" size={24} color="#FF5722" />, ['#1E90FF', '#FF69B4'])}
+                    <Text style={styles.cardTitle}>{item.bad_habits_health_title[lang]}</Text>
                 </View>
+                <Text style={styles.cardSubtitle}>{item.bad_habits_health_para[lang]}</Text>
+                {item.bad_habits_health_repeater.map((rep: {
+                    bad_habits_repeater_icon: string;
+                    bad_habits_repeater_heading: { [key: string]: string };
+                    bad_habits_repeater_description: { [key: string]: string };
+                }, i: number) => (
+                    <View key={i} style={styles.bulletRow}>
+                        {renderBulletIcon(rep.bad_habits_repeater_icon)}
+                        <View style={{ flex: 1 }}>
+                            {renderMaskedText(rep.bad_habits_repeater_heading[lang], ['#1E90FF', '#FF69B4'])}
+                            <Text style={styles.smallText}>{rep.bad_habits_repeater_description[lang]}</Text>
+                        </View>
+                    </View>
+                ))}
+            </View>
 
-                {/* Tips to Improve */}
-                <View style={styles.card}>
-                    <View style={styles.cardHeader}>
-                        {renderMaskedText(<Icon name="lightbulb" size={24} color="#FFC107" />, ['#4CAF50', '#8E24AA'])}
-                        <Text style={styles.cardTitle}>{item.improve_health_habits_title[lang]}</Text>
-                    </View>
-                    <Text style={styles.cardSubtitle}>{item.improve_health_habits_description[lang]}</Text>
-                    {item.improve_habits_health_repeater.map((rep: {
-                        improve_habits_repeater_icon: string;
-                        improve_habits_repeater_heading: { [key: string]: string };
-                        improve_habits_repeater_description: { [key: string]: string };
-                    }, i: number) => (
-                        <View key={i} style={styles.bulletRow}>
-                            {renderBulletIcon(rep.improve_habits_repeater_icon)}
-                            <View style={{ flex: 1 }}>
-                                {renderMaskedText(rep.improve_habits_repeater_heading[lang], ['#4CAF50', '#8E24AA'])}
-                                <Text style={styles.smallText}>{rep.improve_habits_repeater_description[lang]}</Text>
-                            </View>
-                        </View>
-                    ))}
+            {/* Tips to Improve */}
+            <View style={styles.card}>
+                <View style={styles.cardHeader}>
+                    {renderMaskedText(<Icon name="lightbulb" size={24} color="#FFC107" />, ['#4CAF50', '#8E24AA'])}
+                    <Text style={styles.cardTitle}>{item.improve_health_habits_title[lang]}</Text>
                 </View>
-            </ScrollView>
+                <Text style={styles.cardSubtitle}>{item.improve_health_habits_description[lang]}</Text>
+                {item.improve_habits_health_repeater.map((rep: {
+                    improve_habits_repeater_icon: string;
+                    improve_habits_repeater_heading: { [key: string]: string };
+                    improve_habits_repeater_description: { [key: string]: string };
+                }, i: number) => (
+                    <View key={i} style={styles.bulletRow}>
+                        {renderBulletIcon(rep.improve_habits_repeater_icon)}
+                        <View style={{ flex: 1 }}>
+                            {renderMaskedText(rep.improve_habits_repeater_heading[lang], ['#4CAF50', '#8E24AA'])}
+                            <Text style={styles.smallText}>{rep.improve_habits_repeater_description[lang]}</Text>
+                        </View>
+                    </View>
+                ))}
+            </View>
         </View>
     );
 }

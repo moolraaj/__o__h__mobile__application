@@ -9,6 +9,7 @@ import Admin from '../screens/Admin';
 import SettingScreen from '../screens/SettingScreen';
 import LesionsReceived from '../screens/LesionsReceived';
 import QuestionReceived from '../screens/QuestionReceived';
+import MythFactScreen from '../screens/MythFactScreen';
 
 const Stack = createNativeStackNavigator();
 export const AdminStack = () => (
@@ -16,6 +17,7 @@ export const AdminStack = () => (
     <Stack.Screen name="Admin" component={Admin} />
     <Stack.Screen name="LesionsReceived" component={LesionsReceived} />
     <Stack.Screen name="QuestionReceived" component={QuestionReceived} />
+    <Stack.Screen name="MythsAndFacts" component={MythFactScreen} />
     <Stack.Screen name="SliderDetails" component={SliderDetails} />
     <Stack.Screen name="Features" component={FeaturesScreen} />
     <Stack.Screen name="FeatureDetail" component={FeatureDetail} />

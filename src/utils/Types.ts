@@ -96,6 +96,14 @@ interface Faqs {
   __v: number
 }
 
+interface MythsResponse {
+  status: string;
+  result: Faqs[];
+  page?: number;
+  limit?: number;
+  totalResults?: number;
+}
+
 interface CategoryType {
   _id: string,
   categoryImage: string,
@@ -188,7 +196,7 @@ interface QuestionnaireTypes {
   createdAt?: any;
 }
 
-interface QuestionnaireResponse{
+interface QuestionnaireResponse {
   status: string;
   data: QuestionnaireTypes[];
   page?: number;

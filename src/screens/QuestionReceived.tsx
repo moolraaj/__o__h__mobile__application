@@ -39,7 +39,7 @@ export default function QuestionReceived() {
         <Modal animationType="slide" transparent visible={modalVisible} onRequestClose={closeModal}>
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContainer}>
-                    <Text style={styles.modalTitle}>Lesion Details</Text>
+                    <Text style={styles.modalTitle}>Questionnaire Details</Text>
                     {selectedLesion && (
                         <ScrollView style={styles.modalScroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
                             {[

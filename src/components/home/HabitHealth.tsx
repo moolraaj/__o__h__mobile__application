@@ -66,7 +66,7 @@ export default function HabitHealthList({ navigation }: { navigation: any }) {
           end={{ x: 1, y: 0 }}
           style={styles.gradientBorder}
         >
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MythsAndFacts')}>
             <GradientText text={<Icon name="help-outline" size={20} style={{ marginRight: 6 }} />} size={20} />
             <Text style={styles.buttonText}>Myths & Facts</Text>
           </TouchableOpacity>

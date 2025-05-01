@@ -22,7 +22,7 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
         return (
 
             <View style={styles.center}>
-                <Loader/>
+                <Loader />
             </View>
 
         )
@@ -45,77 +45,75 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
 
         <>
 
-        
+
             <SafeAreaView style={styles.container}>
-                <ScrollView>
-                    <View style={styles.content}>
-                        <Text style={styles.field}>
-                            {result?.feature_inner_title?.[currentLanguage] || 'No Title'}
-                        </Text>
-                        <Text style={styles.field}>
-                            {result?.feature_slug?.[currentLanguage] || 'No Slug'}
-                        </Text>
-                        {result?.feature_inner_image ? (
-                            <Image
-                                source={{ uri: result.feature_inner_image }}
-                                style={styles.image}
-                            />
-                        ) : (
-                            <Text>No Image Available</Text>
+                <View style={styles.content}>
+                    <Text style={styles.field}>
+                        {result?.feature_inner_title?.[currentLanguage] || 'No Title'}
+                    </Text>
+                    <Text style={styles.field}>
+                        {result?.feature_slug?.[currentLanguage] || 'No Slug'}
+                    </Text>
+                    {result?.feature_inner_image ? (
+                        <Image
+                            source={{ uri: result.feature_inner_image }}
+                            style={styles.image}
+                        />
+                    ) : (
+                        <Text>No Image Available</Text>
+                    )}
+                </View>
+
+
+                <View style={styles.section}>
+
+                    <Text style={styles.field}>
+                        {result?.feature_myth_facts_title?.[currentLanguage] || null}
+                    </Text>
+                    <Text style={styles.field}>
+                        {result?.feature_myth_facts_description?.[currentLanguage] || null}
+                    </Text>
+                </View>
+
+                <View>
+                    <Text>Diseases</Text>
+                    <Disease disease={result?.diseases} currentLanguage={currentLanguage} navigation={navigation} />
+
+                </View>
+
+
+                <View style={styles.section}>
+                    <Text style={styles.sectionHeader}>Feature Facts</Text>
+                    <FlatList
+                        data={result?.feature_facts || []}
+                        keyExtractor={(item, index) =>
+                            item._id ? item._id.toString() : index.toString()
+                        }
+                        renderItem={({ item }) => (
+                            <View style={styles.factItem}>
+                                <Text style={styles.factText}>{item?.para?.[currentLanguage] || null}</Text>
+                                <Image source={{ uri: item.icon }} style={{ width: 30, height: 30 }} />
+
+                            </View>
                         )}
-                    </View>
+                    />
+                </View>
 
-
-                    <View style={styles.section}>
-
-                        <Text style={styles.field}>
-                            {result?.feature_myth_facts_title?.[currentLanguage] || null}
-                        </Text>
-                        <Text style={styles.field}>
-                            {result?.feature_myth_facts_description?.[currentLanguage] || null}
-                        </Text>
-                    </View>
-
-                    <View>
-                        <Text>Diseases</Text>
-                        <Disease disease={result?.diseases} currentLanguage={currentLanguage} navigation={navigation} />
-
-                    </View>
-
-
-                    <View style={styles.section}>
-                        <Text style={styles.sectionHeader}>Feature Facts</Text>
-                        <FlatList
-                            data={result?.feature_facts || []}
-                            keyExtractor={(item, index) =>
-                                item._id ? item._id.toString() : index.toString()
-                            }
-                            renderItem={({ item }) => (
-                                <View style={styles.factItem}>
-                                    <Text style={styles.factText}>{item?.para?.[currentLanguage] || null}</Text>
-                                    <Image source={{ uri: item.icon }} style={{ width: 30, height: 30 }} />
-
-                                </View>
-                            )}
-                        />
-                    </View>
-
-                    <View style={styles.section}>
-                        <Text style={styles.sectionHeader}>Feature Myths</Text>
-                        <FlatList
-                            data={result?.feature_myths || []}
-                            keyExtractor={(item, index) =>
-                                item._id ? item._id.toString() : index.toString()
-                            }
-                            renderItem={({ item }) => (
-                                <View style={styles.factItem}>
-                                    <Text style={styles.factText}>{item?.para?.[currentLanguage] || null}</Text>
-                                    <Image source={{ uri: item.icon }} style={{ width: 30, height: 30 }} />
-                                </View>
-                            )}
-                        />
-                    </View>
-                </ScrollView>
+                <View style={styles.section}>
+                    <Text style={styles.sectionHeader}>Feature Myths</Text>
+                    <FlatList
+                        data={result?.feature_myths || []}
+                        keyExtractor={(item, index) =>
+                            item._id ? item._id.toString() : index.toString()
+                        }
+                        renderItem={({ item }) => (
+                            <View style={styles.factItem}>
+                                <Text style={styles.factText}>{item?.para?.[currentLanguage] || null}</Text>
+                                <Image source={{ uri: item.icon }} style={{ width: 30, height: 30 }} />
+                            </View>
+                        )}
+                    />
+                </View>
             </SafeAreaView>
         </>
 

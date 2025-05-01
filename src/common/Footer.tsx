@@ -10,16 +10,19 @@ import { RootStackParamList } from '../constants/RootStackParamList';
 export default function BottomBar({
     homeScreen = 'Dashboard',
     settingsScreen = 'Setting',
-    NotificationScreen = 'Notification',
+    AdminScreen = 'Admin',
+    UserScreen = 'User',
     barHeight = 50,
 }) {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute();
 
     const canGoBack = navigation.canGoBack();
-    const isRootScreen =
-        route.name === homeScreen || route.name === settingsScreen || route.name === NotificationScreen;
-    const showBack = canGoBack && route.name !== homeScreen;
+    const showBack =
+        canGoBack &&
+        route.name !== homeScreen &&
+        route.name !== AdminScreen &&
+        route.name !== UserScreen;
 
     return (
         <SafeAreaView style={styles.safeArea}>
