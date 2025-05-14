@@ -21,7 +21,7 @@ export default function QuestionReceived() {
     const { i18n } = useTranslation();
     const lang = i18n.language;
     const { data, isLoading, error } = useGetQuestionsQuery({ page: 1, lang });
-    console.log('dadaada', data)
+    
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedLesion, setSelectedLesion] = useState<QuestionnaireTypes | null>(null);
 

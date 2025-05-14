@@ -82,9 +82,9 @@ export function Header() {
   const getRoleBasedLinks = () => {
     if (user?.role === 'dantasurakshaks') {
       return [
-        { label: 'Create Lesions', screen: 'CreateLesions', icon: 'plus' },
+        { label: 'Lesions', screen: 'AllLesions', icon: 'plus' },
         { label: 'Feedback Received', screen: 'FeedbackReceived', icon: 'tooth' },
-        { label: 'Questionnaire', screen: 'Questionnaire', icon: 'question-circle' },
+        { label: 'Questionnaire', screen: 'CreateQuestionnaire', icon: 'question-circle' },
       ];
     } else if (user?.role === 'admin') {
       return [
