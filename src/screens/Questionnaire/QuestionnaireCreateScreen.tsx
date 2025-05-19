@@ -79,7 +79,7 @@ export default function CreateQuestionnaire({ navigation }: { navigation: any })
 
     Object.entries(form).forEach(([key, value]) => {
       if (key === 'presenceOfGumDisease') {
-        formData.append('presenceOfGumDisease', value); // comma-separated string
+        formData.append('presenceOfGumDisease', value);  
       } else {
         formData.append(key, value);
       }
