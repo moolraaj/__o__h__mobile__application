@@ -15,9 +15,10 @@ import {
   useSubmitLesionMutation,
   useDeleteLesionMutation,
 } from '../../store/services/lesion/createLesionApi';
+import { ToastMessage } from '../../resuable/Toast';
 
 const AllLesionsRecords = ({ navigation }: { navigation: any }) => {
-  const { data, isLoading, error, refetch } = useFetchAllLesionsQuery();
+  const { data, isLoading, error, refetch } = useFetchAllLesionsQuery({});
   const [submitLesion] = useSubmitLesionMutation();
   const [deleteLesion] = useDeleteLesionMutation();
   const [sendingId, setSendingId] = useState<string | null>(null);
@@ -50,12 +51,19 @@ const AllLesionsRecords = ({ navigation }: { navigation: any }) => {
 
   const handleConfirmedDelete = async (id: string) => {
     try {
-      await deleteLesion(id).unwrap();
+    
+      const result = await deleteLesion(id).unwrap();
+
+      console.log(result)
+   
+
       await refetch();
+
       if (isMounted.current) {
-        Alert.alert('Deleted', 'Lesion deleted successfully');
+          ToastMessage('success', `Lesion deleted`);
       }
     } catch (err: any) {
+      console.error('Delete error:', err);  
       const message = err?.data?.message || err?.error || 'Failed to delete lesion';
       if (isMounted.current) {
         Alert.alert('Error', message);
@@ -131,7 +139,7 @@ const AllLesionsRecords = ({ navigation }: { navigation: any }) => {
                 style={[
                   styles.sendButton,
                   (item.status === 'submit' || sendingId === item._id) &&
-                    styles.sendButtonDisabled,
+                  styles.sendButtonDisabled,
                 ]}
                 disabled={item.status === 'submit' || sendingId === item._id}
                 onPress={() => handleSend(item._id)}
@@ -140,8 +148,8 @@ const AllLesionsRecords = ({ navigation }: { navigation: any }) => {
                   {item.status === 'submit'
                     ? 'Sent'
                     : sendingId === item._id
-                    ? 'Sending...'
-                    : 'Send'}
+                      ? 'Sending...'
+                      : 'Send'}
                 </Text>
               </TouchableOpacity>
 

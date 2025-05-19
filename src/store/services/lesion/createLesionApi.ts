@@ -14,8 +14,11 @@ export const lesionApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['Lesions'],
         }),
-        fetchAllLesions: builder.query({
-            query: () => '/api/lesion?page=1&limit=1000',
+        fetchAllLesions: builder.query<LesionResponse, GetSlidersQueryParams>({
+            query: ({ page = 1, limit = 10, lang }) => ({
+                url: '/api/lesion',
+                params: { page, limit, ...(lang && { lang }) },
+            }),
             providesTags: ['Lesions'],
         }),
 
@@ -29,11 +32,12 @@ export const lesionApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['Lesions'],
         }),
-        deleteLesion: builder.mutation<any, string>({
+        deleteLesion: builder.mutation({
             query: (id) => ({
-                url: `/api/lesions/${id}`,
+                url: `/api/lesion/${id}`,
                 method: 'DELETE',
             }),
+            invalidatesTags: ['Lesions'],
         }),
 
 
@@ -45,11 +49,6 @@ export const lesionApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['Lesions'],
         }),
-
-
-
-
-
     }),
 });
 

@@ -106,10 +106,10 @@ export const Slider = ({ navigation }: { navigation: any }) => {
   };
 
   const gradients = [
-    ['#56235E', '#C1392D'], // your existing one (purple -> red)
-    ['#1E90FF', '#FF69B4'], // blue -> pink (second card)
-    ['#4CAF50', '#8E24AA'], // green -> violet (third card)
-    ['#2196F3', '#6A1B9A'], // light blue -> purple (fourth card)
+    ['#56235E', '#C1392D'],  
+    ['#1E90FF', '#FF69B4'],  
+    ['#4CAF50', '#8E24AA'],  
+    ['#2196F3', '#6A1B9A'], 
   ];
 
   return (
@@ -129,7 +129,7 @@ export const Slider = ({ navigation }: { navigation: any }) => {
         }}
         onMomentumScrollEnd={onMomentumScrollEnd}
         renderItem={({ item, index }) => {
-          const colors = gradients[index % gradients.length];  // This will loop through 4 gradients
+          const colors = gradients[index % gradients.length];   
           return (
             <LinearGradient
               colors={colors}

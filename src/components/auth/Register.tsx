@@ -391,9 +391,9 @@ export default function Register({ navigation }: { navigation: any }) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState('');
 
-  // At the top of your component:
+  
   const [countryCode, setCountryCode] = useState<Country['cca2']>('IN');
-  const [callingCode, setCallingCode] = useState<string>('91'); // Not string[]
+  const [callingCode, setCallingCode] = useState<string>('91'); 
 
   const [register, { isLoading: isRegistering, error: registerError }] =
     useRegisterUserMutation();
@@ -475,20 +475,6 @@ export default function Register({ navigation }: { navigation: any }) {
       };
       const result = await register(registrationData).unwrap();
 
-      // ─── if role==='user', backend returns { token, user } → auto‑login ───
-      if ('token' in result && result.token) {
-        // persist
-        await AsyncStorage.multiSet([
-          ['authToken', result.token],
-          ['user', JSON.stringify(result.user)]
-        ]);
-        // replace to your main app screen
-        navigation.navigate('Dashboard');
-        return;
-      }
-      // ────────────────────────────────────────────────────────────────────
-
-      // otherwise (admin/dantasurakshaks): pending email verification
       navigation.navigate('EmailVerification', {
         email: user.email,
         userId: result.id

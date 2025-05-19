@@ -64,13 +64,13 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderTopColor: '#ddd',
 
-        // Box shadow for iOS
+    
         shadowColor: '#000',
         shadowOffset: { width: 0, height: -10 },
         shadowOpacity: 0.1,
         shadowRadius: 50,
 
-        // Box shadow for Android
+     
         elevation: 10,
     },
     button: { flex: 1, alignItems: 'center', paddingVertical: 10 },
