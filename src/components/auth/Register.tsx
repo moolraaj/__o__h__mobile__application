@@ -348,6 +348,7 @@ import {
   StyleSheet,
   Image,
   SafeAreaView,
+  ScrollView
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -439,6 +440,7 @@ export default function Register({ navigation }: { navigation: any }) {
   const handleSendOtp = async () => {
     try {
       const { requestId } = await sendOtp({ phoneNumber: `+${callingCode}${user.phoneNumber}` }).unwrap();
+     
       setRequestId(requestId);
       setOtpSent(true);
       setOtpVerified(false);
@@ -467,7 +469,11 @@ export default function Register({ navigation }: { navigation: any }) {
 
   const handleRegister = async () => {
     try {
-      const result = await register(user).unwrap();
+      const registrationData = {
+        ...user,
+        phoneNumber: `+${callingCode}${user.phoneNumber}`
+      };
+      const result = await register(registrationData).unwrap();
 
       // ─── if role==='user', backend returns { token, user } → auto‑login ───
       if ('token' in result && result.token) {
@@ -496,229 +502,231 @@ export default function Register({ navigation }: { navigation: any }) {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      {step === 1 ? (
-        <View>
-          <Text style={styles.title}>Join Us</Text>
-          <Image source={require('../../images/home_slide_one.png')} />
-          {roles.map(r => (
-            <TouchableOpacity
-              key={r.key}
-              onPress={() => onChangeField('role', r.key)}
-              style={[
-                styles.roleContainer,
-                user.role === r.key && { backgroundColor: r.color },
-                { borderColor: user.role === r.key ? 'white' : r.color }
-              ]}
-            >
-              <View style={styles.roleWrapper}>
-                <Ionicons
-                  name={r.icon}
-                  size={24}
-                  color={user.role === r.key ? 'white' : r.color}
-                />
-                <Text
-                  style={[
-                    styles.roleText,
-                    user.role === r.key && { color: 'white' },
-                  ]}
-                >
-                  {r.label}
-                </Text>
-              </View>
-
-              <View
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {step === 1 ? (
+          <View>
+            <Text style={styles.title}>Join Us</Text>
+            <Image source={require('../../images/home_slide_one.png')} />
+            {roles.map(r => (
+              <TouchableOpacity
+                key={r.key}
+                onPress={() => onChangeField('role', r.key)}
                 style={[
-                  styles.radioOuter,
-                  {
-                    borderColor: user.role === r.key ? 'white' : r.color,
-                    padding: user.role === r.key ? 2 : 0,
-                  },
+                  styles.roleContainer,
+                  user.role === r.key && { backgroundColor: r.color },
+                  { borderColor: user.role === r.key ? 'white' : r.color }
                 ]}
               >
-                {user.role === r.key && (
-                  <View
+                <View style={styles.roleWrapper}>
+                  <Ionicons
+                    name={r.icon}
+                    size={24}
+                    color={user.role === r.key ? 'white' : r.color}
+                  />
+                  <Text
                     style={[
-                      styles.radioInner,
-                      { backgroundColor: 'white', margin: 2 },
+                      styles.roleText,
+                      user.role === r.key && { color: 'white' },
                     ]}
-                  />
-                )}
-              </View>
-            </TouchableOpacity>
-          ))}
-          <View style={{ marginTop: 30 }}>
-            <GradientButton label="Next" onPress={handleNext} />
-          </View>
-        </View>
-      ) : (
-        <View>
-          <View style={styles.header}>
-            <TouchableOpacity
-              onPress={() => setStep(1)}
-              style={styles.prevButton}
-            >
-              <Ionicons
-                name="chevron-back"
-                size={24}
-                color={BACK_ARROW_COLOR}
-              />
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>Create Account</Text>
-          </View>
-          <View style={styles.textInputMainWrapper}>
-            {(['name', 'email', 'password'] as const).map(field => (
-              <View key={field} style={styles.textInputWrapper}>
-                <Text style={styles.label}>{field[0].toUpperCase() + field.slice(1)}</Text>
-                <View style={styles.inputRow}>
-                  {field === 'name' && (
-                    <AntDesign name="user" size={INPUT_ICON_SIZE}
-                      color={INPUT_ICON_COLOR} />
-                  )}
-                  {field === 'email' && (
-                    <AntDesign name="mail" size={INPUT_ICON_SIZE} color={INPUT_ICON_COLOR} />
-                  )}
-                  {field === 'password' && (
-                    <AntDesign name="lock" size={INPUT_ICON_SIZE} color={INPUT_ICON_COLOR} />
-                  )}
-                  <TextInput
-                    style={styles.textInput}
-                    placeholder={
-                      field === 'name'
-                        ? 'e.g. John Doe'
-                        : field === 'email'
-                          ? 'e.g. johndoe@example.com'
-                          : 'e.g. securepassword'
-                    }
-                    value={(user as any)[field]}
-                    onChangeText={v => onChangeField(field, v)}
-                    secureTextEntry={field === 'password' && !showPassword}
-                    keyboardType={field === 'email' ? 'email-address' : 'default'}
-                  />
-                  {field === 'password' && (
-                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                      <Feather name={showPassword ? 'eye' : 'eye-off'} size={18} color="#666" />
-                    </TouchableOpacity>
+                  >
+                    {r.label}
+                  </Text>
+                </View>
+
+                <View
+                  style={[
+                    styles.radioOuter,
+                    {
+                      borderColor: user.role === r.key ? 'white' : r.color,
+                      padding: user.role === r.key ? 2 : 0,
+                    },
+                  ]}
+                >
+                  {user.role === r.key && (
+                    <View
+                      style={[
+                        styles.radioInner,
+                        { backgroundColor: 'white', margin: 2 },
+                      ]}
+                    />
                   )}
                 </View>
-              </View>
+              </TouchableOpacity>
             ))}
-
-            {/* Confirm Password */}
-            <View style={styles.textInputWrapper}>
-              <Text style={styles.label}>Confirm Password</Text>
-              <View style={styles.inputRow}>
-                <AntDesign name="lock" size={INPUT_ICON_SIZE} color={INPUT_ICON_COLOR} />
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="e.g. securepassword"
-                  value={user.confirmPassword}
-                  onChangeText={v => {
-                    onChangeField('confirmPassword', v);
-                    if (user.password && v !== user.password) {
-                      setPasswordError('Passwords do not match');
-                    } else {
-                      setPasswordError('');
-                    }
-                  }}
-                  secureTextEntry={!showConfirmPassword}
-                />
-                <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
-                  <Feather name={showConfirmPassword ? 'eye' : 'eye-off'} size={18} color="#666" />
-                </TouchableOpacity>
-              </View>
-              {passwordError !== '' && (
-                <Text style={styles.errorText}>{passwordError}</Text>
-              )}
-            </View>
-
-            {/* Phone Number */}
-            <View style={styles.textInputWrapper}>
-              <Text style={styles.label}>Phone Number</Text>
-              <View style={styles.inputRow}>
-                <CountryPicker
-                  countryCode={countryCode}
-                  withFlag
-                  withCallingCode
-                  withFilter
-                  withEmoji
-                  onSelect={(country: Country) => {
-                    setCountryCode(country.cca2);
-                    setCallingCode(country.callingCode[0]);
-                  }}
-                />
-                <Text style={styles.prefixText}>+{callingCode}</Text>
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="0000 000 000"
-                  value={user.phoneNumber}
-                  onChangeText={v => onChangeField('phoneNumber', v)}
-                  keyboardType="phone-pad"
-                />
-              </View>
+            <View style={{ marginTop: 30 }}>
+              <GradientButton label="Next" onPress={handleNext} />
             </View>
           </View>
-
-          {!otpSent && user.phoneNumber && (
-            <GradientButton
-              label={isSendingOtp ? 'Sending OTP...' : 'Send OTP'}
-              onPress={handleSendOtp}
-            />
-          )}
-
-          {otpSent && (
-            <View >
-              <Text style={{ marginBottom: 8 }}>Enter OTP:</Text>
-              <View style={[styles.inputRow, { width: 120, margin: 0 }]}>
-                <Feather name="key" size={22} color="#56235E" />
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="123456"
-                  value={otp}
-                  onChangeText={setOtp}
-                  keyboardType="number-pad"
-                  maxLength={6}
+        ) : (
+          <View>
+            <View style={styles.header}>
+              <TouchableOpacity
+                onPress={() => setStep(1)}
+                style={styles.prevButton}
+              >
+                <Ionicons
+                  name="chevron-back"
+                  size={24}
+                  color={BACK_ARROW_COLOR}
                 />
-              </View>
-              {!otpVerified ? (
-                isVerifyingOtp ? (
-                  <Loader />
-                ) : (
-                  <View style={{ marginTop: 20 }}>
-                    <GradientButton
-                      label="Verify OTP"
-                      onPress={handleVerifyOtp}
+              </TouchableOpacity>
+              <Text style={styles.headerTitle}>Create Account</Text>
+            </View>
+            <View style={styles.textInputMainWrapper}>
+              {(['name', 'email', 'password'] as const).map(field => (
+                <View key={field} style={styles.textInputWrapper}>
+                  <Text style={styles.label}>{field[0].toUpperCase() + field.slice(1)}</Text>
+                  <View style={styles.inputRow}>
+                    {field === 'name' && (
+                      <AntDesign name="user" size={INPUT_ICON_SIZE}
+                        color={INPUT_ICON_COLOR} />
+                    )}
+                    {field === 'email' && (
+                      <AntDesign name="mail" size={INPUT_ICON_SIZE} color={INPUT_ICON_COLOR} />
+                    )}
+                    {field === 'password' && (
+                      <AntDesign name="lock" size={INPUT_ICON_SIZE} color={INPUT_ICON_COLOR} />
+                    )}
+                    <TextInput
+                      style={styles.textInput}
+                      placeholder={
+                        field === 'name'
+                          ? 'e.g. John Doe'
+                          : field === 'email'
+                            ? 'e.g. johndoe@example.com'
+                            : 'e.g. securepassword'
+                      }
+                      value={(user as any)[field]}
+                      onChangeText={v => onChangeField(field, v)}
+                      secureTextEntry={field === 'password' && !showPassword}
+                      keyboardType={field === 'email' ? 'email-address' : 'default'}
                     />
+                    {field === 'password' && (
+                      <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                        <Feather name={showPassword ? 'eye' : 'eye-off'} size={18} color="#666" />
+                      </TouchableOpacity>
+                    )}
                   </View>
-                )
-              ) : null}
-              {!otpVerified && (
-                <TouchableOpacity
-                  onPress={handleSendOtp}
-                  style={{ marginTop: 10 }}
-                >
-                  <Text style={{ color: 'blue', textAlign: 'center' }}>
-                    Resend OTP
-                  </Text>
-                </TouchableOpacity>
-              )}
+                </View>
+              ))}
+
+              {/* Confirm Password */}
+              <View style={styles.textInputWrapper}>
+                <Text style={styles.label}>Confirm Password</Text>
+                <View style={styles.inputRow}>
+                  <AntDesign name="lock" size={INPUT_ICON_SIZE} color={INPUT_ICON_COLOR} />
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="e.g. securepassword"
+                    value={user.confirmPassword}
+                    onChangeText={v => {
+                      onChangeField('confirmPassword', v);
+                      if (user.password && v !== user.password) {
+                        setPasswordError('Passwords do not match');
+                      } else {
+                        setPasswordError('');
+                      }
+                    }}
+                    secureTextEntry={!showConfirmPassword}
+                  />
+                  <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+                    <Feather name={showConfirmPassword ? 'eye' : 'eye-off'} size={18} color="#666" />
+                  </TouchableOpacity>
+                </View>
+                {passwordError !== '' && (
+                  <Text style={styles.errorText}>{passwordError}</Text>
+                )}
+              </View>
+
+              {/* Phone Number */}
+              <View style={styles.textInputWrapper}>
+                <Text style={styles.label}>Phone Number</Text>
+                <View style={styles.inputRow}>
+                  <CountryPicker
+                    countryCode={countryCode}
+                    withFlag
+                    withCallingCode
+                    withFilter
+                    withEmoji
+                    onSelect={(country: Country) => {
+                      setCountryCode(country.cca2);
+                      setCallingCode(country.callingCode[0]);
+                    }}
+                  />
+                  <Text style={styles.prefixText}>+{callingCode}</Text>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="0000 000 000"
+                    value={user.phoneNumber}
+                    onChangeText={v => onChangeField('phoneNumber', v)}
+                    keyboardType="phone-pad"
+                  />
+                </View>
+              </View>
             </View>
-          )}
 
-          <View style={styles.buttonWrapper}>
-            <GradientButton
-              label={isRegistering ? 'Registering…' : 'Create Account'}
-              onPress={handleRegister}
-            />
+            {!otpSent && user.phoneNumber && (
+              <GradientButton
+                label={isSendingOtp ? 'Sending OTP...' : 'Send OTP'}
+                onPress={handleSendOtp}
+              />
+            )}
+
+            {otpSent && (
+              <View >
+                <Text style={{ marginBottom: 8 }}>Enter OTP:</Text>
+                <View style={[styles.inputRow, { width: 120, margin: 0 }]}>
+                  <Feather name="key" size={22} color="#56235E" />
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="123456"
+                    value={otp}
+                    onChangeText={setOtp}
+                    keyboardType="number-pad"
+                    maxLength={6}
+                  />
+                </View>
+                {!otpVerified ? (
+                  isVerifyingOtp ? (
+                    <Loader />
+                  ) : (
+                    <View style={{ marginTop: 20 }}>
+                      <GradientButton
+                        label="Verify OTP"
+                        onPress={handleVerifyOtp}
+                      />
+                    </View>
+                  )
+                ) : null}
+                {!otpVerified && (
+                  <TouchableOpacity
+                    onPress={handleSendOtp}
+                    style={{ marginTop: 10 }}
+                  >
+                    <Text style={{ color: 'blue', textAlign: 'center' }}>
+                      Resend OTP
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
+
+            <View style={styles.buttonWrapper}>
+              <GradientButton
+                label={isRegistering ? 'Registering…' : 'Create Account'}
+                onPress={handleRegister}
+              />
+            </View>
           </View>
-        </View>
-      )}
+        )}
 
-      <View style={styles.footerLink}>
-        <Text>I'm already a member</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <GradientText text="Login" />
-        </TouchableOpacity>
-      </View>
+        <View style={styles.footerLink}>
+          <Text>I'm already a member</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <GradientText text="Login" />
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
