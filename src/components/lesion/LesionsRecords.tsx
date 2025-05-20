@@ -310,7 +310,6 @@ const styles = StyleSheet.create({
   disabledButtonColor: { color: '#fff' },
 
   errorText: { color: 'red', textAlign: 'center' },
-  addBtnInner: { width: 30, height: 30, borderRadius: 22, justifyContent: 'center', alignItems: 'center' },
 
   modalOverlay: {
     flex: 1,

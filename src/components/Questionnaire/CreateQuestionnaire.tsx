@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useAuth } from '../../navigation/AuthContext';
- 
+
 import { useGetUsersQuery } from '../../store/services/user/userApi';
 import { useCreateQuestionnaireMutation } from '../../store/services/questionnaire/questionnaireApi';
 import { ToastMessage } from '../../resuable/Toast';
@@ -25,11 +25,11 @@ const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
     role: 'admin',
   });
 
-  const [admins, setAdmins] = useState([]);
+  const [admins, setAdmins] = useState<Users[]>([]);
   const [showReligionInput, setShowReligionInput] = useState(false);
   const [showTobaccoType, setShowTobaccoType] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CreateUpdateQuestionnaire>({
     demographics: '',
     name: '',
     age: 0,
@@ -78,12 +78,12 @@ const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
 
   const handleChange = (name: string, value: string | number | string[]) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
-    
+
     // Show/hide religion input based on selection
     if (name === 'religion') {
       setShowReligionInput(value === 'Others');
     }
-    
+
     // Show/hide tobacco type based on selection
     if (name === 'tobaccoChewer') {
       setShowTobaccoType(value === 'yes');
@@ -96,9 +96,9 @@ const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
       if (isChecked) {
         return { ...prev, presenceOfGumDisease: [...currentValues, value] };
       } else {
-        return { 
-          ...prev, 
-          presenceOfGumDisease: currentValues.filter(item => item !== value) 
+        return {
+          ...prev,
+          presenceOfGumDisease: currentValues.filter(item => item !== value)
         };
       }
     });
@@ -148,10 +148,15 @@ const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
         }
       });
       formDataToSend.append('send_to', JSON.stringify(admins.map((a) => a._id)));
-      formDataToSend.append('submitted_by', user.id);
+      if (user && user.id) {
+        formDataToSend.append('submitted_by', user.id);
+      } else {
+        Alert.alert('Error', 'User information is missing. Please log in again.');
+        return;
+      }
       await createQuestionnaire(formDataToSend).unwrap();
-    
-      ToastMessage('success','Questionnaire created successfully!')
+
+      ToastMessage('success', 'Questionnaire created successfully!')
       navigation.navigate('AllQuestionnaire')
     } catch (error) {
       console.error('Submit error:', error);
@@ -163,7 +168,7 @@ const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Patient Questionnaire</Text>
 
- 
+
       <Text style={styles.sectionHeader}>Demographics</Text>
       <TextInput
         style={styles.input}

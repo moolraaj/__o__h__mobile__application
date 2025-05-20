@@ -28,11 +28,11 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
         role: 'admin',
     });
 
-    const [admins, setAdmins] = useState([]);
+    const [admins, setAdmins] = useState<Users[]>([]);
     const [showReligionInput, setShowReligionInput] = useState(false);
     const [showTobaccoType, setShowTobaccoType] = useState(false);
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<CreateUpdateQuestionnaire>({
         demographics: '',
         name: '',
         age: 0,
@@ -200,6 +200,10 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                     formDataToSend.append(key, value.toString());
                 }
             });
+            if (!user || !user.id) {
+                Alert.alert('Error', 'User information is missing. Please log in again.');
+                return;
+            }
             formDataToSend.append('submitted_by', user.id);
 
             await updateQuestionnaire({ id, formData: formDataToSend }).unwrap();

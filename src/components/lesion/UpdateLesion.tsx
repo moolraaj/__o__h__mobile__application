@@ -23,7 +23,26 @@ const UpdateLesion = ({ navigation }:{navigation:any}) => {
   const { data, isLoading } = useGetLesionByIdQuery(lesionId);
   const [updateLesion, { isLoading: isUpdating }] = useUpdateLesionMutation();
 
-  const [formData, setFormData] = useState({
+  type DentalImage = {
+    uri: string;
+    name?: string;
+    type?: string;
+  };
+  
+  type FormDataType = {
+    fullname: string;
+    age: string;
+    gender: string;
+    contact_number: string;
+    location: string;
+    symptoms: string;
+    disease_time: string;
+    existing_habits: string;
+    previous_dental_treatement: string;
+    dental_images: DentalImage[];
+  };
+  
+  const [formData, setFormData] = useState<FormDataType>({
     fullname: '',
     age: '',
     gender: '',
@@ -49,17 +68,10 @@ const UpdateLesion = ({ navigation }:{navigation:any}) => {
         disease_time: lesion.disease_time || '',
         existing_habits: lesion.existing_habits || '',
         previous_dental_treatement: lesion.previous_dental_treatement || '',
-        dental_images: (lesion.dental_images || []).map((img) =>
-          typeof img === 'string' ? { uri: img } : img
-        ),
+        dental_images: lesion.dental_images || [],
       });
     }
   }, [data]);
-
-  const handleChange = (key, value) => {
-    setFormData((prev) => ({ ...prev, [key]: value }));
-  };
-
   const pickImage = async () => {
     const result = await launchImageLibrary({
       mediaType: 'photo',
@@ -68,11 +80,13 @@ const UpdateLesion = ({ navigation }:{navigation:any}) => {
     });
 
     if (!result.didCancel && result.assets) {
-      const newImages = result.assets.map((asset) => ({
-        uri: asset.uri.startsWith('file://') ? asset.uri : `file://${asset.uri}`,
-        name: asset.fileName || `image_${Date.now()}.jpg`,
-        type: asset.type || 'image/jpeg',
-      }));
+      const newImages = result.assets
+        .filter((asset) => !!asset.uri)
+        .map((asset) => ({
+          uri: asset.uri!.startsWith('file://') ? asset.uri! : `file://${asset.uri}`,
+          name: asset.fileName || `image_${Date.now()}.jpg`,
+          type: asset.type || 'image/jpeg',
+        }));
 
       setFormData((prev) => ({
         ...prev,
@@ -81,7 +95,7 @@ const UpdateLesion = ({ navigation }:{navigation:any}) => {
     }
   };
 
-  const removeImage = (index) => {
+  const removeImage = (index: number) => {
     const updated = [...formData.dental_images];
     updated.splice(index, 1);
     setFormData((prev) => ({ ...prev, dental_images: updated }));
@@ -116,6 +130,10 @@ const UpdateLesion = ({ navigation }:{navigation:any}) => {
   };
 
   if (isLoading) return <ActivityIndicator size="large" />;
+
+  function handleChange(arg0: string, text: string): void {
+    throw new Error('Function not implemented.');
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
