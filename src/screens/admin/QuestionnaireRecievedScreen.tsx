@@ -9,18 +9,18 @@ import {
     Pressable
 } from 'react-native';
 import React, { useState } from 'react';
-import { Layout } from '../common/Layout';
-import { useTranslation } from 'react-i18next';
+import { Layout } from '../../common/Layout';
+ 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
-import GradientText from '../common/GradientText';
-import Loader from '../common/Loader';
-import { useGetQuestionsQuery } from '../store/services/questions/questionApi';
+import GradientText from '../../common/GradientText';
+import Loader from '../../common/Loader';
+import { useFetchAdminAllQuestionnairesQuery } from '../../store/services/questionnaire/questionnaireApi';
+ 
 
-export default function QuestionReceived() {
-    const { i18n } = useTranslation();
-    const lang = i18n.language;
-    const { data, isLoading, error } = useGetQuestionsQuery({ page: 1, lang });
+export default function QuestionReceivedList() {
+    
+    const { data, isLoading, error } = useFetchAdminAllQuestionnairesQuery({ page: 1 });
     
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedLesion, setSelectedLesion] = useState<QuestionnaireTypes | null>(null);
@@ -127,9 +127,7 @@ export default function QuestionReceived() {
                     <LinearGradient colors={['#56235E', '#C1392D']} style={styles.filterBtnAll}>
                         <Text style={styles.filterBtnAllText}>All</Text>
                     </LinearGradient>
-                    <TouchableOpacity style={styles.filterBtn}>
-                        <Text style={styles.filterBtnText}>Status</Text>
-                    </TouchableOpacity>
+                  
                 </View>
             </View>
 
@@ -141,7 +139,7 @@ export default function QuestionReceived() {
                         <View key={item._id || i} style={styles.card}>
                             <View style={[styles.caseRow, styles.caseNumberRow]}>
                                 <Text style={styles.caseText}>Case Number :</Text>
-                                <Text style={styles.caseNumber}>#{i + 7001}</Text>
+                                <Text style={styles.caseNumber}>{item.case_number}</Text>
                             </View>
                             {[
                                 ['Name', item.name],
