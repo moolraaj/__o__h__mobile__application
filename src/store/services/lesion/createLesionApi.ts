@@ -49,7 +49,21 @@ export const lesionApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['Lesions'],
         }),
+        fetchAdminAllLesions: builder.query<LesionResponse, { page?: number; limit?: number }>(
+            {
+                query: ({ page = 1, limit = 10 }) => ({
+                    url: "/api/lesion/admin/get_all",
+                    params: { page, limit },
+                }),
+                providesTags: ["Lesions"],
+            }
+        ),
+        getAdminLesionById: builder.query<Lesion, string>({
+            query: (id) => `/api/lesion/admin/${id}`,
+            providesTags: ["Lesions"],
+        }),
     }),
 });
 
-export const { useCreateLesionMutation, useFetchAllLesionsQuery, useGetLesionByIdQuery, useSubmitLesionMutation, useDeleteLesionMutation, useUpdateLesionMutation } = lesionApi;
+export const { useCreateLesionMutation, useFetchAllLesionsQuery, useGetLesionByIdQuery, useSubmitLesionMutation, useDeleteLesionMutation, useUpdateLesionMutation,useFetchAdminAllLesionsQuery,
+  useGetAdminLesionByIdQuery } = lesionApi;

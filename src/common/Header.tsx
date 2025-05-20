@@ -88,9 +88,8 @@ export function Header() {
       ];
     } else if (user?.role === 'admin') {
       return [
-        { label: 'Lesions Received', screen: 'LesionsReceived', icon: 'plus' },
-        { label: 'Create Lesions Feedback', screen: 'LesionsFeedback', icon: 'tooth' },
-        { label: 'Question Received', screen: 'QuestionReceived', icon: 'question-circle' },
+        { label: 'Lesions Received', screen: 'AdminLesions', icon: 'plus' },
+        { label: 'Question Received', screen: 'AdminQuestion', icon: 'question-circle' },
       ];
     }
     return [];

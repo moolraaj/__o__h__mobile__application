@@ -9,20 +9,23 @@ import {
     Pressable
 } from 'react-native';
 import React, { useState } from 'react';
-import { Layout } from '../common/Layout';
- import { useTranslation } from 'react-i18next';
+import { Layout } from '../../common/Layout';
+ 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
-import GradientText from '../common/GradientText';
-import Loader from '../common/Loader';
-import { useFetchAllLesionsQuery } from '../store/services/lesion/createLesionApi';
+import GradientText from '../../common/GradientText';
+import Loader from '../../common/Loader';
+import { useFetchAdminAllLesionsQuery } from '../../store/services/lesion/createLesionApi';
+ 
 
-export default function LesionsReceived() {
-    const { i18n } = useTranslation();
-    const lang = i18n.language;
-    const { data, isLoading, error } = useFetchAllLesionsQuery({ page: 1, lang });
+export default function LesionsReceivedList() {
+    
+    const { data, isLoading, error } = useFetchAdminAllLesionsQuery({ page: 1 });
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedLesion, setSelectedLesion] = useState<Lesion | null>(null);
+
+    console.log(`data`)
+    console.log(data)
 
     const openModal = (item: Lesion) => {
         setSelectedLesion(item);
@@ -82,7 +85,7 @@ export default function LesionsReceived() {
                         paddingHorizontal: 8,
                         borderRadius: 6,
                     }}>
-                        <GradientText text={data?.totalLesions} size={18} />
+                        <GradientText text={data?.totalResults} size={18} />
                     </View>
                 </View>
             </View>
@@ -100,9 +103,7 @@ export default function LesionsReceived() {
                     <LinearGradient colors={['#56235E', '#C1392D']} style={styles.filterBtnAll}>
                         <Text style={styles.filterBtnAllText}>All</Text>
                     </LinearGradient>
-                    <TouchableOpacity style={styles.filterBtn}>
-                        <Text style={styles.filterBtnText}>Status</Text>
-                    </TouchableOpacity>
+                   
                 </View>
             </View>
 
@@ -114,12 +115,12 @@ export default function LesionsReceived() {
                         <View key={item._id || i} style={styles.card}>
                             <View style={[styles.caseRow, styles.caseNumberRow]}>
                                 <Text style={styles.caseText}>Case Number :</Text>
-                                <Text style={styles.caseNumber}>#{i + 7001}</Text>
+                                <Text style={styles.caseNumber}>{item.case_number}</Text>
                             </View>
                             {[
                                 ['Patient Name', item.fullname],
                                 ['Submission Date', new Date(item.createdAt).toLocaleDateString()],
-                                ['Status', 'Under Review']
+                                ['Status', item.status]
                             ].map(([label, value], idx) => (
                                 <View key={idx} style={[styles.caseRow, styles.caseTextRow]}>
                                     <GradientText

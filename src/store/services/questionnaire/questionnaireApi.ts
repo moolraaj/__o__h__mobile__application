@@ -40,6 +40,18 @@ export const questionnaireApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Questionnaire'],
     }),
+
+    fetchAdminAllQuestionnaires: builder.query<{ data: any[]; page: number; limit: number; totalResults: number }, { page?: number; limit?: number }>({
+      query: ({ page = 1, limit = 100 }) => ({
+        url: '/api/questionnaire/admin/get_all',
+        params: { page, limit },
+      }),
+      providesTags: ['Questionnaire'],
+    }),
+    getAdminQuestionnaireById: builder.query<any, string>({
+      query: (id) => `/api/questionnaire/admin/${id}`,
+      providesTags: ['Questionnaire'],
+    }),
   }),
 });
 
@@ -49,5 +61,7 @@ export const {
   useDeleteQuestionnaireMutation,
   useGetQuestionnaireQuery,
   useSubmitQuestionnaireMutation,
-  useUpdateQuestionnaireMutation
+  useUpdateQuestionnaireMutation,
+  useFetchAdminAllQuestionnairesQuery,
+  useGetAdminQuestionnaireByIdQuery,
 } = questionnaireApi;
