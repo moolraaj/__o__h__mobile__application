@@ -33,7 +33,7 @@ const LesionDetails = () => {
       <Text style={styles.text}>Disease time: {lesion.disease_time}</Text>
       <Text style={styles.text}>Contact number: {lesion.contact_number}</Text>
 
-      {/* Image Gallery Section */}
+     
       <Text style={styles.sectionTitle}>Dental Images:</Text>
       <FlatList
         horizontal

@@ -14,7 +14,8 @@ import AllLesionsScreen from '../screens/lesion/AllLesionsScreen';
 import LesionDetailScreen from '../screens/lesion/LesionDetailScreen';
 import LesionUpdateScreen from '../screens/lesion/LesionUpdateScreen';
 import CreateQuestionnaire from '../screens/Questionnaire/QuestionnaireCreateScreen';
-import QuestionnaireRecords from '../screens/Questionnaire/AllQuestionnaire';
+import QuestionnaireRecords from '../screens/Questionnaire/AllQuestionnaireScreen';
+import UpdateQuestionnaireScreen from '../screens/Questionnaire/UpdateQuestionnaireScreen';
 const Stack = createNativeStackNavigator();
 export const DantaStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -33,6 +34,7 @@ export const DantaStack = () => (
     <Stack.Screen name="UpdateLesionRecord" component={LesionUpdateScreen} />
     <Stack.Screen name="CreateQuestionnaire" component={CreateQuestionnaire} />
     <Stack.Screen name="AllQuestionnaire" component={QuestionnaireRecords} />
+    <Stack.Screen name="UpdateQuestionnaire" component={UpdateQuestionnaireScreen} />
 
   </Stack.Navigator>
 );

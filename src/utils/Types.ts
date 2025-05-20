@@ -194,6 +194,7 @@ interface QuestionnaireTypes {
   comments_or_notes?: string;
   send_email_to_dantasurakshaks?: boolean;
   createdAt?: any;
+  case_number?:string
 }
 
 interface QuestionnaireResponse {
@@ -461,6 +462,9 @@ interface DentalEmergencyTypes {
   updatedAt: Date;
   __v: number;
 }
+
+
+ 
 
 
 
