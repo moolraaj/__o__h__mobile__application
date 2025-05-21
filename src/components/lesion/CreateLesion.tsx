@@ -399,7 +399,6 @@ import {
   Alert,
   Image,
   ActivityIndicator,
-  KeyboardAvoidingView,
   Platform,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
@@ -409,6 +408,7 @@ import { useCreateLesionMutation } from '../../store/services/lesion/createLesio
 import { useGetUsersQuery } from '../../store/services/user/userApi';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LinearGradient from 'react-native-linear-gradient';
+import GradientText from '../../common/GradientText';
 
 type DentalImage = {
   uri: string;
@@ -559,64 +559,68 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1 }}
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
     >
-      <ScrollView
-        contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="handled"
+      <LinearGradient
+        colors={['#56235E', '#C1392D']}
+        style={styles.header}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
       >
-        <LinearGradient
-          colors={['#4a90e2', '#5fa5e8']}
-          style={styles.header}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-        >
-          <Text style={styles.title}>New Lesion Report</Text>
-          <Text style={styles.subtitle}>Fill in the patient details below</Text>
-        </LinearGradient>
+        <Text style={styles.title}>New Lesion Report</Text>
+        <Text style={styles.subtitle}>Fill in the patient details below</Text>
+      </LinearGradient>
 
-        <View style={styles.formContainer}>
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Full Name *</Text>
+      <View style={styles.formContainer}>
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Full Name *</Text>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputIcon}>
+              <GradientText text={<Icon name="person" size={20} color='#56235E' />} size={20} />
+            </Text>
+            <TextInput
+              style={styles.input}
+              value={formData.fullname}
+              onChangeText={(text) => handleChange('fullname', text)}
+              placeholder="Enter full name"
+              placeholderTextColor="#adb5bd"
+            />
+          </View>
+        </View>
+
+        <View style={styles.row}>
+          <View style={[styles.formGroup, { flex: 1, marginRight: 10 }]}>
+            <Text style={styles.label}>Age</Text>
             <View style={styles.inputContainer}>
-              <Icon name="person" size={20} color="#6c757d" style={styles.inputIcon} />
+              <Text style={styles.inputIcon}>
+                <GradientText text={<Icon name="cake" size={20} color='#56235E' />} size={20} />
+              </Text>
               <TextInput
                 style={styles.input}
-                value={formData.fullname}
-                onChangeText={(text) => handleChange('fullname', text)}
-                placeholder="Enter full name"
+                value={formData.age}
+                onChangeText={(text) => handleChange('age', text)}
+                placeholder="Age"
                 placeholderTextColor="#adb5bd"
+                keyboardType="numeric"
               />
             </View>
           </View>
 
-          <View style={styles.row}>
-            <View style={[styles.formGroup, { flex: 1, marginRight: 10 }]}>
-              <Text style={styles.label}>Age</Text>
-              <View style={styles.inputContainer}>
-                <Icon name="cake" size={20} color="#6c757d" style={styles.inputIcon} />
-                <TextInput
-                  style={styles.input}
-                  value={formData.age}
-                  onChangeText={(text) => handleChange('age', text)}
-                  placeholder="Age"
-                  placeholderTextColor="#adb5bd"
-                  keyboardType="numeric"
-                />
-              </View>
-            </View>
-
-            <View style={[styles.formGroup, { flex: 1 }]}>
-              <Text style={styles.label}>Gender</Text>
-              <View style={[styles.inputContainer, { paddingLeft: 10 }]}>
-                <Icon name="wc" size={20} color="#6c757d" style={styles.inputIcon} />
+          <View style={[styles.formGroup, { flex: 1 }]}>
+            <Text style={styles.label}>Gender</Text>
+            <View style={[styles.inputContainer, { paddingLeft: 10 }]}>
+              <Text style={styles.inputIcon}>
+                <GradientText text={<Icon name="wc" size={20} color='#56235E' />} size={20} />
+              </Text>
+              <View style={styles.pickerContainer}>
                 <Picker
                   selectedValue={formData.gender}
                   onValueChange={(value) => handleChange('gender', value)}
                   style={[styles.picker, { color: formData.gender ? '#495057' : '#adb5bd' }]}
                   dropdownIconColor="#6c757d"
+                  mode="dropdown"
                 >
                   <Picker.Item label="Select gender..." value="" />
                   <Picker.Item label="Male" value="male" />
@@ -626,149 +630,175 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
               </View>
             </View>
           </View>
+        </View>
 
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Contact Number</Text>
-            <View style={styles.inputContainer}>
-              <Icon name="phone" size={20} color="#6c757d" style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                value={formData.contact_number}
-                onChangeText={(text) => handleChange('contact_number', text)}
-                placeholder="Phone number"
-                placeholderTextColor="#adb5bd"
-                keyboardType="phone-pad"
-              />
-            </View>
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Contact Number</Text>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputIcon}>
+              <GradientText text={<Icon name="phone" size={20} color='#56235E' />} size={20} />
+            </Text>
+            <TextInput
+              style={styles.input}
+              value={formData.contact_number}
+              onChangeText={(text) => handleChange('contact_number', text)}
+              placeholder="Phone number"
+              placeholderTextColor="#adb5bd"
+              keyboardType="phone-pad"
+            />
           </View>
+        </View>
 
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Location</Text>
-            <View style={styles.inputContainer}>
-              <Icon name="location-on" size={20} color="#6c757d" style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                value={formData.location}
-                onChangeText={(text) => handleChange('location', text)}
-                placeholder="Patient's location"
-                placeholderTextColor="#adb5bd"
-              />
-            </View>
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Location</Text>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputIcon}>
+              <GradientText text={<Icon name="location-on" size={20} color='#56235E' />} size={20} />
+            </Text>
+            <TextInput
+              style={styles.input}
+              value={formData.location}
+              onChangeText={(text) => handleChange('location', text)}
+              placeholder="Patient's location"
+              placeholderTextColor="#adb5bd"
+            />
           </View>
+        </View>
 
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Symptoms *</Text>
-            <View style={[styles.inputContainer, styles.textAreaContainer]}>
-              <Icon name="healing" size={20} color="#6c757d" style={styles.inputIcon} />
-              <TextInput
-                style={[styles.input, styles.textArea]}
-                value={formData.symptoms}
-                onChangeText={(text) => handleChange('symptoms', text)}
-                placeholder="Describe symptoms in detail"
-                placeholderTextColor="#adb5bd"
-                multiline
-                numberOfLines={4}
-              />
-            </View>
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Symptoms *</Text>
+          <View style={[styles.inputContainer, styles.textAreaContainer]}>
+            <Text style={styles.inputIcon}>
+              <GradientText text={<Icon name="healing" size={20} color='#56235E' />} size={20} />
+            </Text>
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              value={formData.symptoms}
+              onChangeText={(text) => handleChange('symptoms', text)}
+              placeholder="Describe symptoms in detail"
+              placeholderTextColor="#adb5bd"
+              multiline
+              numberOfLines={4}
+            />
           </View>
+        </View>
 
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Duration of Condition</Text>
-            <View style={styles.inputContainer}>
-              <Icon name="access-time" size={20} color="#6c757d" style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                value={formData.disease_time}
-                onChangeText={(text) => handleChange('disease_time', text)}
-                placeholder="How long has this been present?"
-                placeholderTextColor="#adb5bd"
-              />
-            </View>
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Duration of Condition</Text>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputIcon}>
+              <GradientText text={<Icon name="access-time" size={20} color='#56235E' />} size={20} />
+            </Text>
+            <TextInput
+              style={styles.input}
+              value={formData.disease_time}
+              onChangeText={(text) => handleChange('disease_time', text)}
+              placeholder="How long has this been present?"
+              placeholderTextColor="#adb5bd"
+            />
           </View>
+        </View>
 
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Existing Habits</Text>
-            <View style={[styles.inputContainer, styles.textAreaContainer]}>
-              <Icon name="smoking-rooms" size={20} color="#6c757d" style={styles.inputIcon} />
-              <TextInput
-                style={[styles.input, styles.textArea]}
-                value={formData.existing_habits}
-                onChangeText={(text) => handleChange('existing_habits', text)}
-                placeholder="Any relevant habits (smoking, etc.)"
-                placeholderTextColor="#adb5bd"
-                multiline
-                numberOfLines={3}
-              />
-            </View>
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Existing Habits</Text>
+          <View style={[styles.inputContainer, styles.textAreaContainer]}>
+            <Text style={styles.inputIcon}>
+              <GradientText text={<Icon name="smoking-rooms" size={20} color='#56235E' />} size={20} />
+            </Text>
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              value={formData.existing_habits}
+              onChangeText={(text) => handleChange('existing_habits', text)}
+              placeholder="Any relevant habits (smoking, etc.)"
+              placeholderTextColor="#adb5bd"
+              multiline
+              numberOfLines={3}
+            />
           </View>
+        </View>
 
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Previous Dental Treatment</Text>
-            <View style={[styles.inputContainer, styles.textAreaContainer]}>
-              <Icon name="medical-services" size={20} color="#6c757d" style={styles.inputIcon} />
-              <TextInput
-                style={[styles.input, styles.textArea]}
-                value={formData.previous_dental_treatement}
-                onChangeText={(text) => handleChange('previous_dental_treatement', text)}
-                placeholder="Any previous dental treatments"
-                placeholderTextColor="#adb5bd"
-                multiline
-                numberOfLines={3}
-              />
-            </View>
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Previous Dental Treatment</Text>
+          <View style={[styles.inputContainer, styles.textAreaContainer]}>
+            <Text style={styles.inputIcon}>
+              <GradientText text={<Icon name="medical-services" size={20} color='#56235E' />} size={20} />
+            </Text>
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              value={formData.previous_dental_treatement}
+              onChangeText={(text) => handleChange('previous_dental_treatement', text)}
+              placeholder="Any previous dental treatments"
+              placeholderTextColor="#adb5bd"
+              multiline
+              numberOfLines={3}
+            />
           </View>
+        </View>
 
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Dental Images</Text>
-            <Text style={styles.imageSubtext}>Upload clear photos of the affected area (max 5)</Text>
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>Dental Images</Text>
+          <Text style={styles.imageSubtext}>Upload clear photos of the affected area (max 5)</Text>
 
-            <TouchableOpacity
+          <TouchableOpacity
+            onPress={pickImage}
+            disabled={isCreatingLesion || formData.dental_images.length >= 5}
+          >
+            <LinearGradient
+              colors={['#56235E', '#C1392D']}
+              locations={[0.2081, 1]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
               style={styles.imageButton}
-              onPress={pickImage}
-              disabled={isCreatingLesion || formData.dental_images.length >= 5}
             >
               <Icon name="add-a-photo" size={20} color="white" />
               <Text style={styles.buttonText}> Add Images</Text>
-            </TouchableOpacity>
+            </LinearGradient>
+          </TouchableOpacity>
 
-            {formData.dental_images.length > 0 && (
-              <View style={styles.imageContainer}>
-                {formData.dental_images.map((image, index) => (
-                  <View key={index} style={styles.imageWrapper}>
-                    <Image source={{ uri: image.uri }} style={styles.image} />
-                    <TouchableOpacity
-                      style={styles.removeImageButton}
-                      onPress={() => removeImage(index)}
-                    >
-                      <Icon name="close" size={16} color="white" />
-                    </TouchableOpacity>
-                  </View>
-                ))}
-              </View>
-            )}
-          </View>
-
-          {isLoadingAdmins ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="small" color="#4a90e2" />
-              <Text style={styles.loadingText}>Loading admin data...</Text>
-            </View>
-          ) : (
-            <View style={styles.adminInfoContainer}>
-              <Icon name="admin-panel-settings" size={20} color="#4a90e2" />
-              <Text style={styles.adminInfo}>
-                This report will be sent to {admins.length} administrator(s)
-              </Text>
+          {formData.dental_images.length > 0 && (
+            <View style={styles.imageContainer}>
+              {formData.dental_images.map((image, index) => (
+                <View key={index} style={styles.imageWrapper}>
+                  <Image source={{ uri: image.uri }} style={styles.image} />
+                  <TouchableOpacity
+                    style={styles.removeImageButton}
+                    onPress={() => removeImage(index)}
+                  >
+                    <Icon name="close" size={16} color="white" />
+                  </TouchableOpacity>
+                </View>
+              ))}
             </View>
           )}
+        </View>
 
-          <TouchableOpacity
+        {isLoadingAdmins ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="small" color="#4a90e2" />
+            <Text style={styles.loadingText}>Loading admin data...</Text>
+          </View>
+        ) : (
+          <View style={styles.adminInfoContainer}>
+            <GradientText text={<Icon name="admin-panel-settings" size={20} color="#4a90e2" />} size={20} />
+            <Text style={styles.adminInfo}>
+              This report will be sent to {admins.length} admin(s)
+            </Text>
+          </View>
+        )}
+
+        <TouchableOpacity
+          onPress={handleSubmit}
+          disabled={isCreatingLesion || isLoadingAdmins}
+        >
+          <LinearGradient
+            colors={['#56235E', '#C1392D']}
+            locations={[0.2081, 1]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
             style={[
               styles.submitButton,
               (isCreatingLesion || isLoadingAdmins) && styles.submitButtonDisabled,
             ]}
-            onPress={handleSubmit}
-            disabled={isCreatingLesion || isLoadingAdmins}
           >
             {isCreatingLesion ? (
               <ActivityIndicator color="#fff" />
@@ -778,17 +808,16 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
                 <Text style={styles.buttonText}> Submit Report</Text>
               </>
             )}
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+    </ScrollView >
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    backgroundColor: '#f8f9fa',
+    flex: 1,
   },
   header: {
     padding: 10,
@@ -802,23 +831,23 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   title: {
-    fontSize: 26,
+    fontSize: 22,
     fontWeight: '700',
     color: 'white',
     textAlign: 'center',
     marginBottom: 5,
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 13,
     color: 'rgba(255,255,255,0.8)',
     textAlign: 'center',
   },
   formContainer: {
-    paddingHorizontal: 20,
     paddingBottom: 30,
   },
   formGroup: {
-    marginBottom: 20,
+    marginBottom: 12,
+    margin: 1
   },
   row: {
     flexDirection: 'row',
@@ -828,7 +857,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: '#495057',
-    marginBottom: 8,
+    marginBottom: 6,
     marginLeft: 5,
   },
   imageSubtext: {
@@ -846,25 +875,45 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderWidth: 1,
     borderColor: '#e9ecef',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 2,
+    // More subtle shadow
+    shadowColor: 'rgba(0, 0, 0, 0.22)',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 1.5,
+    elevation: 1.5,
+    height: 45,
   },
   inputIcon: {
     marginRight: 10,
   },
   input: {
     flex: 1,
-    height: 50,
+    height: 45,
     fontSize: 15,
-    color: '#495057',
+    color: '#56235E',
     paddingVertical: 0,
+  },
+  pickerContainer: {
+    flex: 1,
+    justifyContent: 'center',
   },
   picker: {
     flex: 1,
-    height: 50,
+    width: '100%',
+    color: '#56235E',
+    ...Platform.select({
+      ios: {
+        height: 45,
+      },
+      android: {
+        height: 45,
+        marginTop: -8,
+        marginBottom: -8,
+      },
+    }),
   },
   textAreaContainer: {
     alignItems: 'flex-start',
@@ -881,15 +930,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#4a90e2',
+    gap: 10,
     padding: 12,
     borderRadius: 10,
     marginBottom: 15,
-    shadowColor: '#4a90e2',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 3,
   },
   buttonText: {
     color: 'white',
@@ -945,7 +989,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#f1f8ff',
-    padding: 15,
+    padding: 5,
     borderRadius: 10,
     marginVertical: 15,
     borderWidth: 1,
@@ -954,22 +998,17 @@ const styles = StyleSheet.create({
   adminInfo: {
     marginLeft: 8,
     color: '#495057',
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '500',
   },
   submitButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#28a745',
     padding: 16,
     borderRadius: 10,
     marginTop: 10,
-    shadowColor: '#28a745',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 4,
+    gap: 10
   },
   submitButtonDisabled: {
     backgroundColor: '#6c757d',

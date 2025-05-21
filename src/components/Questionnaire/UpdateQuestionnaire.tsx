@@ -15,9 +15,12 @@ import { useGetUsersQuery } from '../../store/services/user/userApi';
 import { useGetQuestionnaireQuery, useUpdateQuestionnaireMutation } from '../../store/services/questionnaire/questionnaireApi';
 import { ToastMessage } from '../../resuable/Toast';
 import { useRoute } from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
+import GradientText from '../../common/GradientText';
+import RadioButtonGroup from '../../common/RadioButtonGroup';
 
 const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
-  
+
     const { id } = useRoute().params as { id: string };
     const { user } = useAuth();
     const { data: questionnaireData, isLoading: isFetching } = useGetQuestionnaireQuery(id);
@@ -225,11 +228,22 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
     }
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>Patient Questionnaire</Text>
+        <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
 
+            <LinearGradient
+                colors={['#56235E', '#C1392D']}
+                style={styles.header}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+            >
+                <Text style={styles.title}>Patient Questionnaire</Text>
+                <Text style={styles.subtitle}>Fill in the patient details below</Text>
+            </LinearGradient>
 
-            <Text style={styles.sectionHeader}>Demographics</Text>
+            <Text style={styles.sectionHeader}>
+                <GradientText text="Demographics" size={20} />
+            </Text>
+
             <TextInput
                 style={styles.input}
                 value={formData.demographics}
@@ -257,21 +271,15 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 </Picker>
             </View>
 
-            <Text style={styles.label}>Gender *</Text>
-            <View style={styles.radioGroup}>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.gender === 'male' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('gender', 'male')}
-                >
-                    <Text style={styles.radioText}>Male</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.gender === 'female' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('gender', 'female')}
-                >
-                    <Text style={styles.radioText}>Female</Text>
-                </TouchableOpacity>
-            </View>
+            <RadioButtonGroup
+                label="Gender *"
+                options={[
+                    { label: 'Male', value: 'male' },
+                    { label: 'Female', value: 'femaile' },
+                ]}
+                selectedValue={formData.gender}
+                onChange={(value) => handleChange('gender', value)}
+            />
 
             <Text style={styles.label}>Blood Group *</Text>
             <View style={styles.pickerWrapper}>
@@ -438,7 +446,9 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
             </View>
 
             {/* Medical Information */}
-            <Text style={styles.sectionHeader}>Medical Information</Text>
+            <Text style={styles.sectionHeader}>
+                <GradientText text="Medical Information" size={20} />
+            </Text>
 
             <Text style={styles.label}>Height (in cm) *</Text>
             <View style={styles.pickerWrapper}>
@@ -453,7 +463,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 </Picker>
             </View>
 
-            <Text style={styles.label}>Diabetes *</Text>
+            {/* <Text style={styles.label}>Diabetes *</Text>
             <View style={styles.radioGroup}>
                 <TouchableOpacity
                     style={[styles.radioButton, formData.diabetes === 'yes' && styles.radioButtonSelected]}
@@ -499,7 +509,37 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 >
                     <Text style={styles.radioText}>Mixed</Text>
                 </TouchableOpacity>
-            </View>
+            </View> */}
+
+            <RadioButtonGroup
+                label="Do you have Diabetes? *"
+                options={[
+                    { label: 'Yes', value: 'yes' },
+                    { label: 'No', value: 'no' },
+                ]}
+                selectedValue={formData.diabetes}
+                onChange={(value) => handleChange('diabetes', value)}
+            />
+
+            <RadioButtonGroup
+                label="Do you have hypertension? *"
+                options={[
+                    { label: 'Yes', value: 'yes' },
+                    { label: 'No', value: 'no' },
+                ]}
+                selectedValue={formData.hypertension}
+                onChange={(value) => handleChange('hypertension', value)}
+            />
+
+            <RadioButtonGroup
+                label="Diet History*"
+                options={[
+                    { label: 'Vegetarian', value: 'vegetarian' },
+                    { label: 'Mixed', value: 'mixed' },
+                ]}
+                selectedValue={formData.dietHistory}
+                onChange={(value) => handleChange('dietHistory', value)}
+            />
 
             <Text style={styles.label}>Fruits Consumption *</Text>
             <View style={styles.pickerWrapper}>
@@ -625,7 +665,9 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
             </View>
 
             {/* Oral Examination */}
-            <Text style={styles.sectionHeader}>Oral Examination</Text>
+            <Text style={styles.sectionHeader}>
+                <GradientText text="Oral Examination" size={20} />
+            </Text>
 
             <Text style={styles.label}>Oral Cavity Examination</Text>
             <TextInput
@@ -751,15 +793,22 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
             </Text>
 
             <TouchableOpacity
-                style={styles.submitButton}
                 onPress={handleSubmit}
                 disabled={isLoading}
             >
-                {isLoading ? (
-                    <ActivityIndicator color="#fff" />
-                ) : (
-                    <Text style={styles.buttonText}>Update Questionnaire</Text>
-                )}
+                <LinearGradient
+                    colors={['#56235E', '#C1392D']}
+                    locations={[0.2081, 1]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={styles.submitButton}
+                >
+                    {isLoading ? (
+                        <ActivityIndicator color="#fff" />
+                    ) : (
+                        <Text style={styles.buttonText}>Update Questionnaire</Text>
+                    )}
+                </LinearGradient>
             </TouchableOpacity>
         </ScrollView>
     );
@@ -767,21 +816,35 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
         paddingBottom: 40,
-        backgroundColor: '#f5f5f5',
     },
     loadingContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
+    header: {
+        padding: 10,
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
         marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
+        elevation: 5,
+    },
+    title: {
+        fontSize: 22,
+        fontWeight: '700',
+        color: 'white',
         textAlign: 'center',
-        color: '#333',
+        marginBottom: 5,
+    },
+    subtitle: {
+        fontSize: 13,
+        color: 'rgba(255,255,255,0.8)',
+        textAlign: 'center',
     },
     sectionHeader: {
         fontSize: 18,
@@ -818,24 +881,42 @@ const styles = StyleSheet.create({
     },
     radioGroup: {
         flexDirection: 'row',
-        marginBottom: 16,
+        gap: 20,
+        marginBottom: 10
     },
     radioButton: {
-        flex: 1,
-        padding: 12,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 8,
-        marginRight: 8,
+        flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#fff',
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        flex: 1,
     },
     radioButtonSelected: {
-        backgroundColor: '#007bff',
-        borderColor: '#007bff',
+        borderColor: '#56235E',
+        backgroundColor: '#F8E4FF',
+    },
+    radioCircle: {
+        height: 20,
+        width: 20,
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: '#56235E',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 8,
+    },
+    selectedDot: {
+        height: 10,
+        width: 10,
+        borderRadius: 5,
+        backgroundColor: '#56235E',
     },
     radioText: {
         fontSize: 16,
+        color: '#333',
     },
     checkboxGroup: {
         marginBottom: 16,
@@ -856,7 +937,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     submitButton: {
-        backgroundColor: '#28a745',
         padding: 16,
         borderRadius: 8,
         alignItems: 'center',

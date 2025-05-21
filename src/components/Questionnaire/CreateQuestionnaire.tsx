@@ -15,6 +15,9 @@ import { useAuth } from '../../navigation/AuthContext';
 import { useGetUsersQuery } from '../../store/services/user/userApi';
 import { useCreateQuestionnaireMutation } from '../../store/services/questionnaire/questionnaireApi';
 import { ToastMessage } from '../../resuable/Toast';
+import LinearGradient from 'react-native-linear-gradient';
+import GradientText from '../../common/GradientText';
+import RadioButtonGroup from '../../common/RadioButtonGroup';
 
 const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
   const { user } = useAuth();
@@ -165,11 +168,21 @@ const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Patient Questionnaire</Text>
+    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
 
+      <LinearGradient
+        colors={['#56235E', '#C1392D']}
+        style={styles.header}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+      >
+        <Text style={styles.title}>Patient Questionnaire</Text>
+        <Text style={styles.subtitle}>Fill in the patient details below</Text>
+      </LinearGradient>
 
-      <Text style={styles.sectionHeader}>Demographics</Text>
+      <Text style={styles.sectionHeader}>
+        <GradientText text="Demographics" size={20} />
+      </Text>
       <TextInput
         style={styles.input}
         value={formData.demographics}
@@ -197,21 +210,15 @@ const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
         </Picker>
       </View>
 
-      <Text style={styles.label}>Gender *</Text>
-      <View style={styles.radioGroup}>
-        <TouchableOpacity
-          style={[styles.radioButton, formData.gender === 'male' && styles.radioButtonSelected]}
-          onPress={() => handleChange('gender', 'male')}
-        >
-          <Text style={styles.radioText}>Male</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.radioButton, formData.gender === 'female' && styles.radioButtonSelected]}
-          onPress={() => handleChange('gender', 'female')}
-        >
-          <Text style={styles.radioText}>Female</Text>
-        </TouchableOpacity>
-      </View>
+      <RadioButtonGroup
+        label="Gender *"
+        options={[
+          { label: 'Male', value: 'male' },
+          { label: 'Female', value: 'femaile' },
+        ]}
+        selectedValue={formData.gender}
+        onChange={(value) => handleChange('gender', value)}
+      />
 
       <Text style={styles.label}>Blood Group *</Text>
       <View style={styles.pickerWrapper}>
@@ -377,9 +384,11 @@ const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
         </Picker>
       </View>
 
-      {/* Medical Information */}
-      <Text style={styles.sectionHeader}>Medical Information</Text>
 
+      {/* Medical Information */}
+      <Text style={styles.sectionHeader}>
+        <GradientText text="Medical Information" size={20} />
+      </Text>
       <Text style={styles.label}>Height (in cm) *</Text>
       <View style={styles.pickerWrapper}>
         <Picker
@@ -393,53 +402,36 @@ const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
         </Picker>
       </View>
 
-      <Text style={styles.label}>Diabetes *</Text>
-      <View style={styles.radioGroup}>
-        <TouchableOpacity
-          style={[styles.radioButton, formData.diabetes === 'yes' && styles.radioButtonSelected]}
-          onPress={() => handleChange('diabetes', 'yes')}
-        >
-          <Text style={styles.radioText}>Yes</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.radioButton, formData.diabetes === 'no' && styles.radioButtonSelected]}
-          onPress={() => handleChange('diabetes', 'no')}
-        >
-          <Text style={styles.radioText}>No</Text>
-        </TouchableOpacity>
-      </View>
 
-      <Text style={styles.label}>Hypertension *</Text>
-      <View style={styles.radioGroup}>
-        <TouchableOpacity
-          style={[styles.radioButton, formData.hypertension === 'yes' && styles.radioButtonSelected]}
-          onPress={() => handleChange('hypertension', 'yes')}
-        >
-          <Text style={styles.radioText}>Yes</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.radioButton, formData.hypertension === 'no' && styles.radioButtonSelected]}
-          onPress={() => handleChange('hypertension', 'no')}
-        >
-          <Text style={styles.radioText}>No</Text>
-        </TouchableOpacity>
-      </View>
+      <RadioButtonGroup
+        label="Do you have Diabetes? *"
+        options={[
+          { label: 'Yes', value: 'yes' },
+          { label: 'No', value: 'no' },
+        ]}
+        selectedValue={formData.diabetes}
+        onChange={(value) => handleChange('diabetes', value)}
+      />
 
-      <Text style={styles.label}>Diet History *</Text>
-      <View style={styles.radioGroup}>
-        <TouchableOpacity
-          style={[styles.radioButton, formData.dietHistory === 'Vegetarian' && styles.radioButtonSelected]}
-          onPress={() => handleChange('dietHistory', 'Vegetarian')}
-        >
-          <Text style={styles.radioText}>Vegetarian</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.radioButton, formData.dietHistory === 'Mixed' && styles.radioButtonSelected]}
-          onPress={() => handleChange('dietHistory', 'Mixed')}
-        >
-          <Text style={styles.radioText}>Mixed</Text>
-        </TouchableOpacity>
-      </View>
+      <RadioButtonGroup
+        label="Do you have hypertension? *"
+        options={[
+          { label: 'Yes', value: 'yes' },
+          { label: 'No', value: 'no' },
+        ]}
+        selectedValue={formData.hypertension}
+        onChange={(value) => handleChange('hypertension', value)}
+      />
+
+      <RadioButtonGroup
+        label="Diet History*"
+        options={[
+          { label: 'Vegetarian', value: 'vegetarian' },
+          { label: 'Mixed', value: 'mixed' },
+        ]}
+        selectedValue={formData.dietHistory}
+        onChange={(value) => handleChange('dietHistory', value)}
+      />
 
       <Text style={styles.label}>Fruits Consumption *</Text>
       <View style={styles.pickerWrapper}>
@@ -565,8 +557,9 @@ const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
       </View>
 
       {/* Oral Examination */}
-      <Text style={styles.sectionHeader}>Oral Examination</Text>
-
+      <Text style={styles.sectionHeader}>
+        <GradientText text="Oral Examination" size={20} />
+      </Text>
       <Text style={styles.label}>Oral Cavity Examination</Text>
       <TextInput
         style={[styles.input, { height: 80 }]}
@@ -691,15 +684,22 @@ const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
       </Text>
 
       <TouchableOpacity
-        style={styles.submitButton}
         onPress={handleSubmit}
         disabled={isLoading}
       >
-        {isLoading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Submit Questionnaire</Text>
-        )}
+        <LinearGradient
+          colors={['#56235E', '#C1392D']}
+          locations={[0.2081, 1]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.submitButton}
+        >
+          {isLoading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>Submit Questionnaire</Text>
+          )}
+        </LinearGradient>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -707,32 +707,85 @@ const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
     paddingBottom: 40,
-    backgroundColor: '#f5f5f5',
+  },
+  header: {
+    padding: 10,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
+    fontSize: 22,
+    fontWeight: '700',
+    color: 'white',
     textAlign: 'center',
-    color: '#333',
+    marginBottom: 5,
+  },
+  subtitle: {
+    fontSize: 13,
+    color: 'rgba(255,255,255,0.8)',
+    textAlign: 'center',
   },
   sectionHeader: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: 10,
+    marginTop: 10,
+    marginBottom: 20,
     color: '#444',
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: '#56235E',
     paddingBottom: 5,
   },
   label: {
     fontSize: 16,
-    marginBottom: 8,
     fontWeight: '600',
-    color: '#555',
+    marginBottom: 8,
+    color: '#333',
+  },
+  radioGroup: {
+    flexDirection: 'row',
+    gap: 20,
+    marginBottom: 10
+  },
+  radioButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    flex: 1,
+  },
+  radioButtonSelected: {
+    borderColor: '#56235E',
+    backgroundColor: '#F8E4FF',
+  },
+  radioCircle: {
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#56235E',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 8,
+  },
+  selectedDot: {
+    height: 10,
+    width: 10,
+    borderRadius: 5,
+    backgroundColor: '#56235E',
+  },
+  radioText: {
+    fontSize: 16,
+    color: '#333',
   },
   input: {
     borderWidth: 1,
@@ -750,27 +803,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     backgroundColor: '#fff',
     overflow: 'hidden',
-  },
-  radioGroup: {
-    flexDirection: 'row',
-    marginBottom: 16,
-  },
-  radioButton: {
-    flex: 1,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    marginRight: 8,
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  radioButtonSelected: {
-    backgroundColor: '#007bff',
-    borderColor: '#007bff',
-  },
-  radioText: {
-    fontSize: 16,
   },
   checkboxGroup: {
     marginBottom: 16,
@@ -791,7 +823,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   submitButton: {
-    backgroundColor: '#28a745',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
