@@ -12,11 +12,10 @@ const FeaturesScreen = ({ navigation }: { navigation: any }) => {
       <View style={{ marginBottom: 10, alignItems: 'flex-start' }}>
         <GradientText text="Features" size={22} />
       </View>
-       
+
 
       <View style={styles.colRight}>
-         <Features navigation={navigation} />
-         <Features navigation={navigation} />
+        <Features navigation={navigation} />
         <HabitHealthDisease navigation={navigation} />
       </View>
     </View>

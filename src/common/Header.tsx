@@ -21,7 +21,7 @@ export function Header() {
   const [modalVisible, setModalVisible] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
   const [roleModalVisible, setRoleModalVisible] = useState(false);
-  const {  user } = useAuth();
+  const { user } = useAuth();
   const slideAnim = useRef(new Animated.Value(300)).current;
   const languages = [
     { label: 'EN', value: 'en' },
@@ -100,23 +100,25 @@ export function Header() {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
- 
-        <View style={styles.logoContainer}>
-          <Image source={appLogo} style={styles.logo} />
-          <GradientText text="E-DantaSuraksha" size={18} />
-        </View>
+
+        <TouchableOpacity onPress={() => navigation.navigate('Dashboard' as keyof RootStackParamList)}>
+          <View style={styles.logoContainer}>
+            <Image source={appLogo} style={styles.logo} />
+            <GradientText text="E-DantaSuraksha" size={18} />
+          </View>
+        </TouchableOpacity>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
           <TouchableOpacity onPress={() => navigation.navigate('Notification' as keyof RootStackParamList)}>
             <FontAwesome name="bell-o" size={18} color="#56235E" />
           </TouchableOpacity>
 
-  
+
           <TouchableOpacity style={styles.selectBox} onPress={openModal}>
             <GradientText text={selectedLanguage.toUpperCase()} size={16} />
           </TouchableOpacity>
 
-    
+
           <TouchableOpacity onPress={handleProfileClick}>
             <LinearGradient
               colors={['#56235E', '#C1392D']}
@@ -131,7 +133,7 @@ export function Header() {
         </View>
       </View>
 
-    
+
       <Modal transparent visible={modalVisible} onRequestClose={closeModal}>
         <TouchableOpacity
           style={styles.modalOverlay}
@@ -160,7 +162,7 @@ export function Header() {
         </TouchableOpacity>
       </Modal>
 
-  
+
       {roleModalVisible && (
         <TouchableOpacity
           style={styles.ProfileModalBox}
@@ -268,7 +270,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#555',
   },
 
- 
+
   ProfileModalBox: {
     position: 'absolute',
     top: 55,

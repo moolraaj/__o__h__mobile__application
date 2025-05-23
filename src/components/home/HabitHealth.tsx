@@ -43,8 +43,13 @@ export default function HabitHealthList({ navigation }: { navigation: any }) {
   )
 
   return (
+
+   
+
+
+
     <View style={styles.listContainer}>
-     
+    
       <FlatList
         data={records}
         keyExtractor={(r) => r._id}
@@ -57,6 +62,8 @@ export default function HabitHealthList({ navigation }: { navigation: any }) {
         contentContainerStyle={{ padding: 0 }}
         columnWrapperStyle={{ justifyContent: 'space-between', gap: 10 }}
       />
+
+
       <View style={styles.buttonContainer}>
         <LinearGradient
           colors={['#56235E', '#C1392D']}
