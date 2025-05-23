@@ -62,7 +62,7 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
                         try {
                             await deleteQuestionnaire(id).unwrap();
                             refetch();
-                            ToastMessage('success','Questionnaire delete!')
+                            ToastMessage('success', 'Questionnaire delete!')
                         } catch {
                             Alert.alert('Error', 'Failed to delete questionnaire');
                         }
@@ -202,8 +202,8 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
             {isLoading ? <Loader /> : error ? (
                 <Text style={styles.errorText}>Failed to load data</Text>
             ) : (
-                <ScrollView style={{ marginTop: 8 }}>
-                    {data?.data?.map((item, i) => (
+                <ScrollView style={{ marginTop: 8,  }}>
+                    {data?.data?.map((item: QuestionnaireTypes, i: number) => (
                         <View key={item._id || i} style={styles.card}>
                             <View style={[styles.caseRow, styles.caseNumberRow]}>
                                 <Text style={styles.caseText}>Case Number :</Text>
@@ -220,7 +220,7 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
                                         size={14}
                                         colors={['#5E346D', '#C13439']}
                                     />
-                                    <Text style={styles.cardText}>{value || 'N/A'}</Text>
+                                    <Text style={styles.cardText}>{typeof value === 'string' || typeof value === 'number' ? value : 'N/A'}</Text>
                                 </View>
                             ))}
 
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
     },
     searchInput: { flex: 1, color: '#660033' },
-    filterRow: { flexDirection: 'row', marginTop: 20, gap: 12 },
+    filterRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 20, gap: 12 },
     filterBtnAll: { paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8 },
     filterBtnAllText: { color: 'white', fontWeight: 'bold' },
     addBtnGradient: { borderRadius: 22, padding: 1 },

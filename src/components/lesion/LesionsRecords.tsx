@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   searchInput: { flex: 1, color: '#660033' },
-  filterRow: { flexDirection: 'row', marginTop: 20, gap: 12 },
+  filterRow: { flexDirection: 'row', justifyContent: 'space-between',marginTop: 20, gap: 12 },
   filterBtnAll: { paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8 },
   filterBtnAllText: { color: 'white', fontWeight: 'bold' },
   addBtnGradient: { borderRadius: 22, padding: 1 },
@@ -310,7 +310,6 @@ const styles = StyleSheet.create({
   disabledButtonColor: { color: '#fff' },
 
   errorText: { color: 'red', textAlign: 'center' },
-  addBtnInner: { width: 30, height: 30, borderRadius: 22, justifyContent: 'center', alignItems: 'center' },
 
   modalOverlay: {
     flex: 1,

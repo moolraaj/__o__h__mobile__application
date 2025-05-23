@@ -113,6 +113,7 @@ interface CategoryType {
 }
 
 interface Lesion {
+  case_number: string;
   _id: string;
   fullname?: string;
   age?: number;
@@ -148,6 +149,48 @@ interface ConfirmationPageParams {
   id: string;
   redirectUrl?: string;
 }
+
+
+interface CreateUpdateQuestionnaire {
+  demographics: string;
+  name: string;
+  age: number;
+  gender: string;
+  bloodGroup: string;
+  idCardAvailable: string;
+  cardNumber: string;
+  religion: string;
+  religion_input: string;
+  education: string;
+  occupation: string;
+  income: number;
+  phoneNumber: string;
+  address: string;
+  familyHistory: string;
+  firstDegreeRelativeOralCancer: string;
+  height: number;
+  diabetes: string;
+  hypertension: string;
+  dietHistory: string;
+  fruitsConsumption: string;
+  vegetableConsumption: string;
+  habitHistory: string;
+  tobaccoChewer: string;
+  tobaccoType: string;
+  discontinuedHabit: string;
+  durationOfDiscontinuingHabit: string;
+  otherConsumptionHistory: string;
+  alcoholConsumption: string;
+  smoking: string;
+  oralCavityExamination: string;
+  presenceOfLesion: string;
+  reductionInMouthOpening: string;
+  suddenWeightLoss: string;
+  presenceOfSharpTeeth: string;
+  presenceOfDecayedTeeth: string;
+  presenceOfGumDisease: string[];
+  presenceOfFluorosis: string;
+};
 
 interface QuestionnaireTypes {
   _id: string;
@@ -196,7 +239,7 @@ interface QuestionnaireTypes {
   comments_or_notes?: string;
   send_email_to_dantasurakshaks?: boolean;
   createdAt?: any;
-  case_number?:string
+  case_number?: string
 }
 
 interface QuestionnaireResponse {
@@ -466,7 +509,7 @@ interface DentalEmergencyTypes {
 }
 
 
- 
+
 
 
 
