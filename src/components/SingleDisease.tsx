@@ -32,14 +32,7 @@ const SingleDisease = ({ navigation }: { navigation: any }) => {
                             style={styles.mainImage}
                             resizeMode="cover"
                         />
-                        {diseaseData.what_is_disease_repeat?.map((item, index) => (
-                            <View key={index}>
-
-                                
-
-                            </View>
-                        
-                        ))}
+                       
                     </ScrollView>
                 );
             case 'causes':
