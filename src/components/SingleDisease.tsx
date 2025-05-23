@@ -19,53 +19,94 @@ const SingleDisease = ({ navigation }: { navigation: any }) => {
         );
     }
 
+
+
     const diseaseData = data.data;
 
+    console.log(`diseaseData`)
+    console.log(diseaseData)
+
+  
+
+  
     const renderTabContent = () => {
         switch (activeTab) {
             case 'what_is':
                 return (
                     <ScrollView style={styles.tabContent}>
                         <Text style={styles.title}>{diseaseData.what_is_disease_tab_title?.[currentLanguage]}</Text>
-                        <Image 
-                            source={{ uri: diseaseData.disease_main_image }} 
-                            style={styles.mainImage}
-                            resizeMode="cover"
-                        />
-                       
+
+                        {diseaseData.what_is_disease_repeat?.map((item, index) => (
+                            <View key={index} style={styles.section}>
+                            
+                                {item.what_is_disease_repeat_images?.map((imageUrl, index) => (
+                                    <View key={`disease-image-${index}`} style={styles.imageContainer}>
+                                        <Image
+                                            source={{ uri: imageUrl }}
+                                            style={styles.mainImage}
+                                            resizeMode="cover"
+                                            onError={() => console.log('Failed to load image:', imageUrl)}
+                                        />
+                                    </View>
+                                ))}
+                                <Text style={styles.sectionTitle}>{item.what_is_disease_heading?.[currentLanguage]}</Text>
+                                <Text style={styles.description}>
+                                    {item.what_is_disease_disease_repeat_description?.[currentLanguage]}
+                                </Text>
+                                {item.what_is_disease_heading_description_repeater?.map((subItem, subIndex) => (
+                                    <View key={subIndex} style={styles.subSection}>
+                                        <Text style={styles.subSectionTitle}>
+                                            {subItem.what_is_disease_heading_repeat?.[currentLanguage]}
+                                        </Text>
+                                        <Text style={styles.subSectionDescription}>
+                                            {subItem.what_is_disease_description_repeat?.[currentLanguage]}
+                                        </Text>
+                                    </View>
+                                ))}
+
+
+                            </View>
+                        ))}
                     </ScrollView>
                 );
+
+
             case 'causes':
                 return (
                     <ScrollView style={styles.tabContent}>
                         <Text style={styles.title}>{diseaseData.common_cause_tab_title?.[currentLanguage]}</Text>
+
+
                         {diseaseData.common_cause?.map((cause, index) => (
-                            <View key={index} style={styles.section}>
-                                <View style={styles.headerWithIcon}>
+                            <View key={index}  >
+                                <View >
                                     {cause.cause_icon && (
-                                        <Image 
-                                            source={{ uri: cause.cause_icon }} 
+                                        <Image
+                                            source={{ uri: cause.cause_icon }}
                                             style={styles.icon}
                                         />
                                     )}
-                                    <Text style={styles.sectionTitle}>{cause.cause_title?.[currentLanguage]}</Text>
+                                    <Text>{cause.cause_title?.[currentLanguage]}</Text>
+                                    <Text>{cause.cause_para?.[currentLanguage]}</Text>
                                 </View>
-                                <Text style={styles.description}>{cause.cause_para?.[currentLanguage]}</Text>
-                                <Text style={styles.brief}>{cause.cause_brief?.[currentLanguage]}</Text>
+
+
+
+                                <Text style={styles.sectionTitle}>{cause.cause_brief?.[currentLanguage]}</Text>
                                 {cause.cause_repeat?.map((subCause, subIndex) => (
-                                    <View key={subIndex} style={styles.subSection}>
-                                        <View style={styles.headerWithIcon}>
+                                    <View key={subIndex}>
+                                        <View  >
                                             {subCause.cause_repeat_icon && (
-                                                <Image 
-                                                    source={{ uri: subCause.cause_repeat_icon }} 
+                                                <Image
+                                                    source={{ uri: subCause.cause_repeat_icon }}
                                                     style={styles.icon}
                                                 />
                                             )}
-                                            <Text style={styles.subSectionTitle}>
+                                            <Text  >
                                                 {subCause.cause_repeat_title?.[currentLanguage]}
                                             </Text>
                                         </View>
-                                        <Text style={styles.subSectionDescription}>
+                                        <Text >
                                             {subCause.cause_repeat_description?.[currentLanguage]}
                                         </Text>
                                     </View>
@@ -79,32 +120,34 @@ const SingleDisease = ({ navigation }: { navigation: any }) => {
                     <ScrollView style={styles.tabContent}>
                         <Text style={styles.title}>{diseaseData.symptoms_tab_title?.[currentLanguage]}</Text>
                         {diseaseData.symptoms?.map((symptom, index) => (
-                            <View key={index} style={styles.section}>
-                                <View style={styles.headerWithIcon}>
+                            <View key={index} >
+                                <View>
                                     {symptom.symptoms_icon && (
-                                        <Image 
-                                            source={{ uri: symptom.symptoms_icon }} 
+                                        <Image
+                                            source={{ uri: symptom.symptoms_icon }}
                                             style={styles.icon}
                                         />
                                     )}
-                                    <Text style={styles.sectionTitle}>{symptom.symptoms_title?.[currentLanguage]}</Text>
+                                    <Text>{symptom.symptoms_title?.[currentLanguage]}</Text>
+                                    <Text>{symptom.symptoms_para?.[currentLanguage]}</Text>
+
+
+                                    <Text>{symptom.symptoms_brief?.[currentLanguage]}</Text>
                                 </View>
-                                <Text style={styles.description}>{symptom.symptoms_para?.[currentLanguage]}</Text>
-                                <Text style={styles.brief}>{symptom.symptoms_brief?.[currentLanguage]}</Text>
                                 {symptom.symptoms_repeat?.map((subSymptom, subIndex) => (
-                                    <View key={subIndex} style={styles.subSection}>
-                                        <View style={styles.headerWithIcon}>
+                                    <View key={subIndex}  >
+                                        <View  >
                                             {subSymptom.symptoms_repeat_icon && (
-                                                <Image 
-                                                    source={{ uri: subSymptom.symptoms_repeat_icon }} 
+                                                <Image
+                                                    source={{ uri: subSymptom.symptoms_repeat_icon }}
                                                     style={styles.icon}
                                                 />
                                             )}
-                                            <Text style={styles.subSectionTitle}>
+                                            <Text>
                                                 {subSymptom.symptoms_repeat_title?.[currentLanguage]}
                                             </Text>
                                         </View>
-                                        <Text style={styles.subSectionDescription}>
+                                        <Text  >
                                             {subSymptom.symptoms_repeat_description?.[currentLanguage]}
                                         </Text>
                                     </View>
@@ -119,31 +162,33 @@ const SingleDisease = ({ navigation }: { navigation: any }) => {
                         <Text style={styles.title}>{diseaseData.prevention_tips_tab_title?.[currentLanguage]}</Text>
                         {diseaseData.prevention_tips?.map((tip, index) => (
                             <View key={index} style={styles.section}>
-                                <View style={styles.headerWithIcon}>
+                                <View >
                                     {tip.prevention_tips_icon && (
-                                        <Image 
-                                            source={{ uri: tip.prevention_tips_icon }} 
+                                        <Image
+                                            source={{ uri: tip.prevention_tips_icon }}
                                             style={styles.icon}
                                         />
                                     )}
-                                    <Text style={styles.sectionTitle}>{tip.prevention_tips_title?.[currentLanguage]}</Text>
+                                    <Text  >{tip.prevention_tips_title?.[currentLanguage]}</Text>
+                                    <Text style={styles.description}>{tip.prevention_tips_para?.[currentLanguage]}</Text>
                                 </View>
-                                <Text style={styles.description}>{tip.prevention_tips_para?.[currentLanguage]}</Text>
+
+
                                 <Text style={styles.brief}>{tip.prevention_tips_brief?.[currentLanguage]}</Text>
                                 {tip.prevention_tips_repeat?.map((subTip, subIndex) => (
-                                    <View key={subIndex} style={styles.subSection}>
-                                        <View style={styles.headerWithIcon}>
+                                    <View key={subIndex}>
+                                        <View>
                                             {subTip.prevention_tips_repeat_icon && (
-                                                <Image 
-                                                    source={{ uri: subTip.prevention_tips_repeat_icon }} 
+                                                <Image
+                                                    source={{ uri: subTip.prevention_tips_repeat_icon }}
                                                     style={styles.icon}
                                                 />
                                             )}
-                                            <Text style={styles.subSectionTitle}>
+                                            <Text>
                                                 {subTip.prevention_tips_repeat_title?.[currentLanguage]}
                                             </Text>
                                         </View>
-                                        <Text style={styles.subSectionDescription}>
+                                        <Text>
                                             {subTip.prevention_tips_repeat_description?.[currentLanguage]}
                                         </Text>
                                     </View>
@@ -157,32 +202,34 @@ const SingleDisease = ({ navigation }: { navigation: any }) => {
                     <ScrollView style={styles.tabContent}>
                         <Text style={styles.title}>{diseaseData.treatment_option_tab_title?.[currentLanguage]}</Text>
                         {diseaseData.treatment_option?.map((option, index) => (
-                            <View key={index} style={styles.section}>
-                                <View style={styles.headerWithIcon}>
+                            <View key={index}  >
+                                <View >
                                     {option.treatment_option_icon && (
-                                        <Image 
-                                            source={{ uri: option.treatment_option_icon }} 
+                                        <Image
+                                            source={{ uri: option.treatment_option_icon }}
                                             style={styles.icon}
                                         />
                                     )}
-                                    <Text style={styles.sectionTitle}>{option.treatment_option_title?.[currentLanguage]}</Text>
+                                    <Text>{option.treatment_option_title?.[currentLanguage]}</Text>
+                                    <Text>{option.treatment_option_para?.[currentLanguage]}</Text>
                                 </View>
-                                <Text style={styles.description}>{option.treatment_option_para?.[currentLanguage]}</Text>
+
+
                                 <Text style={styles.brief}>{option.treatment_option_brief?.[currentLanguage]}</Text>
                                 {option.treatment_option_repeat?.map((subOption, subIndex) => (
-                                    <View key={subIndex} style={styles.subSection}>
-                                        <View style={styles.headerWithIcon}>
+                                    <View key={subIndex}>
+                                        <View>
                                             {subOption.treatment_option_repeat_icon && (
-                                                <Image 
-                                                    source={{ uri: subOption.treatment_option_repeat_icon }} 
+                                                <Image
+                                                    source={{ uri: subOption.treatment_option_repeat_icon }}
                                                     style={styles.icon}
                                                 />
                                             )}
-                                            <Text style={styles.subSectionTitle}>
+                                            <Text>
                                                 {subOption.treatment_option_repeat_title?.[currentLanguage]}
                                             </Text>
                                         </View>
-                                        <Text style={styles.subSectionDescription}>
+                                        <Text>
                                             {subOption.treatment_option_repeat_description?.[currentLanguage]}
                                         </Text>
                                     </View>
@@ -206,16 +253,17 @@ const SingleDisease = ({ navigation }: { navigation: any }) => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Image 
-                    source={{ uri: diseaseData.disease_icon }} 
+            <View>
+                <Image
+                    source={{ uri: diseaseData.disease_icon }}
                     style={styles.diseaseIcon}
                 />
-                <Text style={styles.diseaseTitle}>{diseaseData.disease_title?.[currentLanguage]}</Text>
+                <Text>{diseaseData.disease_title?.[currentLanguage]}</Text>
+                <Text>{diseaseData.disease_description?.[currentLanguage]}</Text>
             </View>
-            
-            <ScrollView 
-                horizontal 
+
+            <ScrollView
+                horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.tabBarContainer}
             >
@@ -244,6 +292,14 @@ const SingleDisease = ({ navigation }: { navigation: any }) => {
 };
 
 const styles = StyleSheet.create({
+    imageContainer: {
+        marginBottom: 15,
+    },
+    mainImage: {
+        width: '100%',
+        height: 200,
+        borderRadius: 8,
+    },
     container: {
         flex: 1,
         backgroundColor: '#fff',
