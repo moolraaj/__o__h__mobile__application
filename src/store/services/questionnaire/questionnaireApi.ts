@@ -52,6 +52,14 @@ export const questionnaireApi = apiSlice.injectEndpoints({
       query: (id) => `/api/questionnaire/admin/${id}`,
       providesTags: ['Questionnaire'],
     }),
+    sendQuestionnaireFeedback: builder.mutation<any, { id: string; formData: FormData }>({
+      query: ({ id, formData }) => ({
+        url: `/api/questionnaire/${id}/feedback`,
+        method: 'PUT',
+        body: formData,
+      }),
+      invalidatesTags: ['Questionnaire'],
+    }),
   }),
 });
 
@@ -64,4 +72,5 @@ export const {
   useUpdateQuestionnaireMutation,
   useFetchAdminAllQuestionnairesQuery,
   useGetAdminQuestionnaireByIdQuery,
+  useSendQuestionnaireFeedbackMutation
 } = questionnaireApi;

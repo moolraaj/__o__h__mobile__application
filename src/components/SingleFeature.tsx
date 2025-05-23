@@ -17,6 +17,8 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
 
     const { data, isLoading, error } = useGetSingleFeatureCategoryQuery({ id, lang: currentLanguage })
 
+  
+
 
     if (isLoading) {
         return (
@@ -37,10 +39,7 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
 
         )
     }
-
-
     const result = data?.data
-
     return (
 
         <>

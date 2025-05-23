@@ -10,29 +10,39 @@ import {
 } from 'react-native';
 import React, { useState } from 'react';
 import { Layout } from '../../common/Layout';
- 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
 import Loader from '../../common/Loader';
 import { useFetchAdminAllQuestionnairesQuery } from '../../store/services/questionnaire/questionnaireApi';
+import FeedbackModal from './QuestionnaireFeedbackScreen';
  
 
 export default function QuestionReceivedList() {
-    
     const { data, isLoading, error } = useFetchAdminAllQuestionnairesQuery({ page: 1 });
     
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedLesion, setSelectedLesion] = useState<QuestionnaireTypes | null>(null);
+    const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
+    const [selectedQuestionnaire, setSelectedQuestionnaire] = useState<QuestionnaireTypes | null>(null);
 
     const openModal = (item: QuestionnaireTypes) => {
-        setSelectedLesion(item);
+        setSelectedQuestionnaire(item);
         setModalVisible(true);
+    };
+
+    const openFeedbackModal = (item: QuestionnaireTypes) => {
+        setSelectedQuestionnaire(item);
+        setFeedbackModalVisible(true);
     };
 
     const closeModal = () => {
         setModalVisible(false);
-        setSelectedLesion(null);
+        setSelectedQuestionnaire(null);
+    };
+
+    const closeFeedbackModal = () => {
+        setFeedbackModalVisible(false);
+        setSelectedQuestionnaire(null);
     };
 
     const renderModal = () => (
@@ -40,45 +50,45 @@ export default function QuestionReceivedList() {
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContainer}>
                     <Text style={styles.modalTitle}>Questionnaire Details</Text>
-                    {selectedLesion && (
+                    {selectedQuestionnaire && (
                         <ScrollView style={styles.modalScroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
                             {[
-                                ['Name', selectedLesion.name],
-                                ['Age', selectedLesion.age?.toString()],
-                                ['Gender', selectedLesion.gender],
-                                ['Card Number', selectedLesion.cardNumber?.toString()],
-                                ['Phone Number', selectedLesion.phoneNumber?.toString()],
-                                ['Address', selectedLesion.address],
-                                ['Blood Group', selectedLesion.bloodGroup],
-                                ['ID Card Available', selectedLesion.idCardAvailable],
-                                ['Religion', selectedLesion.religion],
-                                ['Education', selectedLesion.education],
-                                ['Occupation', selectedLesion.occupation],
-                                ['Income', selectedLesion.income?.toString()],
-                                ['Family History', selectedLesion.familyHistory],
-                                ['First-degree Relative with Oral Cancer', selectedLesion.firstDegreeRelativeOralCancer],
-                                ['Height', selectedLesion.height?.toString()],
-                                ['Diabetes', selectedLesion.diabetes ? 'Yes' : 'No'],
-                                ['Hypertension', selectedLesion.hypertension ? 'Yes' : 'No'],
-                                ['Diet History', selectedLesion.dietHistory],
-                                ['Fruits Consumption', selectedLesion.fruitsConsumption],
-                                ['Vegetable Consumption', selectedLesion.vegetableConsumption],
-                                ['Habit History', selectedLesion.habitHistory],
-                                ['Tobacco Chewer', selectedLesion.tobaccoChewer ? 'Yes' : 'No'],
-                                ['Tobacco Type', selectedLesion.tobaccoType],
-                                ['Discontinued Habit', selectedLesion.discontinuedHabit ? 'Yes' : 'No'],
-                                ['Duration of Discontinuing Habit', selectedLesion.durationOfDiscontinuingHabit],
-                                ['Other Consumption History', selectedLesion.otherConsumptionHistory],
-                                ['Alcohol Consumption', selectedLesion.alcoholConsumption ? 'Yes' : 'No'],
-                                ['Smoking', selectedLesion.smoking ? 'Yes' : 'No'],
-                                ['Oral Cavity Examination', selectedLesion.oralCavityExamination],
-                                ['Presence of Lesion', selectedLesion.presenceOfLesion ? 'Yes' : 'No'],
-                                ['Reduction in Mouth Opening', selectedLesion.reductionInMouthOpening ? 'Yes' : 'No'],
-                                ['Sudden Weight Loss', selectedLesion.suddenWeightLoss ? 'Yes' : 'No'],
-                                ['Presence of Sharp Teeth', selectedLesion.presenceOfSharpTeeth ? 'Yes' : 'No'],
-                                ['Presence of Decayed Teeth', selectedLesion.presenceOfDecayedTeeth ? 'Yes' : 'No'],
-                                ['Presence of Fluorosis', selectedLesion.presenceOfFluorosis ? 'Yes' : 'No'],
-                                ['Presence of Gum Disease', selectedLesion.presenceOfGumDisease?.join(', ')],
+                                ['Name', selectedQuestionnaire.name],
+                                ['Age', selectedQuestionnaire.age?.toString()],
+                                ['Gender', selectedQuestionnaire.gender],
+                                ['Card Number', selectedQuestionnaire.cardNumber?.toString()],
+                                ['Phone Number', selectedQuestionnaire.phoneNumber?.toString()],
+                                ['Address', selectedQuestionnaire.address],
+                                ['Blood Group', selectedQuestionnaire.bloodGroup],
+                                ['ID Card Available', selectedQuestionnaire.idCardAvailable],
+                                ['Religion', selectedQuestionnaire.religion],
+                                ['Education', selectedQuestionnaire.education],
+                                ['Occupation', selectedQuestionnaire.occupation],
+                                ['Income', selectedQuestionnaire.income?.toString()],
+                                ['Family History', selectedQuestionnaire.familyHistory],
+                                ['First-degree Relative with Oral Cancer', selectedQuestionnaire.firstDegreeRelativeOralCancer],
+                                ['Height', selectedQuestionnaire.height?.toString()],
+                                ['Diabetes', selectedQuestionnaire.diabetes ? 'Yes' : 'No'],
+                                ['Hypertension', selectedQuestionnaire.hypertension ? 'Yes' : 'No'],
+                                ['Diet History', selectedQuestionnaire.dietHistory],
+                                ['Fruits Consumption', selectedQuestionnaire.fruitsConsumption],
+                                ['Vegetable Consumption', selectedQuestionnaire.vegetableConsumption],
+                                ['Habit History', selectedQuestionnaire.habitHistory],
+                                ['Tobacco Chewer', selectedQuestionnaire.tobaccoChewer ? 'Yes' : 'No'],
+                                ['Tobacco Type', selectedQuestionnaire.tobaccoType],
+                                ['Discontinued Habit', selectedQuestionnaire.discontinuedHabit ? 'Yes' : 'No'],
+                                ['Duration of Discontinuing Habit', selectedQuestionnaire.durationOfDiscontinuingHabit],
+                                ['Other Consumption History', selectedQuestionnaire.otherConsumptionHistory],
+                                ['Alcohol Consumption', selectedQuestionnaire.alcoholConsumption ? 'Yes' : 'No'],
+                                ['Smoking', selectedQuestionnaire.smoking ? 'Yes' : 'No'],
+                                ['Oral Cavity Examination', selectedQuestionnaire.oralCavityExamination],
+                                ['Presence of Lesion', selectedQuestionnaire.presenceOfLesion ? 'Yes' : 'No'],
+                                ['Reduction in Mouth Opening', selectedQuestionnaire.reductionInMouthOpening ? 'Yes' : 'No'],
+                                ['Sudden Weight Loss', selectedQuestionnaire.suddenWeightLoss ? 'Yes' : 'No'],
+                                ['Presence of Sharp Teeth', selectedQuestionnaire.presenceOfSharpTeeth ? 'Yes' : 'No'],
+                                ['Presence of Decayed Teeth', selectedQuestionnaire.presenceOfDecayedTeeth ? 'Yes' : 'No'],
+                                ['Presence of Fluorosis', selectedQuestionnaire.presenceOfFluorosis ? 'Yes' : 'No'],
+                                ['Presence of Gum Disease', selectedQuestionnaire.presenceOfGumDisease?.join(', ')],
                             ].map(([label, value], idx) => (
                                 <View key={idx} style={styles.modelTextRow}>
                                     <GradientText
@@ -98,11 +108,12 @@ export default function QuestionReceivedList() {
             </View>
         </Modal>
     );
+
     return (
         <Layout>
             <View style={{ alignItems: 'flex-start', marginBottom: 15 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center', gap: 10 }}>
-                    <GradientText text="Questionnaries Received" size={18} />
+                    <GradientText text="Questionnaires Received" size={18} />
                     <View style={{
                         backgroundColor: '#FFD6D6',
                         paddingVertical: 4,
@@ -127,7 +138,6 @@ export default function QuestionReceivedList() {
                     <LinearGradient colors={['#56235E', '#C1392D']} style={styles.filterBtnAll}>
                         <Text style={styles.filterBtnAllText}>All</Text>
                     </LinearGradient>
-                  
                 </View>
             </View>
 
@@ -155,18 +165,48 @@ export default function QuestionReceivedList() {
                                     <Text style={styles.cardText}>{value || 'N/A'}</Text>
                                 </View>
                             ))}
-                            <TouchableOpacity style={[styles.caseRow, styles.caseActionRow]} onPress={() => openModal(item)}>
-                                <Text style={styles.actionText}>Action</Text>
-                                <Ionicons name="eye" size={18} color="#660033" style={styles.icon} />
-                            </TouchableOpacity>
+                            <View style={[styles.caseRow, styles.caseActionRow]}>
+                                <TouchableOpacity 
+                                    style={styles.actionButton} 
+                                    onPress={() => openModal(item)}
+                                >
+                                    <Text style={styles.actionText}>View</Text>
+                                    <Ionicons name="eye" size={18} color="#660033" style={styles.icon} />
+                                </TouchableOpacity>
+                                
+                                <TouchableOpacity 
+                                    style={[
+                                        styles.feedbackButton, 
+                                        item.send_email_to_dantasurakshaks && styles.disabledButton
+                                    ]} 
+                                    onPress={() => openFeedbackModal(item)}
+                                    disabled={item.send_email_to_dantasurakshaks}
+                                >
+                                    <Text style={styles.feedbackButtonText}>
+                                        {item.send_email_to_dantasurakshaks ? 'Feedback Sent' : 'Feedback'}
+                                    </Text>
+                                    <Ionicons 
+                                        name={item.send_email_to_dantasurakshaks ? "checkmark" : "mail"} 
+                                        size={18} 
+                                        color="#fff" 
+                                        style={styles.icon} 
+                                    />
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     ))}
                 </ScrollView>
             )}
             {renderModal()}
+            <FeedbackModal
+                visible={feedbackModalVisible}
+                onClose={closeFeedbackModal}
+                questionnaire={selectedQuestionnaire}
+            />
         </Layout>
     );
 }
+
 const styles = StyleSheet.create({
     searchContainer: {
         flex: 1
@@ -260,9 +300,31 @@ const styles = StyleSheet.create({
         textTransform: 'capitalize',
         paddingHorizontal: 10
     },
+    actionButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 6,
+    },
     actionText: {
         color: '#660033',
         fontWeight: 'bold'
+    },
+    feedbackButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 6,
+        backgroundColor: '#660033',
+    },
+    feedbackButtonText: {
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    disabledButton: {
+        backgroundColor: '#4CAF50',
     },
     icon: {
         marginLeft: 8

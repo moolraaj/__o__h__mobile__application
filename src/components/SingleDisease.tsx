@@ -1,0 +1,364 @@
+import React, { useState } from 'react';
+import { View, Text, ScrollView, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import { useGetSingleDiseasesQuery } from '../store/services/disease/diseaseApi';
+import { useTranslation } from 'react-i18next';
+
+const SingleDisease = ({ navigation }: { navigation: any }) => {
+    const { id } = useRoute().params as { id: string };
+    const { i18n } = useTranslation();
+    const currentLanguage = i18n.language;
+    const { data } = useGetSingleDiseasesQuery({ id, lang: currentLanguage });
+    const [activeTab, setActiveTab] = useState('what_is');
+
+    if (!data?.data) {
+        return (
+            <View style={styles.container}>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
+
+    const diseaseData = data.data;
+
+    const renderTabContent = () => {
+        switch (activeTab) {
+            case 'what_is':
+                return (
+                    <ScrollView style={styles.tabContent}>
+                        <Text style={styles.title}>{diseaseData.what_is_disease_tab_title?.[currentLanguage]}</Text>
+                        <Image 
+                            source={{ uri: diseaseData.disease_main_image }} 
+                            style={styles.mainImage}
+                            resizeMode="cover"
+                        />
+                        {diseaseData.what_is_disease_repeat?.map((item, index) => (
+                            <View key={index}>
+
+                                
+
+                            </View>
+                        
+                        ))}
+                    </ScrollView>
+                );
+            case 'causes':
+                return (
+                    <ScrollView style={styles.tabContent}>
+                        <Text style={styles.title}>{diseaseData.common_cause_tab_title?.[currentLanguage]}</Text>
+                        {diseaseData.common_cause?.map((cause, index) => (
+                            <View key={index} style={styles.section}>
+                                <View style={styles.headerWithIcon}>
+                                    {cause.cause_icon && (
+                                        <Image 
+                                            source={{ uri: cause.cause_icon }} 
+                                            style={styles.icon}
+                                        />
+                                    )}
+                                    <Text style={styles.sectionTitle}>{cause.cause_title?.[currentLanguage]}</Text>
+                                </View>
+                                <Text style={styles.description}>{cause.cause_para?.[currentLanguage]}</Text>
+                                <Text style={styles.brief}>{cause.cause_brief?.[currentLanguage]}</Text>
+                                {cause.cause_repeat?.map((subCause, subIndex) => (
+                                    <View key={subIndex} style={styles.subSection}>
+                                        <View style={styles.headerWithIcon}>
+                                            {subCause.cause_repeat_icon && (
+                                                <Image 
+                                                    source={{ uri: subCause.cause_repeat_icon }} 
+                                                    style={styles.icon}
+                                                />
+                                            )}
+                                            <Text style={styles.subSectionTitle}>
+                                                {subCause.cause_repeat_title?.[currentLanguage]}
+                                            </Text>
+                                        </View>
+                                        <Text style={styles.subSectionDescription}>
+                                            {subCause.cause_repeat_description?.[currentLanguage]}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                        ))}
+                    </ScrollView>
+                );
+            case 'symptoms':
+                return (
+                    <ScrollView style={styles.tabContent}>
+                        <Text style={styles.title}>{diseaseData.symptoms_tab_title?.[currentLanguage]}</Text>
+                        {diseaseData.symptoms?.map((symptom, index) => (
+                            <View key={index} style={styles.section}>
+                                <View style={styles.headerWithIcon}>
+                                    {symptom.symptoms_icon && (
+                                        <Image 
+                                            source={{ uri: symptom.symptoms_icon }} 
+                                            style={styles.icon}
+                                        />
+                                    )}
+                                    <Text style={styles.sectionTitle}>{symptom.symptoms_title?.[currentLanguage]}</Text>
+                                </View>
+                                <Text style={styles.description}>{symptom.symptoms_para?.[currentLanguage]}</Text>
+                                <Text style={styles.brief}>{symptom.symptoms_brief?.[currentLanguage]}</Text>
+                                {symptom.symptoms_repeat?.map((subSymptom, subIndex) => (
+                                    <View key={subIndex} style={styles.subSection}>
+                                        <View style={styles.headerWithIcon}>
+                                            {subSymptom.symptoms_repeat_icon && (
+                                                <Image 
+                                                    source={{ uri: subSymptom.symptoms_repeat_icon }} 
+                                                    style={styles.icon}
+                                                />
+                                            )}
+                                            <Text style={styles.subSectionTitle}>
+                                                {subSymptom.symptoms_repeat_title?.[currentLanguage]}
+                                            </Text>
+                                        </View>
+                                        <Text style={styles.subSectionDescription}>
+                                            {subSymptom.symptoms_repeat_description?.[currentLanguage]}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                        ))}
+                    </ScrollView>
+                );
+            case 'prevention':
+                return (
+                    <ScrollView style={styles.tabContent}>
+                        <Text style={styles.title}>{diseaseData.prevention_tips_tab_title?.[currentLanguage]}</Text>
+                        {diseaseData.prevention_tips?.map((tip, index) => (
+                            <View key={index} style={styles.section}>
+                                <View style={styles.headerWithIcon}>
+                                    {tip.prevention_tips_icon && (
+                                        <Image 
+                                            source={{ uri: tip.prevention_tips_icon }} 
+                                            style={styles.icon}
+                                        />
+                                    )}
+                                    <Text style={styles.sectionTitle}>{tip.prevention_tips_title?.[currentLanguage]}</Text>
+                                </View>
+                                <Text style={styles.description}>{tip.prevention_tips_para?.[currentLanguage]}</Text>
+                                <Text style={styles.brief}>{tip.prevention_tips_brief?.[currentLanguage]}</Text>
+                                {tip.prevention_tips_repeat?.map((subTip, subIndex) => (
+                                    <View key={subIndex} style={styles.subSection}>
+                                        <View style={styles.headerWithIcon}>
+                                            {subTip.prevention_tips_repeat_icon && (
+                                                <Image 
+                                                    source={{ uri: subTip.prevention_tips_repeat_icon }} 
+                                                    style={styles.icon}
+                                                />
+                                            )}
+                                            <Text style={styles.subSectionTitle}>
+                                                {subTip.prevention_tips_repeat_title?.[currentLanguage]}
+                                            </Text>
+                                        </View>
+                                        <Text style={styles.subSectionDescription}>
+                                            {subTip.prevention_tips_repeat_description?.[currentLanguage]}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                        ))}
+                    </ScrollView>
+                );
+            case 'treatment':
+                return (
+                    <ScrollView style={styles.tabContent}>
+                        <Text style={styles.title}>{diseaseData.treatment_option_tab_title?.[currentLanguage]}</Text>
+                        {diseaseData.treatment_option?.map((option, index) => (
+                            <View key={index} style={styles.section}>
+                                <View style={styles.headerWithIcon}>
+                                    {option.treatment_option_icon && (
+                                        <Image 
+                                            source={{ uri: option.treatment_option_icon }} 
+                                            style={styles.icon}
+                                        />
+                                    )}
+                                    <Text style={styles.sectionTitle}>{option.treatment_option_title?.[currentLanguage]}</Text>
+                                </View>
+                                <Text style={styles.description}>{option.treatment_option_para?.[currentLanguage]}</Text>
+                                <Text style={styles.brief}>{option.treatment_option_brief?.[currentLanguage]}</Text>
+                                {option.treatment_option_repeat?.map((subOption, subIndex) => (
+                                    <View key={subIndex} style={styles.subSection}>
+                                        <View style={styles.headerWithIcon}>
+                                            {subOption.treatment_option_repeat_icon && (
+                                                <Image 
+                                                    source={{ uri: subOption.treatment_option_repeat_icon }} 
+                                                    style={styles.icon}
+                                                />
+                                            )}
+                                            <Text style={styles.subSectionTitle}>
+                                                {subOption.treatment_option_repeat_title?.[currentLanguage]}
+                                            </Text>
+                                        </View>
+                                        <Text style={styles.subSectionDescription}>
+                                            {subOption.treatment_option_repeat_description?.[currentLanguage]}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                        ))}
+                    </ScrollView>
+                );
+            default:
+                return null;
+        }
+    };
+
+    const tabs = [
+        { id: 'what_is', title: diseaseData.what_is_disease_tab_title?.[currentLanguage] },
+        { id: 'causes', title: diseaseData.common_cause_tab_title?.[currentLanguage] },
+        { id: 'symptoms', title: diseaseData.symptoms_tab_title?.[currentLanguage] },
+        { id: 'prevention', title: diseaseData.prevention_tips_tab_title?.[currentLanguage] },
+        { id: 'treatment', title: diseaseData.treatment_option_tab_title?.[currentLanguage] },
+    ];
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <Image 
+                    source={{ uri: diseaseData.disease_icon }} 
+                    style={styles.diseaseIcon}
+                />
+                <Text style={styles.diseaseTitle}>{diseaseData.disease_title?.[currentLanguage]}</Text>
+            </View>
+            
+            <ScrollView 
+                horizontal 
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.tabBarContainer}
+            >
+                {tabs.map((tab) => (
+                    <TouchableOpacity
+                        key={tab.id}
+                        style={[
+                            styles.tabButton,
+                            activeTab === tab.id && styles.activeTabButton
+                        ]}
+                        onPress={() => setActiveTab(tab.id)}
+                    >
+                        <Text style={[
+                            styles.tabButtonText,
+                            activeTab === tab.id && styles.activeTabButtonText
+                        ]}>
+                            {tab.title}
+                        </Text>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
+
+            {renderTabContent()}
+        </View>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 15,
+        backgroundColor: '#f5f5f5',
+    },
+    diseaseIcon: {
+        width: 40,
+        height: 40,
+        marginRight: 15,
+    },
+    diseaseTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    tabBarContainer: {
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        backgroundColor: '#f8f8f8',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e0e0e0',
+    },
+    tabButton: {
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        marginHorizontal: 4,
+        borderRadius: 20,
+    },
+    activeTabButton: {
+        backgroundColor: '#1e88e5',
+    },
+    tabButtonText: {
+        fontSize: 14,
+        color: '#666',
+    },
+    activeTabButtonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+    tabContent: {
+        flex: 1,
+        padding: 15,
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 15,
+        color: '#333',
+    },
+    mainImage: {
+        width: '100%',
+        height: 200,
+        borderRadius: 8,
+        marginBottom: 15,
+    },
+    section: {
+        marginBottom: 20,
+    },
+    sectionTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 8,
+        color: '#444',
+    },
+    description: {
+        fontSize: 14,
+        lineHeight: 20,
+        marginBottom: 10,
+        color: '#666',
+    },
+    brief: {
+        fontSize: 13,
+        fontStyle: 'italic',
+        marginBottom: 10,
+        color: '#666',
+    },
+    subSection: {
+        marginLeft: 10,
+        marginBottom: 15,
+        paddingLeft: 10,
+        borderLeftWidth: 2,
+        borderLeftColor: '#ddd',
+    },
+    subSectionTitle: {
+        fontSize: 15,
+        fontWeight: '600',
+        marginBottom: 5,
+        color: '#444',
+    },
+    subSectionDescription: {
+        fontSize: 13,
+        lineHeight: 18,
+        color: '#666',
+    },
+    headerWithIcon: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 8,
+    },
+    icon: {
+        width: 24,
+        height: 24,
+        marginRight: 8,
+    },
+});
+
+export default SingleDisease;

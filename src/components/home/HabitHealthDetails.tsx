@@ -64,7 +64,7 @@ export default function HabitHealthDetails() {
                 </View>
             </View>
 
-            {/* Habits suggestions */}
+           
             <View style={styles.card}>
                 <View style={styles.cardHeader}>
                     {renderMaskedText(<Icon name="emoji-events" size={24} color="#4CAF50" />, ['#56235E', '#C1392D'])}
@@ -78,7 +78,7 @@ export default function HabitHealthDetails() {
                 ))}
             </View>
 
-            {/* Bad Habits */}
+       
             <View style={styles.card}>
                 <View style={styles.cardHeader}>
                     {renderMaskedText(<Icon name="highlight-off" size={24} color="#FF5722" />, ['#1E90FF', '#FF69B4'])}
@@ -100,7 +100,7 @@ export default function HabitHealthDetails() {
                 ))}
             </View>
 
-            {/* Tips to Improve */}
+            
             <View style={styles.card}>
                 <View style={styles.cardHeader}>
                     {renderMaskedText(<Icon name="lightbulb" size={24} color="#FFC107" />, ['#4CAF50', '#8E24AA'])}

@@ -18,7 +18,7 @@ const SingleDisease = ({ disease, currentLanguage, navigation }: any) => {
                         <TouchableOpacity
 
                             onPress={() =>
-                                navigation.navigate('DiseaseScreen', { id: item._id })
+                                navigation.navigate('SingleDisease', { id: item._id })
                             }
                         >
                             <Text  >go to details page</Text>

@@ -44,9 +44,7 @@ export default function HabitHealthList({ navigation }: { navigation: any }) {
 
   return (
     <View style={styles.listContainer}>
-      <View style={{ marginBottom: 10, alignItems: 'flex-start' }}>
-        <GradientText text="Features" size={22} />
-      </View>
+     
       <FlatList
         data={records}
         keyExtractor={(r) => r._id}

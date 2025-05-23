@@ -45,13 +45,13 @@ const SettingScreen = () => {
   return (
     <Layout>
       <ScrollView style={styles.container}>
-        {/* Title */}
+  
         <View style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
           <Text style={styles.title}>Settings</Text>
           <Feather name='settings' size={20} color="#56235E" />
         </View>
 
-        {/* Account Section */}
+    
         <Text style={styles.sectionTitle}>Account</Text>
         <LinearGradient
           colors={['#F8E4FF', '#FFD7D8']}
@@ -66,7 +66,7 @@ const SettingScreen = () => {
           <SettingOption icon="lock-closed-outline" label="Change Password" />
         </LinearGradient>
 
-        {/* Language & Accessibility */}
+ 
         <Text style={styles.sectionTitle}>Language & Accessibility</Text>
         <View style={styles.languageContainer}>
           <Text style={styles.languageLabel}>Language Selection</Text>
@@ -82,7 +82,7 @@ const SettingScreen = () => {
           </View>
         </View>
 
-        {/* Support & Feedback */}
+      
         <Text style={styles.sectionTitle}>Support & Feedback</Text>
         <LinearGradient
           colors={['#F8E4FF', '#FFD7D8']}
@@ -95,7 +95,7 @@ const SettingScreen = () => {
           <SettingOption icon="document-text-outline" label="Terms And Policies" />
         </LinearGradient>
 
-        {/* Logout */}
+    
         <Text style={styles.sectionTitle}>Logout</Text>
         <LinearGradient
           colors={['#F8E4FF', '#FFD7D8']}
@@ -114,7 +114,7 @@ const SettingScreen = () => {
   );
 };
 
-// Reusable Setting Option
+ 
 const SettingOption: React.FC<{ icon: string; label: string }> = ({ icon, label }) => (
   <TouchableOpacity style={styles.sectionBtn}>
     <Ionicons name={icon} size={22} color="#56235E" />
