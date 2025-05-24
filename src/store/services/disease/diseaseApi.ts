@@ -1,16 +1,16 @@
 import { apiSlice } from "../apiSlice";
- 
- 
+
+
 export const diseaseApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getDiseases: builder.query({
-      query: ({ page = 1, limit = 10,  lang }) => ({
+      query: ({ page = 1, limit = 10, lang }) => ({
         url: '/api/diseases',
-        params: { page, limit,   ...(lang && { lang }) },
+        params: { page, limit, ...(lang && { lang }) },
       }),
       providesTags: ['Disease'],
     }),
-    getSingleDiseases: builder.query<DiseaseTypes, { id: string; lang?: string }>({
+    getSingleDiseases: builder.query<{ data: DiseaseTypes }, { id: string; lang?: string }>({
       query: ({ id, lang }) => ({
         url: `/api/disease/${id}`,
         params: lang ? { lang } : {},
@@ -43,4 +43,4 @@ export const diseaseApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const {useGetDiseasesQuery,useGetSingleDiseasesQuery,useDeleteDiseaseMutation,useCreateDiseaseMutation,useUpdateDiseasesMutation} = diseaseApi;
+export const { useGetDiseasesQuery, useGetSingleDiseasesQuery, useDeleteDiseaseMutation, useCreateDiseaseMutation, useUpdateDiseasesMutation } = diseaseApi;

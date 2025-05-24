@@ -16,11 +16,11 @@ import GradientText from '../../common/GradientText';
 import Loader from '../../common/Loader';
 import { useFetchAdminAllQuestionnairesQuery } from '../../store/services/questionnaire/questionnaireApi';
 import FeedbackModal from './QuestionnaireFeedbackScreen';
- 
+
 
 export default function QuestionReceivedList() {
     const { data, isLoading, error } = useFetchAdminAllQuestionnairesQuery({ page: 1 });
-    
+
     const [modalVisible, setModalVisible] = useState(false);
     const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
     const [selectedQuestionnaire, setSelectedQuestionnaire] = useState<QuestionnaireTypes | null>(null);
@@ -166,30 +166,30 @@ export default function QuestionReceivedList() {
                                 </View>
                             ))}
                             <View style={[styles.caseRow, styles.caseActionRow]}>
-                                <TouchableOpacity 
-                                    style={styles.actionButton} 
+                                <TouchableOpacity
+                                    style={styles.actionButton}
                                     onPress={() => openModal(item)}
                                 >
                                     <Text style={styles.actionText}>View</Text>
                                     <Ionicons name="eye" size={18} color="#660033" style={styles.icon} />
                                 </TouchableOpacity>
-                                
-                                <TouchableOpacity 
+
+                                <TouchableOpacity
                                     style={[
-                                        styles.feedbackButton, 
+                                        styles.feedbackButton,
                                         item.send_email_to_dantasurakshaks && styles.disabledButton
-                                    ]} 
+                                    ]}
                                     onPress={() => openFeedbackModal(item)}
                                     disabled={item.send_email_to_dantasurakshaks}
                                 >
                                     <Text style={styles.feedbackButtonText}>
                                         {item.send_email_to_dantasurakshaks ? 'Feedback Sent' : 'Feedback'}
                                     </Text>
-                                    <Ionicons 
-                                        name={item.send_email_to_dantasurakshaks ? "checkmark" : "mail"} 
-                                        size={18} 
-                                        color="#fff" 
-                                        style={styles.icon} 
+                                    <Ionicons
+                                        name={item.send_email_to_dantasurakshaks ? "checkmark" : "mail"}
+                                        size={18}
+                                        color="#fff"
+                                        style={styles.icon}
                                     />
                                 </TouchableOpacity>
                             </View>

@@ -3,6 +3,7 @@ import { View, Text, ScrollView, Image, StyleSheet, TouchableOpacity } from 'rea
 import { useRoute } from '@react-navigation/native';
 import { useGetSingleDiseasesQuery } from '../store/services/disease/diseaseApi';
 import { useTranslation } from 'react-i18next';
+import GradientText from '../common/GradientText';
 
 const SingleDisease = ({ navigation }: { navigation: any }) => {
     const { id } = useRoute().params as { id: string };
@@ -19,16 +20,14 @@ const SingleDisease = ({ navigation }: { navigation: any }) => {
         );
     }
 
-
-
     const diseaseData = data.data;
 
     console.log(`diseaseData`)
     console.log(diseaseData)
 
-  
 
-  
+
+
     const renderTabContent = () => {
         switch (activeTab) {
             case 'what_is':
@@ -38,7 +37,7 @@ const SingleDisease = ({ navigation }: { navigation: any }) => {
 
                         {diseaseData.what_is_disease_repeat?.map((item, index) => (
                             <View key={index} style={styles.section}>
-                            
+
                                 {item.what_is_disease_repeat_images?.map((imageUrl, index) => (
                                     <View key={`disease-image-${index}`} style={styles.imageContainer}>
                                         <Image
@@ -253,13 +252,20 @@ const SingleDisease = ({ navigation }: { navigation: any }) => {
 
     return (
         <View style={styles.container}>
-            <View>
-                <Image
-                    source={{ uri: diseaseData.disease_icon }}
-                    style={styles.diseaseIcon}
-                />
-                <Text>{diseaseData.disease_title?.[currentLanguage]}</Text>
-                <Text>{diseaseData.disease_description?.[currentLanguage]}</Text>
+
+            <View style={styles.sectionContainer}>
+                <View style={styles.row}>
+                    <Text>
+                        <GradientText text={diseaseData.disease_title?.[currentLanguage]} size={22} />
+                    </Text>
+                    <Text>{diseaseData.disease_description?.[currentLanguage]}</Text>
+                </View>
+                <View style={styles.row}>
+                    <Image
+                        source={{ uri: diseaseData.disease_icon }}
+                        style={styles.diseaseIcon}
+                    />
+                </View>
             </View>
 
             <ScrollView
@@ -294,6 +300,19 @@ const SingleDisease = ({ navigation }: { navigation: any }) => {
 const styles = StyleSheet.create({
     imageContainer: {
         marginBottom: 15,
+    },
+    sectionContainer: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+        gap: 10,
+        marginBottom: 20,
+    },
+    row: {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+        gap: 5,
     },
     mainImage: {
         width: '100%',
@@ -352,12 +371,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 15,
         color: '#333',
-    },
-    mainImage: {
-        width: '100%',
-        height: 200,
-        borderRadius: 8,
-        marginBottom: 15,
     },
     section: {
         marginBottom: 20,
