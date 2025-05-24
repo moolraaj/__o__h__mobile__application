@@ -129,8 +129,7 @@ interface Lesion {
   dental_images?: string[];
   status?: string,
   adminAction?: boolean,
-  createdAt?: any;
-  case_number:number
+  createdAt?: string;
 }
 
 interface LesionResponse {
@@ -140,7 +139,7 @@ interface LesionResponse {
   limit?: number;
   total?: number;
   totalLesions?: number;
-  totalResults?:number
+  totalResults?: number
 }
 
 interface ConfirmationPageParams {
@@ -250,7 +249,7 @@ interface QuestionnaireResponse {
   total?: number;
   totalResults?: number;
 }
-                                                                                                                                 
+
 interface WhatIsDiseaseDescriptionRepeater {
   what_is_disease_heading_repeat: Language;
   what_is_disease_description_repeat: Language;

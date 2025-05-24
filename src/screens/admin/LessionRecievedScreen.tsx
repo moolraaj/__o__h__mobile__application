@@ -119,7 +119,7 @@ export default function LesionsReceivedList() {
                             </View>
                             {[
                                 ['Patient Name', item.fullname],
-                                ['Submission Date', new Date(item.createdAt).toLocaleDateString()],
+                                ['Submission Date', item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'N/A'],
                                 ['Status', item.status]
                             ].map(([label, value], idx) => (
                                 <View key={idx} style={[styles.caseRow, styles.caseTextRow]}>

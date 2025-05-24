@@ -105,7 +105,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ visible, onClose, questio
               disabled={isLoading}
             >
               {isLoading ? (
-                <Loader size="small" color="#fff" />
+                <Loader/>
               ) : (
                 <Text style={styles.buttonText}>Submit Feedback</Text>
               )}
