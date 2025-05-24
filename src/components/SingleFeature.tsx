@@ -53,7 +53,7 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
                         {result?.feature_inner_title?.[currentLanguage] || 'No Title'}
                     </Text>
                     <Text style={styles.field}>
-                        {result?.feature_slug?.[currentLanguage] || 'No Slug'}
+                        {result?.feature_inner_description?.[currentLanguage] || 'No Slug'}
                     </Text>
                    
                     </View>
@@ -185,3 +185,6 @@ const styles = StyleSheet.create({
 })
 
 export default SingleFeature
+
+
+ 
