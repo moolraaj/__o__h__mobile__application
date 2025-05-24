@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next'
 import { useGetFeatureCategoryQuery } from '../store/services/categories/categoryApi'
 
 const { width } = Dimensions.get('window')
-const CARD_WIDTH = (width - 36) / 2  // Subtracting total horizontal padding (16*2 + 4)
+const CARD_WIDTH = (width - 36) / 2   
 
 const Features = ({ navigation }: { navigation: any }) => {
   const { i18n } = useTranslation()
