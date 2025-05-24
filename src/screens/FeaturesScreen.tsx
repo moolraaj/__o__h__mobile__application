@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import Features from '../components/Features'
 import HabitHealthDisease from '../components/home/HabitHealth'
 import GradientText from '../common/GradientText'
+import DentalEmergencyScreen from './DentalEmergencyScreen'
 
 
 
@@ -16,6 +17,7 @@ const FeaturesScreen = ({ navigation }: { navigation: any }) => {
 
       <View style={styles.colRight}>
         <Features navigation={navigation} />
+        <DentalEmergencyScreen navigation={navigation}/>
         <HabitHealthDisease navigation={navigation} />
       </View>
     </View>
