@@ -7,6 +7,7 @@ import Loader from '../common/Loader'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import Disease from './Disease'
+import GradientText from '../common/GradientText'
 
 const SingleFeature = ({ navigation }: { navigation: any }) => {
     const route = useRoute()
@@ -47,12 +48,15 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
 
             <SafeAreaView style={styles.container}>
                 <View style={styles.content}>
+                    <View style={styles.textBlock}>
                     <Text style={styles.field}>
                         {result?.feature_inner_title?.[currentLanguage] || 'No Title'}
                     </Text>
                     <Text style={styles.field}>
                         {result?.feature_slug?.[currentLanguage] || 'No Slug'}
                     </Text>
+                   
+                    </View>
                     {result?.feature_inner_image ? (
                         <Image
                             source={{ uri: result.feature_inner_image }}
@@ -64,7 +68,15 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
                 </View>
 
 
-                <View style={styles.section}>
+                
+
+                <View>
+                      <GradientText text="Diseases"/>
+                    
+                    <Disease disease={result?.diseases} currentLanguage={currentLanguage} navigation={navigation} />
+                </View>
+
+                  <View style={styles.section}>
 
                     <Text style={styles.field}>
                         {result?.feature_myth_facts_title?.[currentLanguage] || null}
@@ -74,15 +86,10 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
                     </Text>
                 </View>
 
-                <View>
-                    <Text>Diseases</Text>
-                    <Disease disease={result?.diseases} currentLanguage={currentLanguage} navigation={navigation} />
-
-                </View>
-
 
                 <View style={styles.section}>
-                    <Text style={styles.sectionHeader}>Feature Facts</Text>
+                    <GradientText text="Feature Facts" />
+                    <Text style={styles.sectionHeader}></Text>
                     <FlatList
                         data={result?.feature_facts || []}
                         keyExtractor={(item, index) =>
@@ -92,11 +99,12 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
                             <View style={styles.factItem}>
                                 <Text style={styles.factText}>{item?.para?.[currentLanguage] || null}</Text>
                                 <Image source={{ uri: item.icon }} style={{ width: 30, height: 30 }} />
-
                             </View>
                         )}
                     />
                 </View>
+
+              
 
                 <View style={styles.section}>
                     <Text style={styles.sectionHeader}>Feature Myths</Text>
@@ -108,7 +116,7 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
                         renderItem={({ item }) => (
                             <View style={styles.factItem}>
                                 <Text style={styles.factText}>{item?.para?.[currentLanguage] || null}</Text>
-                                <Image source={{ uri: item.icon }} style={{ width: 30, height: 30 }} />
+                                <Image source={{ uri: item.icon }} style={{ width: 10, height: 10 }} />
                             </View>
                         )}
                     />
@@ -120,6 +128,19 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
 }
 
 const styles = StyleSheet.create({
+
+     textBlock: {     
+    flex: 1,
+    justifyContent: 'center',
+    // if you want them stacked with a bit of space:
+    paddingRight: 10,
+  },
+   field: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 4,    // space between title + slug
+      marginVertical: 4,
+  },
     center: {
         flex: 1,
         justifyContent: 'center',
@@ -132,17 +153,17 @@ const styles = StyleSheet.create({
     },
     content: {
         marginVertical: 16,
+        backgroundColor: '#FFE6F0',
+        padding:10,
+        borderRadius:5,        
     },
-    field: {
-        fontSize: 16,
-        marginVertical: 4,
-    },
+
     error: {
         color: 'red',
     },
     image: {
-        width: 150,
-        height: 150,
+        width: 50,
+        height: 50,
         marginTop: 12,
     },
     section: {
