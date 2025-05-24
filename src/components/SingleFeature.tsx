@@ -68,7 +68,7 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
                 </View>
 
                 <View style={styles.section}>
-                     {/* Heading & Description */} 
+                    {/* Heading & Description */}
                     <Text style={styles.heading}>
                         <GradientText text={result?.feature_myth_facts_title?.[currentLanguage] || null} size={22} />
                     </Text>
