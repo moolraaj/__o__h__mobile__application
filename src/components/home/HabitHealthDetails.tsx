@@ -56,15 +56,16 @@ export default function HabitHealthDetails() {
     return (
         <View style={styles.container}>
             {/* Intro */}
-            <View style={styles.section}>
-                <GradientText text={item.habits_health_heading[lang]} size={22} />
-                <View style={styles.row}>
+            <View style={styles.sectionContainer}>
+                <View style={styles.textContainer}>
+                    <GradientText text={item.habits_health_heading[lang]} size={22} />
                     <Text style={styles.paragraph}>{item.habits_health_para[lang]}</Text>
+                </View>
+                <View style={styles.imageWrapper}>
                     <Image source={{ uri: item.habits_health_icon }} style={styles.sectionIcon} />
                 </View>
             </View>
 
-           
             <View style={styles.card}>
                 <View style={styles.cardHeader}>
                     {renderMaskedText(<Icon name="emoji-events" size={24} color="#4CAF50" />, ['#56235E', '#C1392D'])}
@@ -78,7 +79,7 @@ export default function HabitHealthDetails() {
                 ))}
             </View>
 
-       
+
             <View style={styles.card}>
                 <View style={styles.cardHeader}>
                     {renderMaskedText(<Icon name="highlight-off" size={24} color="#FF5722" />, ['#1E90FF', '#FF69B4'])}
@@ -100,7 +101,7 @@ export default function HabitHealthDetails() {
                 ))}
             </View>
 
-            
+
             <View style={styles.card}>
                 <View style={styles.cardHeader}>
                     {renderMaskedText(<Icon name="lightbulb" size={24} color="#FFC107" />, ['#4CAF50', '#8E24AA'])}
@@ -129,6 +130,27 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
+    },
+    sectionContainer: {
+        borderRadius: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 10,
+        marginBottom: 20,
+    },
+    textContainer: {
+        alignItems: 'flex-start',
+        width: '80%',
+        flexDirection: 'column',
+        gap: 5,
+        paddingRight: 10,
+    },
+    imageWrapper: {
+        width: '20%',
+        height: 'auto',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     center: {
         flex: 1,
