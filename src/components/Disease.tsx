@@ -1,20 +1,43 @@
-import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
+import CardSkeletonItem from '../common/CardSkeletonItem'
 import React from 'react'
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native'
 
-const { width } = Dimensions.get('window')
-const CARD_WIDTH = (width - 36) / 2 // Subtracting total horizontal padding (16*2 + 4)
+const PADDING_HORIZONTAL = 16
+const CARD_GAP = 8
+const MIN_CARD_WIDTH = 150
 
-const SingleDisease = ({ disease, currentLanguage, navigation }: any) => {
+const SingleDisease = ({ disease, currentLanguage, isLoading, navigation }: any) => {
+  const { width } = useWindowDimensions()
+
+  const CARD_WIDTH = Math.max(
+    (width - PADDING_HORIZONTAL * 2 - CARD_GAP) / 2,
+    MIN_CARD_WIDTH
+  )
+
+  if (isLoading) {
+    return <CardSkeletonItem count={6} />
+  }
+
   return (
-    <View style={styles.container}>
+    <View style={styles.listContainer}>
       <FlatList
         data={disease}
         numColumns={2}
-        columnWrapperStyle={styles.columnWrapper}
-        keyExtractor={(item, index) => item._id ? item._id.toString() : index.toString()}
+        columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: CARD_GAP }}
+        keyExtractor={(item, index) =>
+          item._id ? item._id.toString() : index.toString()
+        }
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={styles.card}
+            style={[styles.card, { width: CARD_WIDTH }]}
             onPress={() => navigation.navigate('SingleDisease', { id: item._id })}
           >
             <Image
@@ -29,22 +52,18 @@ const SingleDisease = ({ disease, currentLanguage, navigation }: any) => {
             </View>
           </TouchableOpacity>
         )}
+        contentContainerStyle={{ paddingBottom: 16 }}
       />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
+  listContainer: {
     flex: 1,
     backgroundColor: '#fff',
   },
-  columnWrapper: {
-    justifyContent: 'space-between',
-    marginBottom: 8,
-  },
   card: {
-    width: CARD_WIDTH,
     aspectRatio: 1 / 0.6,
     borderRadius: 12,
     overflow: 'hidden',
@@ -75,13 +94,3 @@ const styles = StyleSheet.create({
 })
 
 export default SingleDisease
-
-
-
-
-
-
-
- 
-
-

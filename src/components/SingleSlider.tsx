@@ -5,6 +5,7 @@ import {
   Image,
   StyleSheet,
   FlatList,
+  ActivityIndicator,
 } from 'react-native'
 import { useRoute, RouteProp } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
@@ -28,7 +29,7 @@ export const SingleSlider = () => {
   if (isLoading) {
     return (
       <View style={styles.center}>
-        <Loader />
+        <ActivityIndicator size="large" />
       </View>
     )
   }

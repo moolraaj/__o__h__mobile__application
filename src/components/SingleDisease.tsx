@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Image, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useGetSingleDiseasesQuery } from '../store/services/disease/diseaseApi';
 import { useTranslation } from 'react-i18next';
 import GradientText from '../common/GradientText';
 import LinearGradient from 'react-native-linear-gradient';
+import CardSkeletonItem from '../common/CardSkeletonItem';
 
-const SingleDisease = ({ navigation }: { navigation: any }) => {
+const SingleDisease = () => {
     const { id } = useRoute().params as { id: string };
     const { i18n } = useTranslation();
-    const currentLanguage = i18n.language;
-    const { data } = useGetSingleDiseasesQuery({ id, lang: currentLanguage });
+    const currentLanguage = i18n.language as keyof Language;
+    const { data, isLoading } = useGetSingleDiseasesQuery({ id, lang: currentLanguage });
     const [activeTab, setActiveTab] = useState('what_is');
 
     if (!data?.data) {
         return (
-            <View style={styles.container}>
-                <Text>Loading...</Text>
+            <View style={styles.center}>
+                <ActivityIndicator size="large" />
             </View>
-        );
+        )
     }
 
     const diseaseData = data.data;
@@ -36,21 +37,23 @@ const SingleDisease = ({ navigation }: { navigation: any }) => {
 
                         {/* Images Grid Container */}
                         <View style={styles.imagesGridContainer}>
-                            {diseaseData.what_is_disease_repeat?.map((item, index) => (
-                                item.what_is_disease_repeat_images?.map((imageUrl, imgIndex) => (
-                                    <TouchableOpacity
-                                        key={`disease-image-${index}-${imgIndex}`}
-                                        style={styles.imageCard}
-                                        onPress={() => {/* Handle image press if needed */ }}
-                                    >
-                                        <Image
-                                            source={{ uri: imageUrl }}
-                                            style={styles.gridImage}
-                                            resizeMode="cover"
-                                        />
-                                    </TouchableOpacity>
+                            {isLoading ? <CardSkeletonItem count={4} /> : (
+                                diseaseData.what_is_disease_repeat?.map((item, index) => (
+                                    item.what_is_disease_repeat_images?.map((imageUrl, imgIndex) => (
+                                        <TouchableOpacity
+                                            key={`disease-image-${index}-${imgIndex}`}
+                                            style={styles.imageCard}
+                                            onPress={() => {/* Handle image press if needed */ }}
+                                        >
+                                            <Image
+                                                source={{ uri: imageUrl }}
+                                                style={styles.gridImage}
+                                                resizeMode="cover"
+                                            />
+                                        </TouchableOpacity>
+                                    ))
                                 ))
-                            ))}
+                            )}
                         </View>
 
                         {diseaseData.what_is_disease_repeat?.map((item, index) => (
@@ -61,7 +64,7 @@ const SingleDisease = ({ navigation }: { navigation: any }) => {
                                 <Text style={styles.description}>
                                     {item.what_is_disease_disease_repeat_description?.[currentLanguage]}
                                 </Text>
-                                {item.what_is_disease_heading_description_repeater?.map((subItem, subIndex) => (
+                                {item.what_is_disease_heading_description_repeater?.map((subItem: WhatIsDiseaseDescriptionRepeater, subIndex: number) => (
                                     <View key={subIndex} style={styles.subSection}>
                                         <Text style={styles.subSectionTitle}>
                                             {subItem.what_is_disease_heading_repeat?.[currentLanguage]}
@@ -308,6 +311,11 @@ const SingleDisease = ({ navigation }: { navigation: any }) => {
 };
 
 const styles = StyleSheet.create({
+    center: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     imageContainer: {
         marginBottom: 15,
     },
@@ -408,9 +416,6 @@ const styles = StyleSheet.create({
     subSection: {
         marginLeft: 10,
         marginBottom: 15,
-        paddingLeft: 10,
-        borderLeftWidth: 2,
-        borderLeftColor: '#ddd',
     },
     subSectionTitle: {
         fontSize: 15,

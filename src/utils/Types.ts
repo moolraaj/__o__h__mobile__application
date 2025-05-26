@@ -256,7 +256,8 @@ interface WhatIsDiseaseDescriptionRepeater {
 }
 
 interface WhatIsDiseaseRepeat {
-  what_is_disease_repeat_images: File[] | null | string[];
+  [x: string]: any;
+  what_is_disease_repeat_images: string[];
   what_is_disease_heading: Language;
   what_is_disease_disease_repeat_icon: File | null | string;
   what_is_disease_disease_repeat_description: Language;
@@ -266,12 +267,12 @@ interface WhatIsDiseaseRepeat {
 interface CauseRepeat {
   cause_repeat_title: Language;
   cause_repeat_description: Language;
-  cause_repeat_icon: File | null | string;
+  cause_repeat_icon: string;
 }
 
 interface Cause {
   cause_title: Language;
-  cause_icon: File | null | string;
+  cause_icon: string;
   cause_para: Language;
   cause_brief: Language;
   cause_repeat: CauseRepeat[];
@@ -280,12 +281,12 @@ interface Cause {
 interface SymptomRepeat {
   symptoms_repeat_title: Language;
   symptoms_repeat_description: Language;
-  symptoms_repeat_icon: File | null | string;
+  symptoms_repeat_icon: string;
 }
 
 interface Symptom {
   symptoms_title: Language;
-  symptoms_icon: File | null | string;
+  symptoms_icon: string;
   symptoms_para: Language;
   symptoms_brief: Language;
   symptoms_repeat: SymptomRepeat[];
@@ -294,12 +295,12 @@ interface Symptom {
 interface PreventionTipRepeat {
   prevention_tips_repeat_title: Language;
   prevention_tips_repeat_description: Language;
-  prevention_tips_repeat_icon: File | null | string;
+  prevention_tips_repeat_icon: string;
 }
 
 interface PreventionTip {
   prevention_tips_title: Language;
-  prevention_tips_icon: File | null | string;
+  prevention_tips_icon: string;
   prevention_tips_para: Language;
   prevention_tips_brief: Language;
   prevention_tips_repeat: PreventionTipRepeat[];
@@ -308,12 +309,12 @@ interface PreventionTip {
 interface TreatmentOptionRepeat {
   treatment_option_repeat_title: Language;
   treatment_option_repeat_description: Language;
-  treatment_option_repeat_icon: File | null | string;
+  treatment_option_repeat_icon: string;
 }
 
 interface TreatmentOption {
   treatment_option_title: Language;
-  treatment_option_icon: File | null | string;
+  treatment_option_icon: string;
   treatment_option_para: Language;
   treatment_option_brief: Language;
   treatment_option_repeat: TreatmentOptionRepeat[];
@@ -489,26 +490,24 @@ interface DentalEmerRepeater {
   dental_emer_tab_title: Language;
   denatl_emer_description_repeater: DentalEmerDescriptionRepeater[];
 }
+
 interface DentalEmergencyTypes {
-  _id: string;
-  dental_emergency_title: Language;
-  dental_emergency_image: string;
-  dental_emergency_heading: Language;
-  dental_emergency_para: Language;
-  dental_emergency_icon: string;
-  dental_emergency_inner_title: Language;
-  dental_emergency_inner_para: Language;
-  dental_emergency_inner_icon: string;
-  dental_emer_title: Language;
-  dental_emer_sub_title: Language;
-  dental_emer_repeater: DentalEmerRepeater[];
-  createdAt: Date;
-  updatedAt: Date;
-  __v: number;
+  _id: string
+  dental_emergency_title: Language
+  dental_emergency_image: string
+  dental_emergency_heading: Language
+  dental_emergency_para: Language
+  dental_emergency_icon: string
+  dental_emergency_inner_title: Language
+  dental_emergency_inner_para: Language
+  dental_emergency_inner_icon: string
+  dental_emer_title: Language
+  dental_emer_sub_title: Language
+  dental_emer_repeater: DentalEmerRepeater[]
+  createdAt: Date
+  updatedAt: Date
+  __v: number
 }
-
-
-
 
 
 

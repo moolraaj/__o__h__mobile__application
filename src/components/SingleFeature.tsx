@@ -1,8 +1,7 @@
 import React from 'react'
-import { View, Text, StyleSheet, Image, FlatList } from 'react-native'
+import { View, Text, StyleSheet, Image, FlatList, ActivityIndicator } from 'react-native'
 import { useRoute } from '@react-navigation/native'
 import { useGetSingleFeatureCategoryQuery } from '../store/services/categories/categoryApi'
-import Loader from '../common/Loader'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import Disease from './Disease'
@@ -20,7 +19,7 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
     if (isLoading) {
         return (
             <View style={styles.center}>
-                <Loader />
+                <ActivityIndicator size="large" />
             </View>
         )
     }
@@ -64,7 +63,7 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
                     <Text style={styles.title_field}>
                         <GradientText text="Diseases" size={22} />
                     </Text>
-                    <Disease disease={result?.diseases} currentLanguage={currentLanguage} navigation={navigation} />
+                    <Disease disease={result?.diseases} currentLanguage={currentLanguage} navigation={navigation} isLoading={isLoading} />
                 </View>
 
                 <View style={styles.section}>

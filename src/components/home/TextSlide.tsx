@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 import {
     View,
-    Text,
     FlatList,
     TouchableOpacity,
     Dimensions,
@@ -13,6 +12,7 @@ import { useGetTextSliderQuery } from '../../store/services/textslider/slideText
 import { useTranslation } from 'react-i18next'
 import LinearGradient from 'react-native-linear-gradient'
 import GradientText from '../../common/GradientText'
+import Shimmer from '../../common/Shimmer'
 
 type SliderItem = {
     _id: string
@@ -23,11 +23,11 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window')
 const CARD_WIDTH = SCREEN_WIDTH * 0.85
 const CARD_MARGIN = 10
 
-export default function TextSlide({ navigation }: { navigation: any }) {
+export default function TextSlide({navigation}: { navigation: any }) {
     const { i18n } = useTranslation()
     const lang = i18n.language
 
-    const { data } = useGetTextSliderQuery({ page: 1, limit: 10, lang })
+    const { data, isLoading } = useGetTextSliderQuery({ page: 1, limit: 10, lang })
     const slides: SliderItem[] = data?.data ?? []
 
     const [currentIndex, setCurrentIndex] = useState(0)
@@ -67,49 +67,73 @@ export default function TextSlide({ navigation }: { navigation: any }) {
 
     return (
         <View style={styles.wrapper}>
-            <FlatList
-                ref={flatRef}
-                data={slides}
-                keyExtractor={i => i._id}
-                horizontal
-                pagingEnabled
-                showsHorizontalScrollIndicator={false}
-                onViewableItemsChanged={onViewableItemsChanged.current}
-                viewabilityConfig={viewConfig.current}
-                contentContainerStyle={{ paddingHorizontal: CARD_MARGIN }}
-                snapToInterval={CARD_WIDTH + CARD_MARGIN * 2}
-                decelerationRate="fast"
-                renderItem={({ item }) => (
-                    <LinearGradient
-                        colors={['#FBEAFF', '#FFD6D6']}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        style={styles.slide}
-                    >
-                        <GradientText text={item.slider_text[lang]} />
+            {isLoading ?
+                <View style={styles.skeletonWrapper}>
+                    <View style={styles.skeletonCard}>
+                        <Shimmer style={styles.skeletonText} />
 
-                        <TouchableOpacity onPress={goPrev} style={[styles.arrow, styles.leftArrow]}>
-                            <Feather name="chevron-left" size={14} />
-                        </TouchableOpacity>
+                        <View style={[styles.arrow, styles.leftArrow]}>
+                            <Shimmer style={styles.skeletonArrow} />
+                        </View>
 
-                        <TouchableOpacity onPress={goNext} style={[styles.arrow, styles.rightArrow]}>
-                            <Feather name="chevron-right" size={14} />
-                        </TouchableOpacity>
-                    </LinearGradient>
-                )}
-            />
+                        <View style={[styles.arrow, styles.rightArrow]}>
+                            <Shimmer style={styles.skeletonArrow} />
+                        </View>
+                    </View>
 
-            <View style={styles.pagination}>
-                {slides.map((_, index) => (
-                    <View
-                        key={index}
-                        style={[
-                            styles.dot,
-                            currentIndex === index ? styles.activeDot : {},
-                        ]}
+                    <View style={styles.pagination}>
+                        {[...Array(3)].map((_, index) => (
+                            <Shimmer key={index} style={styles.skeletonDot} />
+                        ))}
+                    </View>
+                </View>
+                :
+                <>
+                    <FlatList
+                        ref={flatRef}
+                        data={slides}
+                        keyExtractor={i => i._id}
+                        horizontal
+                        pagingEnabled
+                        showsHorizontalScrollIndicator={false}
+                        onViewableItemsChanged={onViewableItemsChanged.current}
+                        viewabilityConfig={viewConfig.current}
+                        contentContainerStyle={{ paddingHorizontal: CARD_MARGIN }}
+                        snapToInterval={CARD_WIDTH + CARD_MARGIN * 2}
+                        decelerationRate="fast"
+                        renderItem={({ item }) => (
+                            <LinearGradient
+                                colors={['#FBEAFF', '#FFD6D6']}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 0 }}
+                                style={styles.slide}
+                            >
+                                <GradientText text={item.slider_text[lang]} />
+
+                                <TouchableOpacity onPress={goPrev} style={[styles.arrow, styles.leftArrow]}>
+                                    <Feather name="chevron-left" size={14} />
+                                </TouchableOpacity>
+
+                                <TouchableOpacity onPress={goNext} style={[styles.arrow, styles.rightArrow]}>
+                                    <Feather name="chevron-right" size={14} />
+                                </TouchableOpacity>
+                            </LinearGradient>
+                        )}
                     />
-                ))}
-            </View>
+
+                    <View style={styles.pagination}>
+                        {slides.map((_, index) => (
+                            <View
+                                key={index}
+                                style={[
+                                    styles.dot,
+                                    currentIndex === index ? styles.activeDot : {},
+                                ]}
+                            />
+                        ))}
+                    </View>
+                </>
+            }
         </View>
     )
 }
@@ -171,5 +195,38 @@ const styles = StyleSheet.create({
     activeDot: {
         backgroundColor: '#FF7F50',
         width: 16,
+    },
+    skeletonWrapper: {
+        alignItems: 'center',
+    },
+
+    skeletonCard: {
+        width: CARD_WIDTH,
+        height: 80,
+        borderRadius: 16,
+        backgroundColor: '#f0f0f0',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 28,
+        margin: 5,
+    },
+
+    skeletonText: {
+        width: '70%',
+        height: 14,
+        borderRadius: 6,
+    },
+
+    skeletonArrow: {
+        width: 15,
+        height: 15,
+        borderRadius: 10,
+    },
+
+    skeletonDot: {
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        backgroundColor: '#e0e0e0',
     },
 })
