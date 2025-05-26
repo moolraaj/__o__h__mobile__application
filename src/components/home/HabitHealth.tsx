@@ -12,57 +12,46 @@ import { useTranslation } from 'react-i18next'
 import GradientText from '../../common/GradientText'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import LinearGradient from 'react-native-linear-gradient'
-import Loader from '../../common/Loader'
+import CardSkeletonItem from '../../common/CardSkeletonItem'
 
 export default function HabitHealthList({ navigation }: { navigation: any }) {
   const { i18n } = useTranslation()
   const lang = i18n.language
-  const { data, isLoading, error } = useGetHabitHealthQuery({ page: 1, lang })
-
-  if (isLoading) return <View style={styles.center}><Loader /></View>
-  if (error) return <Text>Error loading habits</Text>
-
+  const { data, isLoading, error } = useGetHabitHealthQuery({ page: 1, lang },
+    {
+      refetchOnMountOrArgChange: true,
+    })
   const records = data?.result.slice(0, 2) ?? []
 
-  const renderCard = (item: any) => (
-    <TouchableOpacity
-      style={styles.card}
-      onPress={() => navigation.navigate('HabitHealthDetail', { id: item._id })}
-    >
-      <Image
-        source={{ uri: item.habits_health_main_image }}
-        style={styles.image}
-        resizeMode="cover"
-      />
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>
-          {item.habits_health_main_title[lang]}
-        </Text>
-      </View>
-    </TouchableOpacity>
-  )
+  if (error) return <Text>Error loading habits</Text>
 
   return (
-
-   
-
-
-
     <View style={styles.listContainer}>
-    
-      <FlatList
-        data={records}
-        keyExtractor={(r) => r._id}
-        renderItem={({ item, index }) => (
-          <View style={{ flex: 1, marginBottom: index < records.length - 2 ? 10 : 0 }}>
-            {renderCard(item)}
-          </View>
-        )}
-        numColumns={2}
-        contentContainerStyle={{ padding: 0 }}
-        columnWrapperStyle={{ justifyContent: 'space-between', gap: 10 }}
-      />
-
+      {isLoading ? <CardSkeletonItem count={2} /> :
+        <FlatList
+          data={records}
+          keyExtractor={(r) => r._id}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.card}
+              onPress={() => navigation.navigate('HabitHealthDetail', { id: item._id })}
+            >
+              <Image
+                source={{ uri: item.habits_health_main_image }}
+                style={styles.image}
+                resizeMode="cover"
+              />
+              <View style={styles.titleContainer}>
+                <Text style={styles.title}>
+                  {item.habits_health_main_title[lang]}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
+          numColumns={2}
+          columnWrapperStyle={{ justifyContent: 'space-between', gap: 8 }}
+        />
+      }
 
       <View style={styles.buttonContainer}>
         <LinearGradient
@@ -106,7 +95,7 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
-    aspectRatio: 1 / 0.7,
+    aspectRatio: 1 / 0.6,
     borderRadius: 12,
     overflow: 'hidden',
     position: 'relative',

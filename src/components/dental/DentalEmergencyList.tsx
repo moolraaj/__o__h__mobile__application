@@ -1,25 +1,20 @@
-import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, Dimensions, ActivityIndicator } from 'react-native'
+import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
- 
- 
- 
+import { useTranslation } from 'react-i18next'
 import { useGetDentalEmergencyQuery } from '../../store/services/dental_emergency/dentalEmergencyApi'
+import CardSkeletonItem from '../../common/CardSkeletonItem'
 
-const { width } = Dimensions.get('window')
-const CARD_WIDTH = (width - 36) / 2
-
-const DentalEmergencyList = ({navigation}:{navigation:any}) => {
- 
-  const { data, isLoading, isError, error } = useGetDentalEmergencyQuery({})
+const DentalEmergencyList = ({ navigation }: { navigation: any }) => {
+  const { i18n } = useTranslation()
+  const lang = i18n.language
+  const { data, isLoading, isError, error } = useGetDentalEmergencyQuery(
+    {
+      refetchOnMountOrArgChange: true,
+    })
 
   if (isLoading) {
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" />
-      </View>
-    )
+    return <CardSkeletonItem count={1} />
   }
-
 
   if (isError) {
     return (
@@ -30,14 +25,12 @@ const DentalEmergencyList = ({navigation}:{navigation:any}) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.listContainer}>
       <FlatList
         data={data?.result
-}
+        }
         numColumns={2}
-        columnWrapperStyle={styles.columnWrapper}
         keyExtractor={(item, index) => item._id ? item._id.toString() : index.toString()}
-       
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.card}
@@ -48,7 +41,11 @@ const DentalEmergencyList = ({navigation}:{navigation:any}) => {
               style={styles.image}
               resizeMode="cover"
             />
-            
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>
+                {item.habits_health_main_title?.[lang] || 'Dental Emergency'}
+              </Text>
+            </View>
           </TouchableOpacity>
         )}
       />
@@ -57,19 +54,10 @@ const DentalEmergencyList = ({navigation}:{navigation:any}) => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding: 12,
-  },
   center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  columnWrapper: {
-    justifyContent: 'space-between',
-    marginBottom: 12,
   },
   header: {
     fontSize: 24,
@@ -77,9 +65,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 10,
   },
+  listContainer: {
+    flex: 1,
+  },
   card: {
-    width: CARD_WIDTH,
-    aspectRatio: 1 / 0.8,
+    flex: 1,
+    aspectRatio: 1 / 0.6,
     borderRadius: 12,
     overflow: 'hidden',
     position: 'relative',
@@ -91,16 +82,20 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     position: 'absolute',
-    bottom: 0,
+    top: 0,
     left: 0,
     right: 0,
-    padding: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    padding: 10
   },
   title: {
     color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 16,
+    fontWeight: '700',
+    textAlign: 'center',
   },
 })
 

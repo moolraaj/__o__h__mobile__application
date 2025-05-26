@@ -6,13 +6,11 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  Dimensions
 } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { useGetFeatureCategoryQuery } from '../store/services/categories/categoryApi'
+import CardSkeletonItem from '../common/CardSkeletonItem'
 
-const { width } = Dimensions.get('window')
-const CARD_WIDTH = (width - 36) / 2   
 
 const Features = ({ navigation }: { navigation: any }) => {
   const { i18n } = useTranslation()
@@ -21,7 +19,15 @@ const Features = ({ navigation }: { navigation: any }) => {
     page: 1,
     limit: 10,
     lang: currentLanguage,
-  })
+  },
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  )
+
+  if (isFetching) {
+    return <CardSkeletonItem count={1} />
+  }
 
   return (
     <View style={styles.container}>
@@ -29,8 +35,6 @@ const Features = ({ navigation }: { navigation: any }) => {
         data={data?.result}
         keyExtractor={(item) => item._id}
         numColumns={2}
-        columnWrapperStyle={styles.columnWrapper}
-        refreshing={isFetching}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.card}
@@ -60,12 +64,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  columnWrapper: {
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
   card: {
-    width: CARD_WIDTH,
+    flex: 1,
     aspectRatio: 1 / 0.6,
     borderRadius: 12,
     overflow: 'hidden',

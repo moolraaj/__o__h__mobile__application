@@ -13,11 +13,11 @@ import { useGetSlidersQuery } from '../store/services/slider/sliderApi';
 import { useTranslation } from 'react-i18next';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../common/GradientText';
-import Loader from '../common/Loader';
+import SliderSkeleton from '../common/SliderSkeleton';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width * 0.8;
-const CARD_SPACING = 12;
+const CARD_SPACING = 5;
 
 export const Slider = ({ navigation }: { navigation: any }) => {
   const { i18n } = useTranslation();
@@ -26,7 +26,11 @@ export const Slider = ({ navigation }: { navigation: any }) => {
     page: 1,
     limit: 10,
     lang: currentLanguage,
-  });
+  },
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
   const sliderRef = useRef<FlatList<any>>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -44,11 +48,7 @@ export const Slider = ({ navigation }: { navigation: any }) => {
   }, [data?.result?.length]);
 
   if (isLoading) {
-    return (
-      <View style={styles.center}>
-        <Loader />
-      </View>
-    );
+    return <SliderSkeleton />;
   }
 
   if (error || !data?.result) {
@@ -106,10 +106,10 @@ export const Slider = ({ navigation }: { navigation: any }) => {
   };
 
   const gradients = [
-    ['#56235E', '#C1392D'],  
-    ['#1E90FF', '#FF69B4'],  
-    ['#4CAF50', '#8E24AA'],  
-    ['#2196F3', '#6A1B9A'], 
+    ['#56235E', '#C1392D'],
+    ['#1E90FF', '#FF69B4'],
+    ['#4CAF50', '#8E24AA'],
+    ['#2196F3', '#6A1B9A'],
   ];
 
   return (
@@ -129,46 +129,51 @@ export const Slider = ({ navigation }: { navigation: any }) => {
         }}
         onMomentumScrollEnd={onMomentumScrollEnd}
         renderItem={({ item, index }) => {
-          const colors = gradients[index % gradients.length];   
+          const colors = gradients[index % gradients.length];
           return (
-            <LinearGradient
-              colors={colors}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
+            <TouchableOpacity
+              onPress={() => navigation.navigate('SliderDetails', { id: item._id })}
               style={styles.slide}
             >
-              <View style={styles.content}>
-                <View style={styles.textContainer}>
-                  <Text
-                    style={styles.title}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    {item.text?.[currentLanguage]}
-                  </Text>
+              <LinearGradient
+                colors={colors}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={{ width: CARD_WIDTH, borderRadius: 16 }}
+              >
+                <View style={styles.content}>
+                  <View style={styles.textContainer}>
+                    <Text
+                      style={styles.title}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
+                      {item.text?.[currentLanguage]}
+                    </Text>
 
-                  <Text
-                    style={styles.subtitle}
-                    numberOfLines={2}
-                    ellipsizeMode="tail"
-                  >
-                    {item.description?.[currentLanguage]}
-                  </Text>
+                    <Text
+                      style={styles.subtitle}
+                      numberOfLines={2}
+                      ellipsizeMode="tail"
+                    >
+                      {item.description?.[currentLanguage]}
+                    </Text>
 
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => navigation.navigate('SliderDetails', { id: item._id })}
-                  >
-                    <GradientText text="View" />
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => navigation.navigate('SliderDetails', { id: item._id })}
+                    >
+                      <GradientText text="View" />
+                    </TouchableOpacity>
+                  </View>
+                  <Image
+                    source={{ uri: item.sliderImage }}
+                    style={styles.image}
+                    resizeMode="cover"
+                  />
                 </View>
-                <Image
-                  source={{ uri: item.sliderImage }}
-                  style={styles.image}
-                  resizeMode="cover"
-                />
-              </View>
-            </LinearGradient>
+              </LinearGradient>
+            </TouchableOpacity>
           );
         }}
         ItemSeparatorComponent={() => <View style={{ width: CARD_SPACING }} />}
@@ -196,11 +201,14 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: CARD_SPACING,
   },
   content: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 5,
+    position: 'relative',
+    overflow: 'hidden',
     paddingVertical: 10,
   },
   textContainer: {

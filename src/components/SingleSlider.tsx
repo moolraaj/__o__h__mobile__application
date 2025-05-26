@@ -5,6 +5,7 @@ import {
   Image,
   StyleSheet,
   FlatList,
+  ActivityIndicator,
 } from 'react-native'
 import { useRoute, RouteProp } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
@@ -23,12 +24,15 @@ export const SingleSlider = () => {
   const { i18n } = useTranslation()
   const currentLanguage = i18n.language
 
-  const { data, error, isLoading } = useGetSingleSliderQuery({ id, lang: currentLanguage })
+  const { data, error, isLoading } = useGetSingleSliderQuery({ id, lang: currentLanguage },
+    {
+      refetchOnMountOrArgChange: true,
+    })
 
   if (isLoading) {
     return (
       <View style={styles.center}>
-        <Loader />
+        <ActivityIndicator size="large" />
       </View>
     )
   }

@@ -9,15 +9,16 @@ import DentalEmergencyScreen from './DentalEmergencyScreen'
 
 const FeaturesScreen = ({ navigation }: { navigation: any }) => {
   return (
-    <View style={styles.container}>
+    <View>
       <View style={{ marginBottom: 10, alignItems: 'flex-start' }}>
         <GradientText text="Features" size={22} />
       </View>
 
-
-      <View style={styles.colRight}>
-        <Features navigation={navigation} />
-        <DentalEmergencyScreen navigation={navigation}/>
+      <View>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+          <Features navigation={navigation} />
+          <DentalEmergencyScreen navigation={navigation} />
+        </View>
         <HabitHealthDisease navigation={navigation} />
       </View>
     </View>
@@ -26,16 +27,3 @@ const FeaturesScreen = ({ navigation }: { navigation: any }) => {
 
 export default FeaturesScreen
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-  },
-  colLeft: {
-    flex: 2,
-    marginRight: 20,
-  },
-  colRight: {
-    flex: 2,
-  },
-})

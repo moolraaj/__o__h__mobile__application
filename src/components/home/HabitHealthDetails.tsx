@@ -15,6 +15,7 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Loader from '../../common/Loader';
+import { ActivityIndicator } from 'react-native';
 
 interface HabitHealthInnerRepeater {
     habit_health_suggesion_icon: string;
@@ -25,12 +26,15 @@ export default function HabitHealthDetails() {
     const { id } = useRoute().params as { id: string };
     const { i18n } = useTranslation();
     const lang = i18n.language;
-    const { data, isLoading, error } = useGetSingleHabitHealthQuery({ id, lang });
+    const { data, isLoading, error } = useGetSingleHabitHealthQuery({ id, lang },
+        {
+            refetchOnMountOrArgChange: true,
+        });
 
     if (isLoading || error || !data?.data) {
         return (
             <View style={styles.center}>
-                <Loader />
+                <ActivityIndicator size="large" />
                 {error && <Text>Error loading details.</Text>}
             </View>
         );

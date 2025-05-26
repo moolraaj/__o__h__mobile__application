@@ -10,7 +10,7 @@ export const dentalEmergencyApi = apiSlice.injectEndpoints({
             }),
             providesTags: ['Dental'],
         }),
-        getSingleDentalEmergency: builder.query<{ data: DiseaseTypes }, { id: string; lang?: string }>({
+        getSingleDentalEmergency: builder.query<{ result: DentalEmergencyTypes }, { id: string; lang?: string }>({
             query: ({ id, lang }) => ({
                 url: `/api/dental-emergency/${id}`,
                 params: lang ? { lang } : {},

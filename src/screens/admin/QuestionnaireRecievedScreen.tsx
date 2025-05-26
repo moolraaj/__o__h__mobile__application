@@ -42,7 +42,7 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
 
     const handleTakeover = async (id: string) => {
         try {
-            const { message } = await takeoverQuestionnaire({ id, adminId: user?.id }).unwrap();
+            const { message } = await takeoverQuestionnaire({ id, adminId: user?.id ?? '' }).unwrap();
             ToastMessage('success', message);
             refetch();
         } catch (err: any) {
