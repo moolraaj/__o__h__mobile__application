@@ -21,7 +21,6 @@ export default function HabitHealthList({ navigation }: { navigation: any }) {
     {
       refetchOnMountOrArgChange: true,
     })
-    console.log('HabitHealthList data', data)
   const records = data?.result.slice(0, 2) ?? []
 
   if (error) return <Text>Error loading habits</Text>

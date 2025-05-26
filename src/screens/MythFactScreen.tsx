@@ -1,10 +1,9 @@
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, ActivityIndicator } from 'react-native';
 import React from 'react';
 import { Layout } from '../common/Layout';
 import GradientText from '../common/GradientText';
 import { useGetMythsAndFactsQuery } from '../store/services/mythsfacts/mythfactApi';
 import { useTranslation } from 'react-i18next';
-import Loader from '../common/Loader';
 import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
 
@@ -18,7 +17,9 @@ export default function MythFactScreen() {
     return (
         <Layout>
             {isLoading ? (
-                <Loader />
+                <View style={styles.center}>
+                    <ActivityIndicator size="large" />
+                </View>
             ) : error ? (
                 <Text>Error loading myths and facts.</Text>
             ) : (
@@ -78,6 +79,11 @@ export default function MythFactScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    center: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     header: {
         flexDirection: 'row',

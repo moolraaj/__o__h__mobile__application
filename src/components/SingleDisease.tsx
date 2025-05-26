@@ -11,7 +11,10 @@ const SingleDisease = () => {
     const { id } = useRoute().params as { id: string };
     const { i18n } = useTranslation();
     const currentLanguage = i18n.language as keyof Language;
-    const { data, isLoading } = useGetSingleDiseasesQuery({ id, lang: currentLanguage });
+    const { data, isLoading } = useGetSingleDiseasesQuery({ id, lang: currentLanguage },
+        {
+            refetchOnMountOrArgChange: true,
+        });
     const [activeTab, setActiveTab] = useState('what_is');
 
     if (!data?.data) {
@@ -23,10 +26,6 @@ const SingleDisease = () => {
     }
 
     const diseaseData = data.data;
-
-    console.log(`diseaseData`)
-    console.log(diseaseData)
-
 
     const renderTabContent = () => {
         switch (activeTab) {

@@ -23,11 +23,14 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window')
 const CARD_WIDTH = SCREEN_WIDTH * 0.85
 const CARD_MARGIN = 10
 
-export default function TextSlide({navigation}: { navigation: any }) {
+export default function TextSlide({ navigation }: { navigation: any }) {
     const { i18n } = useTranslation()
     const lang = i18n.language
 
-    const { data, isLoading } = useGetTextSliderQuery({ page: 1, limit: 10, lang })
+    const { data, isLoading } = useGetTextSliderQuery({ page: 1, limit: 10, lang },
+        {
+            refetchOnMountOrArgChange: true,
+        })
     const slides: SliderItem[] = data?.data ?? []
 
     const [currentIndex, setCurrentIndex] = useState(0)

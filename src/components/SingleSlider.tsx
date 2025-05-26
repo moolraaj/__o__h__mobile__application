@@ -24,7 +24,10 @@ export const SingleSlider = () => {
   const { i18n } = useTranslation()
   const currentLanguage = i18n.language
 
-  const { data, error, isLoading } = useGetSingleSliderQuery({ id, lang: currentLanguage })
+  const { data, error, isLoading } = useGetSingleSliderQuery({ id, lang: currentLanguage },
+    {
+      refetchOnMountOrArgChange: true,
+    })
 
   if (isLoading) {
     return (

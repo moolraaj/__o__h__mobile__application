@@ -14,7 +14,10 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
     const { i18n } = useTranslation();
     const currentLanguage = i18n.language;
     const { id } = route.params as { id: string }
-    const { data, isLoading, error } = useGetSingleFeatureCategoryQuery({ id, lang: currentLanguage })
+    const { data, isLoading, error } = useGetSingleFeatureCategoryQuery({ id, lang: currentLanguage },
+        {
+            refetchOnMountOrArgChange: true,
+        })
 
     if (isLoading) {
         return (

@@ -26,7 +26,10 @@ export default function HabitHealthDetails() {
     const { id } = useRoute().params as { id: string };
     const { i18n } = useTranslation();
     const lang = i18n.language;
-    const { data, isLoading, error } = useGetSingleHabitHealthQuery({ id, lang });
+    const { data, isLoading, error } = useGetSingleHabitHealthQuery({ id, lang },
+        {
+            refetchOnMountOrArgChange: true,
+        });
 
     if (isLoading || error || !data?.data) {
         return (
