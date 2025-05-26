@@ -61,7 +61,7 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                             contentContainerStyle={styles.scrollContent}
                             showsVerticalScrollIndicator={false}
                         >
-                            {/* Regular fields */}
+
                             {[
                                 ['Name', selectedQuestionnaire.name],
                                 ['Age', selectedQuestionnaire.age?.toString()],
@@ -110,7 +110,7 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                                 </View>
                             ))}
 
-                             
+
                             {selectedQuestionnaire.send_email_to_dantasurakshaks === true && (
                                 <>
                                     <View style={styles.sectionDivider} />
@@ -258,12 +258,18 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                                     </TouchableOpacity>
                                 ) : (
                                     <TouchableOpacity
-                                        style={[styles.feedbackButton, item.send_email_to_dantasurakshaks && styles.disabledButton]}
+                                        style={[
+                                            styles.feedbackButton,
+                                            (!item.adminAction || item.send_email_to_dantasurakshaks || item.assignTo?._id !== user?.id) && styles.disabledButton
+                                        ]}
                                         onPress={() => navigation.navigate('QuestionnaireFeedback', { id: item._id })}
-                                        disabled={item.send_email_to_dantasurakshaks}
+                                        disabled={!item.adminAction || item.send_email_to_dantasurakshaks || item.assignTo?._id !== user?.id}
                                     >
                                         <Text style={styles.feedbackButtonText}>
-                                            {item.send_email_to_dantasurakshaks ? 'Feedback Sent' : 'send Feedback'}
+                                            {item.send_email_to_dantasurakshaks
+                                                ? 'Feedback Sent'
+                                                : (item.assignTo?._id === user?.id ? 'Send Feedback' : 'Already Taken')
+                                            }
                                         </Text>
                                         <Ionicons
                                             name={item.send_email_to_dantasurakshaks ? 'checkmark' : 'mail'}
@@ -288,7 +294,7 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
 const styles = StyleSheet.create({
     sectionDivider: {
         height: 1,
-        
+
         marginVertical: 15,
     },
     sectionHeader: {
@@ -488,9 +494,9 @@ const styles = StyleSheet.create({
         borderStyle: 'dashed',
     },
     modelTextNewRow: {
-        textAlign:'left',
+        textAlign: 'left',
         flexDirection: 'column',
-        justifyContent:'flex-start',
+        justifyContent: 'flex-start',
         marginBottom: 6,
         paddingBottom: 6,
         gap: 10,
@@ -500,7 +506,7 @@ const styles = StyleSheet.create({
         borderStyle: 'dashed',
 
     },
-       modelText: {
+    modelText: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -511,8 +517,8 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1.5,
         borderBottomColor: '#B1D6FF',
         borderStyle: 'dashed',
-        fontSize:40
-     
+        fontSize: 40
+
     },
     modalText: {
         marginBottom: 8,
