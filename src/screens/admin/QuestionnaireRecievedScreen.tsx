@@ -15,21 +15,21 @@ import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
 import Loader from '../../common/Loader';
 import { useFetchAdminAllQuestionnairesQuery, useTakeoverQuestionnaireMutation } from '../../store/services/questionnaire/questionnaireApi';
- 
+
 import { useAuth } from '../../navigation/AuthContext';
 import { ToastMessage } from '../../resuable/Toast';
 
 
-export default function QuestionReceivedList({navigation}:{navigation:any}) {
+export default function QuestionReceivedList({ navigation }: { navigation: any }) {
     const { data, isLoading, error, refetch } = useFetchAdminAllQuestionnairesQuery({ page: 1 });
     const [takeoverQuestionnaire] = useTakeoverQuestionnaireMutation();
 
     const [modalVisible, setModalVisible] = useState(false);
- 
+
     const [selectedQuestionnaire, setSelectedQuestionnaire] = useState<QuestionnaireTypes | null>(null);
 
     const { user } = useAuth();
-  
+
     const openModal = (item: QuestionnaireTypes) => {
         setSelectedQuestionnaire(item);
         setModalVisible(true);
@@ -56,7 +56,12 @@ export default function QuestionReceivedList({navigation}:{navigation:any}) {
                 <View style={styles.modalContainer}>
                     <Text style={styles.modalTitle}>Questionnaire Details</Text>
                     {selectedQuestionnaire && (
-                        <ScrollView style={styles.modalScroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+                        <ScrollView
+                            style={styles.modalScroll}
+                            contentContainerStyle={styles.scrollContent}
+                            showsVerticalScrollIndicator={false}
+                        >
+                            {/* Regular fields */}
                             {[
                                 ['Name', selectedQuestionnaire.name],
                                 ['Age', selectedQuestionnaire.age?.toString()],
@@ -95,7 +100,7 @@ export default function QuestionReceivedList({navigation}:{navigation:any}) {
                                 ['Presence of Fluorosis', selectedQuestionnaire.presenceOfFluorosis ? 'Yes' : 'No'],
                                 ['Presence of Gum Disease', selectedQuestionnaire.presenceOfGumDisease?.join(', ')],
                             ].map(([label, value], idx) => (
-                                <View key={idx} style={styles.modelTextRow}>
+                                <View key={`regular-${idx}`} style={styles.modelTextRow}>
                                     <GradientText
                                         text={`${label} :`}
                                         size={14}
@@ -104,6 +109,37 @@ export default function QuestionReceivedList({navigation}:{navigation:any}) {
                                     <Text style={styles.modalText}>{value || 'N/A'}</Text>
                                 </View>
                             ))}
+
+                             
+                            {selectedQuestionnaire.send_email_to_dantasurakshaks === true && (
+                                <>
+                                    <View style={styles.sectionDivider} />
+
+                                    <View style={styles.modelText}>
+                                        <GradientText
+                                            text="Your Given Feedback"
+                                            size={16}
+                                            colors={['#5E346D', '#C13439']}
+                                        />
+                                    </View>
+
+                                    {[
+                                        ['Questionary Type', selectedQuestionnaire.questionary_type],
+                                        ['Diagnosis Notes', selectedQuestionnaire.diagnosis_notes],
+                                        ['Recommended Actions', selectedQuestionnaire.recomanded_actions],
+                                        ['Comments/Notes', selectedQuestionnaire.comments_or_notes],
+                                    ].map(([label, value], idx) => (
+                                        <View key={`feedback-${idx}`} style={styles.modelTextNewRow}>
+                                            <GradientText
+                                                text={`${label} :`}
+                                                size={14}
+                                                colors={['#5E346D', '#C13439']}
+                                            />
+                                            <Text style={styles.modalText}>{value || 'N/A'}</Text>
+                                        </View>
+                                    ))}
+                                </>
+                            )}
                         </ScrollView>
                     )}
                     <Pressable style={styles.closeButton} onPress={closeModal}>
@@ -244,12 +280,20 @@ export default function QuestionReceivedList({navigation}:{navigation:any}) {
                 </ScrollView>
             )}
             {renderModal()}
-             
+
         </Layout>
     );
 }
 
 const styles = StyleSheet.create({
+    sectionDivider: {
+        height: 1,
+        
+        marginVertical: 15,
+    },
+    sectionHeader: {
+        marginBottom: 10,
+    },
     filterBtnView: { backgroundColor: '#e5fff2', paddingVertical: 8, paddingHorizontal: 16, borderRadius: 6 },
     filterBtnTextView: { color: '#660033', fontWeight: 'bold' },
     searchContainer: {
@@ -442,6 +486,33 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1.5,
         borderBottomColor: '#B1D6FF',
         borderStyle: 'dashed',
+    },
+    modelTextNewRow: {
+        textAlign:'left',
+        flexDirection: 'column',
+        justifyContent:'flex-start',
+        marginBottom: 6,
+        paddingBottom: 6,
+        gap: 10,
+        flexWrap: 'nowrap',
+        borderBottomWidth: 1.5,
+        borderBottomColor: '#B1D6FF',
+        borderStyle: 'dashed',
+
+    },
+       modelText: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 6,
+        paddingBottom: 6,
+        gap: 10,
+        flexWrap: 'wrap',
+        borderBottomWidth: 1.5,
+        borderBottomColor: '#B1D6FF',
+        borderStyle: 'dashed',
+        fontSize:40
+     
     },
     modalText: {
         marginBottom: 8,
