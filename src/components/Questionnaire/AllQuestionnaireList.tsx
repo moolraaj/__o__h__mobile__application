@@ -26,7 +26,7 @@ import { ToastMessage } from '../../resuable/Toast';
 export default function QuestionnaireLists({ navigation }: { navigation: any }) {
     const { data, isLoading, error, refetch } = useGetQuestionnairesQuery({ page: 1 });
     const [deleteQuestionnaire] = useDeleteQuestionnaireMutation();
-    const [submitQuestionnaire, { isLoading: isSubmitting }] = useSubmitQuestionnaireMutation();
+    const [submitQuestionnaire] = useSubmitQuestionnaireMutation();
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState<any>(null);
     const [sendingId, setSendingId] = useState<string | null>(null);

@@ -48,7 +48,7 @@ export const questionnaireApi = apiSlice.injectEndpoints({
       }),
       providesTags: ['Questionnaire'],
     }),
-    getAdminQuestionnaireById: builder.query<any, string>({
+    getAdminQuestionnaireById: builder.query({
       query: (id) => `/api/questionnaire/admin/${id}`,
       providesTags: ['Questionnaire'],
     }),
@@ -57,6 +57,14 @@ export const questionnaireApi = apiSlice.injectEndpoints({
         url: `/api/questionnaire/${id}/feedback`,
         method: 'PUT',
         body: formData,
+      }),
+      invalidatesTags: ['Questionnaire'],
+    }),
+    takeoverQuestionnaire: builder.mutation<any, { id: string; adminId: string }>({
+      query: ({ id, adminId }) => ({
+        url: `/api/questionnaire/${id}/takeover`,
+        method: 'PUT',
+        body: { adminId },
       }),
       invalidatesTags: ['Questionnaire'],
     }),
@@ -72,5 +80,6 @@ export const {
   useUpdateQuestionnaireMutation,
   useFetchAdminAllQuestionnairesQuery,
   useGetAdminQuestionnaireByIdQuery,
-  useSendQuestionnaireFeedbackMutation
+  useSendQuestionnaireFeedbackMutation,
+  useTakeoverQuestionnaireMutation
 } = questionnaireApi;

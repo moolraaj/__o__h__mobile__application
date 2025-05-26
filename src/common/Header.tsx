@@ -83,7 +83,7 @@ export function Header() {
     if (user?.role === 'dantasurakshaks') {
       return [
         { label: 'Lesions', screen: 'AllLesions', icon: 'plus' },
-        { label: 'Feedback Received', screen: 'FeedbackReceived', icon: 'tooth' },
+        { label: 'Feedback Received', screen: 'FeedbackReceivedToDanta', icon: 'tooth' },
         { label: 'Questionnaire', screen: 'AllQuestionnaire', icon: 'question-circle' },
       ];
     } else if (user?.role === 'admin') {
