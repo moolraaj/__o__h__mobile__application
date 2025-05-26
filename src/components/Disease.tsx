@@ -12,13 +12,15 @@ import {
 
 const PADDING_HORIZONTAL = 16
 const CARD_GAP = 8
-const MIN_CARD_WIDTH = 150
+const NUM_COLUMNS = 3
+const MIN_CARD_WIDTH = 100
 
 const SingleDisease = ({ disease, currentLanguage, isLoading, navigation }: any) => {
   const { width } = useWindowDimensions()
 
+  const totalGaps = (NUM_COLUMNS - 1) * CARD_GAP
   const CARD_WIDTH = Math.max(
-    (width - PADDING_HORIZONTAL * 2 - CARD_GAP) / 2,
+    (width - PADDING_HORIZONTAL * 2 - totalGaps) / NUM_COLUMNS,
     MIN_CARD_WIDTH
   )
 
@@ -30,8 +32,11 @@ const SingleDisease = ({ disease, currentLanguage, isLoading, navigation }: any)
     <View style={styles.listContainer}>
       <FlatList
         data={disease}
-        numColumns={2}
-        columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: CARD_GAP }}
+        numColumns={NUM_COLUMNS}
+        columnWrapperStyle={{
+          gap: CARD_GAP,
+          marginBottom: CARD_GAP,
+        }}
         keyExtractor={(item, index) =>
           item._id ? item._id.toString() : index.toString()
         }
@@ -52,7 +57,6 @@ const SingleDisease = ({ disease, currentLanguage, isLoading, navigation }: any)
             </View>
           </TouchableOpacity>
         )}
-        contentContainerStyle={{ paddingBottom: 16 }}
       />
     </View>
   )
@@ -64,7 +68,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   card: {
-    aspectRatio: 1 / 0.6,
+    aspectRatio: 1 / 0.9,
     borderRadius: 12,
     overflow: 'hidden',
     position: 'relative',
@@ -87,7 +91,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '700',
     textAlign: 'center',
   },
