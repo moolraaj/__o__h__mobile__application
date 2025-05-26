@@ -43,12 +43,12 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
                     end={{ x: 1, y: 0 }}
                     style={styles.sectionContainer}
                 >
-                    <View style={styles.row}>
+                    <View style={styles.textContainer}>
                         <GradientText text={result?.feature_inner_title?.[currentLanguage] || 'No Title'} size={22} />
                         <Text> {result?.feature_slug?.[currentLanguage] || 'No Slug'}
                         </Text>
                     </View>
-                    <View style={styles.row}>
+                    <View style={styles.imageWrapper}>
                         {result?.feature_inner_image ? (
                             <Image
                                 source={{ uri: result.feature_inner_image }}
@@ -142,16 +142,23 @@ const styles = StyleSheet.create({
         padding: 16,
         borderRadius: 12,
         flexDirection: 'row',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         justifyContent: 'space-between',
         gap: 10,
         marginBottom: 20,
     },
-    row: {
-        flexDirection: 'column',
+    textContainer: {
         alignItems: 'flex-start',
-        justifyContent: 'space-between',
+        width: '80%',
+        flexDirection: 'column',
         gap: 5,
+        paddingRight: 10,
+    },
+    imageWrapper: {
+        width: '20%',
+        height: 'auto',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     title_field: {
         alignItems: 'flex-start',
