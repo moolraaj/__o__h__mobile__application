@@ -19,7 +19,9 @@ import UpdateQuestionnaireScreen from '../screens/Questionnaire/UpdateQuestionna
 import SingleDiseaseScreen from '../screens/SingleDiseaseScreen';
 import DentalEmergencyScreen from '../screens/DentalEmergencyScreen';
 import DentalEmergencyDetail from '../screens/SingleDentalEmergency';
-const Stack = createNativeStackNavigator();
+import RecievedQuestionaryScreen from '../screens/Questionnaire/RecievedQuestionaryScreen';
+ 
+ const Stack = createNativeStackNavigator();
 export const DantaStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="Dashboard" component={DashboardScreen} />
@@ -40,6 +42,8 @@ export const DantaStack = () => (
     <Stack.Screen name="SingleDisease" component={SingleDiseaseScreen} />
     <Stack.Screen name="DentalEmergency" component={DentalEmergencyScreen} />
     <Stack.Screen name="DentalEmergencyDetails" component={DentalEmergencyDetail} />
+    <Stack.Screen name="FeedbackReceivedToDanta" component={RecievedQuestionaryScreen} />
+  
 
   </Stack.Navigator>
 );

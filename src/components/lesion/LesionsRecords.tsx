@@ -16,7 +16,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
 import Loader from '../../common/Loader';
-import { Layout } from '../../common/Layout';
+ 
 import {
   useFetchAllLesionsQuery,
   useSubmitLesionMutation,

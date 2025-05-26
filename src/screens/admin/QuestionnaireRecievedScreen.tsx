@@ -14,25 +14,25 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
 import Loader from '../../common/Loader';
-import { useFetchAdminAllQuestionnairesQuery } from '../../store/services/questionnaire/questionnaireApi';
-import FeedbackModal from './QuestionnaireFeedbackScreen';
+import { useFetchAdminAllQuestionnairesQuery, useTakeoverQuestionnaireMutation } from '../../store/services/questionnaire/questionnaireApi';
+ 
+import { useAuth } from '../../navigation/AuthContext';
+import { ToastMessage } from '../../resuable/Toast';
 
 
-export default function QuestionReceivedList() {
-    const { data, isLoading, error } = useFetchAdminAllQuestionnairesQuery({ page: 1 });
+export default function QuestionReceivedList({navigation}:{navigation:any}) {
+    const { data, isLoading, error, refetch } = useFetchAdminAllQuestionnairesQuery({ page: 1 });
+    const [takeoverQuestionnaire] = useTakeoverQuestionnaireMutation();
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
+ 
     const [selectedQuestionnaire, setSelectedQuestionnaire] = useState<QuestionnaireTypes | null>(null);
 
+    const { user } = useAuth();
+  
     const openModal = (item: QuestionnaireTypes) => {
         setSelectedQuestionnaire(item);
         setModalVisible(true);
-    };
-
-    const openFeedbackModal = (item: QuestionnaireTypes) => {
-        setSelectedQuestionnaire(item);
-        setFeedbackModalVisible(true);
     };
 
     const closeModal = () => {
@@ -40,9 +40,14 @@ export default function QuestionReceivedList() {
         setSelectedQuestionnaire(null);
     };
 
-    const closeFeedbackModal = () => {
-        setFeedbackModalVisible(false);
-        setSelectedQuestionnaire(null);
+    const handleTakeover = async (id: string) => {
+        try {
+            const { message } = await takeoverQuestionnaire({ id, adminId: user?.id }).unwrap();
+            ToastMessage('success', message);
+            refetch();
+        } catch (err: any) {
+            ToastMessage('error', err.data?.message || 'Failed to takeover questionnaire');
+        }
     };
 
     const renderModal = () => (
@@ -147,14 +152,44 @@ export default function QuestionReceivedList() {
                 <ScrollView style={{ marginTop: 8 }}>
                     {data?.data?.map((item, i) => (
                         <View key={item._id || i} style={styles.card}>
+                            <View style={[
+                                styles.statusBadge,
+                                item.adminAction ? styles.successBadge : styles.pendingBadge
+                            ]}>
+                                <Text style={styles.statusText}>
+                                    {item.adminAction ? (
+
+                                        item.assignTo?._id === user?.id ? (
+                                            `You ( ${user?.name} ) approved this questionnaire`
+                                        ) : (
+                                            `Questionnaire approved by ${item.assignTo?.name || ''}`
+                                        )
+                                    ) : (
+
+                                        <>
+                                            Feedback has been sent by{' '}
+                                            <Text >
+                                                {item.submitted_by?.name || 'N/A'}
+                                            </Text>
+                                            . Click to approve.
+                                        </>
+                                    )}
+                                </Text>
+
+                            </View>
                             <View style={[styles.caseRow, styles.caseNumberRow]}>
                                 <Text style={styles.caseText}>Case Number :</Text>
-                                <Text style={styles.caseNumber}>{item.case_number}</Text>
+                                <View style={styles.statusContainer}>
+
+                                    <Text style={styles.caseNumber}>{item.case_number}</Text>
+
+                                </View>
                             </View>
                             {[
                                 ['Name', item.name],
                                 ['Gender', item.gender],
                                 ['CardNumber', item.cardNumber],
+
                             ].map(([label, value], idx) => (
                                 <View key={idx} style={[styles.caseRow, styles.caseTextRow]}>
                                     <GradientText
@@ -165,49 +200,58 @@ export default function QuestionReceivedList() {
                                     <Text style={styles.cardText}>{value || 'N/A'}</Text>
                                 </View>
                             ))}
+
+
                             <View style={[styles.caseRow, styles.caseActionRow]}>
-                                <TouchableOpacity
-                                    style={styles.actionButton}
-                                    onPress={() => openModal(item)}
-                                >
-                                    <Text style={styles.actionText}>View</Text>
-                                    <Ionicons name="eye" size={18} color="#660033" style={styles.icon} />
-                                </TouchableOpacity>
+
 
                                 <TouchableOpacity
-                                    style={[
-                                        styles.feedbackButton,
-                                        item.send_email_to_dantasurakshaks && styles.disabledButton
-                                    ]}
-                                    onPress={() => openFeedbackModal(item)}
-                                    disabled={item.send_email_to_dantasurakshaks}
+                                    style={styles.filterBtnView}
+                                    onPress={() => openModal(item)}
                                 >
-                                    <Text style={styles.feedbackButtonText}>
-                                        {item.send_email_to_dantasurakshaks ? 'Feedback Sent' : 'Feedback'}
-                                    </Text>
-                                    <Ionicons
-                                        name={item.send_email_to_dantasurakshaks ? "checkmark" : "mail"}
-                                        size={18}
-                                        color="#fff"
-                                        style={styles.icon}
-                                    />
+                                    <Text style={styles.filterBtnTextView}>view</Text>
                                 </TouchableOpacity>
+
+                                {!item.adminAction ? (
+                                    <TouchableOpacity
+                                        style={styles.takeoverButton}
+                                        onPress={() => handleTakeover(item._id)}
+                                    >
+                                        <Text style={styles.takeoverButtonText}>click to approve</Text>
+                                        <Ionicons name="checkmark-circle" size={18} color="#fff" style={styles.icon} />
+                                    </TouchableOpacity>
+                                ) : (
+                                    <TouchableOpacity
+                                        style={[styles.feedbackButton, item.send_email_to_dantasurakshaks && styles.disabledButton]}
+                                        onPress={() => navigation.navigate('QuestionnaireFeedback', { id: item._id })}
+                                        disabled={item.send_email_to_dantasurakshaks}
+                                    >
+                                        <Text style={styles.feedbackButtonText}>
+                                            {item.send_email_to_dantasurakshaks ? 'Feedback Sent' : 'send Feedback'}
+                                        </Text>
+                                        <Ionicons
+                                            name={item.send_email_to_dantasurakshaks ? 'checkmark' : 'mail'}
+                                            size={18}
+                                            color="#fff"
+                                            style={styles.icon}
+                                        />
+                                    </TouchableOpacity>
+                                )}
                             </View>
+
                         </View>
                     ))}
                 </ScrollView>
             )}
             {renderModal()}
-            <FeedbackModal
-                visible={feedbackModalVisible}
-                onClose={closeFeedbackModal}
-                questionnaire={selectedQuestionnaire}
-            />
+             
         </Layout>
     );
 }
 
 const styles = StyleSheet.create({
+    filterBtnView: { backgroundColor: '#e5fff2', paddingVertical: 8, paddingHorizontal: 16, borderRadius: 6 },
+    filterBtnTextView: { color: '#660033', fontWeight: 'bold' },
     searchContainer: {
         flex: 1
     },
@@ -294,6 +338,27 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
     },
+    statusContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+    },
+    statusBadge: {
+        paddingHorizontal: 8,
+        paddingVertical: 8,
+        borderRadius: 4,
+    },
+    pendingBadge: {
+        backgroundColor: '#FFA500',
+    },
+    successBadge: {
+        backgroundColor: '#4CAF50',
+    },
+    statusText: {
+        color: 'white',
+        fontSize: 12,
+        fontWeight: 'bold',
+    },
     cardText: {
         marginBottom: 5,
         color: '#000',
@@ -311,6 +376,18 @@ const styles = StyleSheet.create({
         color: '#660033',
         fontWeight: 'bold'
     },
+    takeoverButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 6,
+        backgroundColor: '#660033',
+    },
+    takeoverButtonText: {
+        color: '#fff',
+        fontWeight: 'bold'
+    },
     feedbackButton: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -324,7 +401,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     disabledButton: {
-        backgroundColor: '#4CAF50',
+        backgroundColor: '#999',
     },
     icon: {
         marginLeft: 8
@@ -380,5 +457,6 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'center',
         fontWeight: 'bold',
-    }
+    },
+
 });

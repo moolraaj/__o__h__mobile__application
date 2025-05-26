@@ -10,6 +10,7 @@ import SettingScreen from '../screens/SettingScreen';
 import MythFactScreen from '../screens/MythFactScreen';
 import LesionsReceivedList from '../screens/admin/LessionRecievedScreen';
 import QuestionReceivedList from '../screens/admin/QuestionnaireRecievedScreen';
+import { QuestionnaireFeedbackScreen } from '../screens/admin/QuestionnaireFeedbackScreen';
 
 const Stack = createNativeStackNavigator();
 export const AdminStack = () => (
@@ -23,7 +24,8 @@ export const AdminStack = () => (
     <Stack.Screen name="FeatureDetail" component={FeatureDetail} />
     <Stack.Screen name="HabitHealthDetail" component={HabitHealthDetails} />
     <Stack.Screen name="Setting" component={SettingScreen} />
-   
+    <Stack.Screen name="QuestionnaireFeedback" component={QuestionnaireFeedbackScreen} />
+
 
   </Stack.Navigator>
 );
