@@ -40,13 +40,13 @@ export default function Login({ navigation }: { navigation: any }) {
 
   // At the top of your component:
   const [countryCode, setCountryCode] = useState<Country['cca2']>('IN');
-  const [callingCode, setCallingCode] = useState<string>('91');  
+  const [callingCode, setCallingCode] = useState<string>('91');
 
-  
+
   const [loginMethod, setLoginMethod] = useState<'phone' | 'email'>('phone');
   const [showPassword, setShowPassword] = useState(false);
 
-  
+
   const [phoneNumber, setPhoneNumber] = useState('');
   const [otp, setOtp] = useState('');
   const [requestId, setRequestId] = useState<string | null>(null);
@@ -56,11 +56,13 @@ export default function Login({ navigation }: { navigation: any }) {
   const [loginUser, { isLoading: loggingIn }] = useLoginUserMutation();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
- 
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
 
- 
+
+
   const slideX = useRef(new Animated.Value(0)).current;
   const goToSlide = (index: number) => {
     Animated.timing(slideX, {
@@ -70,7 +72,7 @@ export default function Login({ navigation }: { navigation: any }) {
     }).start();
   };
 
- 
+
   const handleSendOtp = async () => {
     if (!phoneNumber) return ToastMessage('error', 'Please provide a valid number');
     try {
@@ -84,38 +86,53 @@ export default function Login({ navigation }: { navigation: any }) {
       ToastMessage('error', err?.data?.error || 'Failed to send OTP');
     }
   };
+
+
   const handleVerifyOtp = async () => {
-    if (otp.length !== 6 || !requestId) return ToastMessage('error', 'Enter the 6-digit OTP');
-    try {
-      const verifyRes = await verifyOtp({ requestId, otp }).unwrap();
-      if (!verifyRes.isOTPVerified) return ToastMessage('error', 'Invalid OTP!');
-   
-      setShowSuccessModal(true);
-  
+    if (otp.length !== 6 || !requestId)
+      return ToastMessage('error', 'Enter the 6-digit OTP')
 
-    } catch (err: any) {
-      ToastMessage('error', err?.data?.error || 'Server error');
-    }
-  };
-
- 
-  const handleEmailLogin = async () => {
-    if (!email || !password) return ToastMessage('error', 'Email and password required');
     try {
-      const loginRes = await loginUser({ email, password }).unwrap();
-    
+      const verifyRes = await verifyOtp({ requestId, otp }).unwrap()
+      if (!verifyRes.isOTPVerified)
+        return ToastMessage('error', 'Invalid OTP!')
+
+
+      const loginRes = await loginUser({ phoneNumber: `+${callingCode}${phoneNumber}` }).unwrap()
+
+
       await AsyncStorage.multiSet([
         ['authToken', loginRes.token],
         ['user', JSON.stringify(loginRes.user)],
-      ]);
-      setToken(loginRes.token);
-      setUser(loginRes.user);
-      ToastMessage('success', loginRes.message || 'Logged in successfully');
-      setShowSuccessModal(true);
+      ])
+      setToken(loginRes.token)
+      setUser(loginRes.user)
+
+      ToastMessage('success', loginRes.message || 'Logged in successfully')
+      setShowSuccessModal(true)
+
     } catch (err: any) {
-      ToastMessage('error', err?.data?.error || 'Login failed');
+      ToastMessage('error', err?.data?.error || 'Server error')
     }
-  };
+  }
+
+
+
+  const handleEmailLogin = async () => {
+    setFieldErrors({})
+    try {
+      const res = await loginUser({ email, password }).unwrap()
+
+      ToastMessage('error', res?.error || 'provide valid credentials')
+    } catch (err: any) {
+
+      if (err.data?.errors) {
+      } else {
+        ToastMessage('error', err.data?.error || 'provide valid credentials')
+      }
+    }
+  }
+
 
   return (
     <SafeAreaView style={styles.wrapper} edges={['top', 'bottom']}>
@@ -128,7 +145,7 @@ export default function Login({ navigation }: { navigation: any }) {
           phoneNumber={phoneNumber}
           callingCode={callingCode}
         />}
-       
+
         <View style={{ margin: 20 }}>
           {loginMethod === 'email' ?
             <Text style={styles.headerText}>Login via Email</Text>
@@ -139,7 +156,7 @@ export default function Login({ navigation }: { navigation: any }) {
             <Text style={styles.headerSubtext}>Please enter your email and password to continue</Text> :
             <Text style={styles.headerSubtext}>Enter your phone number, and we’ll send you a confirmation code</Text>}
         </View>
-     
+
         <View style={styles.toggleContainer}>
           <LinearGradient
             colors={['rgba(222, 32, 39, 0.16)', '#E39EFC']}
@@ -186,7 +203,7 @@ export default function Login({ navigation }: { navigation: any }) {
         </View>
         {
           loginMethod === 'email' ? (
-            
+
             <View style={styles.slide}>
               <Input
                 placeholder="e.g. johndoe@example.com"

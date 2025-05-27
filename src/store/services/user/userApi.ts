@@ -42,17 +42,15 @@ export const userApi = apiSlice.injectEndpoints({
         body: { requestId, otp },
       }),
     }),
-
-
-
-    loginUser: builder.mutation({
-      query: ({ phoneNumber }) => ({
+    loginUser: builder.mutation<{ token: string; user: any; message?: string }, { phoneNumber?: string; email?: string; password?: string }>({
+      query: ({ phoneNumber, email, password }) => ({
         url: '/api/auth/login',
         method: 'POST',
-        body: { phoneNumber },
+        body: phoneNumber
+          ? { phoneNumber }
+          : { email, password },
       }),
     }),
-
     sendEmailVerification: builder.mutation({
       query: ({ userId }) => ({
         url: `/api/auth/register/send-verification/${userId}`,
