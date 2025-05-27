@@ -4,13 +4,12 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  SafeAreaView,
   Dimensions,
   Animated,
   StyleSheet,
-  ScrollView,
-  StatusBar
+  ScrollView
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Feather from 'react-native-vector-icons/Feather';
 import GradientButton from '../../resuable/Button';
@@ -40,29 +39,31 @@ export default function Login({ navigation }: { navigation: any }) {
 
   // At the top of your component:
   const [countryCode, setCountryCode] = useState<Country['cca2']>('IN');
-  const [callingCode, setCallingCode] = useState<string>('91');
+  const [callingCode, setCallingCode] = useState<string>('91'); // Not string[]
 
-
+  // NEW: which method is active?
   const [loginMethod, setLoginMethod] = useState<'phone' | 'email'>('phone');
   const [showPassword, setShowPassword] = useState(false);
 
-
+  // PHONE flow state
   const [phoneNumber, setPhoneNumber] = useState('');
   const [otp, setOtp] = useState('');
   const [requestId, setRequestId] = useState<string | null>(null);
+  const [phoneError, setPhoneError] = useState('');
+  const [otpError, setOtpError] = useState('');
 
   const [sendOtp, { isLoading: sending }] = useSendOtpMutation();
   const [verifyOtp, { isLoading: verifying }] = useVerifyOtpMutation();
   const [loginUser, { isLoading: loggingIn }] = useLoginUserMutation();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-
+  // EMAIL flow state
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
-
-
+  // for PHONE slider
   const slideX = useRef(new Animated.Value(0)).current;
   const goToSlide = (index: number) => {
     Animated.timing(slideX, {
@@ -72,9 +73,13 @@ export default function Login({ navigation }: { navigation: any }) {
     }).start();
   };
 
-
+  // PHONE handlers
   const handleSendOtp = async () => {
-    if (!phoneNumber) return ToastMessage('error', 'Please provide a valid number');
+    setPhoneError('');
+    if (!phoneNumber) {
+      setPhoneError('Please provide a valid number');
+      return;
+    }
     try {
       const data = await sendOtp({ phoneNumber: `+${callingCode}${phoneNumber}` }).unwrap();
       const rid = data.requestId ?? data.request_id;
@@ -83,60 +88,75 @@ export default function Login({ navigation }: { navigation: any }) {
       ToastMessage('success', `OTP sent to ${phoneNumber}`);
       goToSlide(1);
     } catch (err: any) {
-      ToastMessage('error', err?.data?.error || 'Failed to send OTP');
+      const errorMessage = err?.data?.error || 'Failed to send OTP';
+      setPhoneError(errorMessage);
+      ToastMessage('error', errorMessage);
+    }
+  };
+  const handleVerifyOtp = async () => {
+    setOtpError('');
+    if (otp.length !== 6 || !requestId) {
+      setOtpError('Enter the 6-digit OTP');
+      return;
+    }
+    try {
+      const verifyRes = await verifyOtp({ requestId, otp }).unwrap();
+      if (!verifyRes.isOTPVerified) {
+        setOtpError('Invalid OTP!');
+        return ToastMessage('error', 'Invalid OTP!');
+      }
+      setShowSuccessModal(true);
+    } catch (err: any) {
+      const errorMessage = err?.data?.error || 'Server error';
+      setOtpError(errorMessage);
+      ToastMessage('error', errorMessage);
     }
   };
 
 
-  const handleVerifyOtp = async () => {
-    if (otp.length !== 6 || !requestId)
-      return ToastMessage('error', 'Enter the 6-digit OTP')
+  const handleEmailLogin = async () => {
+    setEmailError('');
+    setPasswordError('');
+    
+    if (!email) {
+      setEmailError('Email is required');
+      return;
+    }
+    if (!password) {
+      setPasswordError('Password is required');
+      return;
+    }
 
+   
+    
     try {
-      const verifyRes = await verifyOtp({ requestId, otp }).unwrap()
-      if (!verifyRes.isOTPVerified)
-        return ToastMessage('error', 'Invalid OTP!')
-
-
-      const loginRes = await loginUser({ phoneNumber: `+${callingCode}${phoneNumber}` }).unwrap()
-
-
+      const loginRes = await loginUser({ email, password }).unwrap();
       await AsyncStorage.multiSet([
         ['authToken', loginRes.token],
         ['user', JSON.stringify(loginRes.user)],
-      ])
-      setToken(loginRes.token)
-      setUser(loginRes.user)
+      ]);
+      setToken(loginRes.token);
+      setUser(loginRes.user);
 
-      ToastMessage('success', loginRes.message || 'Logged in successfully')
-      setShowSuccessModal(true)
-
+      if(!email||!password){
+        return  ToastMessage('error', loginRes.message || 'Logged in successfully');
+      }
+      ToastMessage('success', loginRes.message || 'Logged in successfully');
+      setShowSuccessModal(true);
     } catch (err: any) {
-      ToastMessage('error', err?.data?.error || 'Server error')
-    }
-  }
-
-
-
-  const handleEmailLogin = async () => {
-    setFieldErrors({})
-    try {
-      const res = await loginUser({ email, password }).unwrap()
-
-      ToastMessage('error', res?.error || 'provide valid credentials')
-    } catch (err: any) {
-
-      if (err.data?.errors) {
+      const errorMessage = err?.data?.error || 'provide valid credentials';
+      if (errorMessage.toLowerCase().includes('email')) {
+        setEmailError(errorMessage);
+      } else if (errorMessage.toLowerCase().includes('password')) {
+        setPasswordError(errorMessage);
       } else {
-        ToastMessage('error', err.data?.error || 'provide valid credentials')
+        ToastMessage('error', errorMessage);
       }
     }
-  }
-
+  };
 
   return (
-    <SafeAreaView style={styles.wrapper} edges={['top', 'bottom']}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+    <SafeAreaView style={styles.wrapper}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {showSuccessModal && <SuccessModal
           visible={showSuccessModal}
@@ -145,7 +165,7 @@ export default function Login({ navigation }: { navigation: any }) {
           phoneNumber={phoneNumber}
           callingCode={callingCode}
         />}
-
+    
         <View style={{ margin: 20 }}>
           {loginMethod === 'email' ?
             <Text style={styles.headerText}>Login via Email</Text>
@@ -154,9 +174,9 @@ export default function Login({ navigation }: { navigation: any }) {
         <View style={{ margin: 20 }}>
           {loginMethod === 'email' ?
             <Text style={styles.headerSubtext}>Please enter your email and password to continue</Text> :
-            <Text style={styles.headerSubtext}>Enter your phone number, and we’ll send you a confirmation code</Text>}
+            <Text style={styles.headerSubtext}>Enter your phone number, and we'll send you a confirmation code</Text>}
         </View>
-
+      
         <View style={styles.toggleContainer}>
           <LinearGradient
             colors={['rgba(222, 32, 39, 0.16)', '#E39EFC']}
@@ -203,27 +223,35 @@ export default function Login({ navigation }: { navigation: any }) {
         </View>
         {
           loginMethod === 'email' ? (
-
+            // ——————— EMAIL LOGIN ———————
             <View style={styles.slide}>
               <Input
                 placeholder="e.g. johndoe@example.com"
                 keyboardType="email-address"
                 value={email}
-                onChangeText={setEmail}
+                onChangeText={(text) => {
+                  setEmail(text);
+                  setEmailError('');
+                }}
                 icon="mail"
                 name='Email'
+                error={emailError}
               />
               <Input
                 placeholder="e.g. securepassword"
                 keyboardType="default"
                 value={password}
-                onChangeText={setPassword}
+                onChangeText={(text) => {
+                  setPassword(text);
+                  setPasswordError('');
+                }}
                 icon="lock"
                 secureTextEntry={!showPassword}
                 name='Password'
                 isPassword
                 showPassword={showPassword}
                 toggleShowPassword={() => setShowPassword(!showPassword)}
+                error={passwordError}
               />
 
               {loggingIn ? (
@@ -255,7 +283,7 @@ export default function Login({ navigation }: { navigation: any }) {
                         withEmoji
                         onSelect={(country: Country) => {
                           setCountryCode(country.cca2);
-                          setCallingCode(country.callingCode[0]); // Use the first element of the array
+                          setCallingCode(country.callingCode[0]);
                         }}
                       />
                       <View style={styles.phoneInputField}>
@@ -265,16 +293,20 @@ export default function Login({ navigation }: { navigation: any }) {
                           placeholder="0000 000 000"
                           keyboardType="phone-pad"
                           value={phoneNumber}
-                          onChangeText={setPhoneNumber}
+                          onChangeText={(text) => {
+                            setPhoneNumber(text);
+                            setPhoneError('');
+                          }}
                           maxLength={10}
                         />
                       </View>
                     </View>
+                    {phoneError ? <Text style={styles.errorText}>{phoneError}</Text> : null}
                   </View>
 
                   <View style={{ marginTop: 30 }}>
                     <GradientButton
-                      label={sending ? 'Sending OTP…' : 'Send OTP'}
+                      label={sending ? 'Sending OTP...' : 'Send OTP'}
                       onPress={handleSendOtp}
                     />
                   </View>
@@ -290,9 +322,13 @@ export default function Login({ navigation }: { navigation: any }) {
                     maxLength={6}
                     value={otp}
                     name='Enter Otp'
-                    onChangeText={setOtp}
+                    onChangeText={(text) => {
+                      setOtp(text);
+                      setOtpError('');
+                    }}
                     icon="key"
                     textCenter
+                    error={otpError}
                   />
                   {verifying || loggingIn ? (
                     <Loader />
@@ -346,6 +382,8 @@ function Input({
   isPassword = false,
   showPassword,
   toggleShowPassword,
+  error,
+  textCenter = false,
 }: {
   placeholder: string;
   icon: string;
@@ -359,14 +397,22 @@ function Input({
   isPassword?: boolean;
   showPassword?: boolean;
   toggleShowPassword?: () => void;
+  error?: string;
 }) {
   return (
     <View style={styles.inputWrapper}>
       <Text style={styles.label}>{name}</Text>
-      <View style={styles.inputRow}>
+      <View style={[
+        styles.inputRow,
+        error ? styles.inputError : null,
+        textCenter ? { justifyContent: 'center' } : null
+      ]}>
         <GradientText text={<Feather name={icon} size={22} color="#56235E" />} />
         <TextInput
-          style={styles.input}
+          style={[
+            styles.input,
+            textCenter ? { textAlign: 'center' } : null
+          ]}
           placeholder={placeholder}
           keyboardType={keyboardType}
           maxLength={maxLength}
@@ -380,8 +426,8 @@ function Input({
           </TouchableOpacity>
         )}
       </View>
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
     </View>
-
   );
 }
 
@@ -461,7 +507,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#56235E',
   },
-
   title: {
     fontSize: 24,
     textAlign: 'center',
@@ -503,6 +548,9 @@ const styles = StyleSheet.create({
     position: 'relative',
     justifyContent: 'space-between',
   },
+  inputError: {
+    borderColor: '#DE2027',
+  },
   input: {
     flex: 1,
     textAlign: 'left',
@@ -510,6 +558,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#56235E',
     marginLeft: 5,
+  },
+  errorText: {
+    color: '#DE2027',
+    fontSize: 12,
+    marginTop: 4,
   },
   footerLink: {
     padding: 18,
