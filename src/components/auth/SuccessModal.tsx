@@ -11,8 +11,11 @@ interface SuccessModalProps {
     visible: boolean;
     message: string;
     onClose: () => void;
-    phoneNumber: string;
+    phoneNumber?: string;
+    email?: string;
+    password?: string;
     callingCode: any;
+    loginMethod?: 'phone' | 'email';
 }
 
 const SuccessModal: React.FC<SuccessModalProps> = ({
@@ -20,18 +23,51 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
     message,
     onClose,
     phoneNumber,
+    email,
+    password,
+    loginMethod,
     callingCode,
 }) => {
     const { setToken, setUser } = useAuth();
     const [loginUser, { isLoading: loggingIn }] = useLoginUserMutation();
 
+    // const handleModalContinue = async () => {
+    //     try {
+    //         const loginRes = await loginUser({ phoneNumber: `+${callingCode}${phoneNumber}` }).unwrap();
+    //         await AsyncStorage.multiSet([
+    //             ['authToken', loginRes.token],
+    //             ['user', JSON.stringify(loginRes.user)],
+    //         ]);
+    //         setToken(loginRes.token);
+    //         setUser(loginRes.user);
+    //         onClose();
+    //         ToastMessage('success', loginRes.message || 'Logged in successfully');
+    //     } catch (err: any) {
+    //         onClose();
+    //         ToastMessage('error', err?.data?.error || 'Login failed');
+    //     }
+    // };
+
     const handleModalContinue = async () => {
         try {
-            const loginRes = await loginUser({ phoneNumber: `+${callingCode}${phoneNumber}` }).unwrap();
+            let loginPayload: any = {};
+
+            if (loginMethod === 'email' && email && password) {
+                loginPayload = { email, password };
+            } else if (loginMethod === 'phone' && phoneNumber) {
+                loginPayload = { phoneNumber: `+${callingCode}${phoneNumber}` };
+            } else {
+                ToastMessage('error', 'Missing login credentials');
+                return;
+            }
+
+            const loginRes = await loginUser(loginPayload).unwrap();
+
             await AsyncStorage.multiSet([
                 ['authToken', loginRes.token],
                 ['user', JSON.stringify(loginRes.user)],
             ]);
+
             setToken(loginRes.token);
             setUser(loginRes.user);
             onClose();

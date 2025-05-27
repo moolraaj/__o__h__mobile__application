@@ -117,7 +117,7 @@ export default function Login({ navigation }: { navigation: any }) {
   const handleEmailLogin = async () => {
     setEmailError('');
     setPasswordError('');
-    
+
     if (!email) {
       setEmailError('Email is required');
       return;
@@ -127,21 +127,20 @@ export default function Login({ navigation }: { navigation: any }) {
       return;
     }
 
-   
-    
-    try {
-      const loginRes = await loginUser({ email, password }).unwrap();
-      await AsyncStorage.multiSet([
-        ['authToken', loginRes.token],
-        ['user', JSON.stringify(loginRes.user)],
-      ]);
-      setToken(loginRes.token);
-      setUser(loginRes.user);
 
-      if(!email||!password){
-        return  ToastMessage('error', loginRes.message || 'Logged in successfully');
+
+    try {
+      // const loginRes = await loginUser({ email, password }).unwrap();
+      // await AsyncStorage.multiSet([
+      //   ['authToken', loginRes.token],
+      //   ['user', JSON.stringify(loginRes.user)],
+      // ]);
+      // setToken(loginRes.token);
+      // setUser(loginRes.user);
+
+      if (!email || !password) {
+        return ToastMessage('error', 'Please provide valid credentials');
       }
-      ToastMessage('success', loginRes.message || 'Logged in successfully');
       setShowSuccessModal(true);
     } catch (err: any) {
       const errorMessage = err?.data?.error || 'provide valid credentials';
@@ -160,12 +159,19 @@ export default function Login({ navigation }: { navigation: any }) {
       <ScrollView showsVerticalScrollIndicator={false}>
         {showSuccessModal && <SuccessModal
           visible={showSuccessModal}
-          message="Otp Verified successful!"
+          message={
+            loginMethod === 'phone'
+              ? "OTP Verified successfully!"
+              : "Logged in successfully!"
+          }
           onClose={() => setShowSuccessModal(false)}
           phoneNumber={phoneNumber}
+          email={email}
+          password={password}
           callingCode={callingCode}
+          loginMethod={loginMethod}
         />}
-    
+
         <View style={{ margin: 20 }}>
           {loginMethod === 'email' ?
             <Text style={styles.headerText}>Login via Email</Text>
@@ -176,7 +182,7 @@ export default function Login({ navigation }: { navigation: any }) {
             <Text style={styles.headerSubtext}>Please enter your email and password to continue</Text> :
             <Text style={styles.headerSubtext}>Enter your phone number, and we'll send you a confirmation code</Text>}
         </View>
-      
+
         <View style={styles.toggleContainer}>
           <LinearGradient
             colors={['rgba(222, 32, 39, 0.16)', '#E39EFC']}
