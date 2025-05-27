@@ -68,6 +68,10 @@ export const questionnaireApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Questionnaire'],
     }),
+    fetchDantaRecievedQuestionnaires: builder.query({
+      query: (userId) => `/api/questionnaire/danta/${userId}`,
+      providesTags: ['Questionnaire'],
+    }),
   }),
 });
 
@@ -81,5 +85,6 @@ export const {
   useFetchAdminAllQuestionnairesQuery,
   useGetAdminQuestionnaireByIdQuery,
   useSendQuestionnaireFeedbackMutation,
-  useTakeoverQuestionnaireMutation
+  useTakeoverQuestionnaireMutation,
+  useFetchDantaRecievedQuestionnairesQuery
 } = questionnaireApi;

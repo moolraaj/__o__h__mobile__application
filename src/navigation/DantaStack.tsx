@@ -21,6 +21,10 @@ import DentalEmergencyScreen from '../screens/DentalEmergencyScreen';
 import DentalEmergencyDetail from '../screens/SingleDentalEmergency';
 import RecievedQuestionaryScreen from '../screens/Questionnaire/RecievedQuestionaryScreen';
 import MythFactScreen from '../screens/MythFactScreen';
+import EditUserScreen from '../screens/settings/EditUserScreen';
+import UpdatePasswordScreen from '../screens/settings/ChangePassword';
+import { ForgotPasswordScreen } from '../screens/settings/ForgotPasswordScreen';
+import { SettingForgotPasswordScreen } from '../screens/settings/SettingForgotPasswordScreen';
 
 const Stack = createNativeStackNavigator();
 export const DantaStack = () => (
@@ -31,7 +35,7 @@ export const DantaStack = () => (
     <Stack.Screen name="MythsAndFacts" component={MythFactScreen} />
     <Stack.Screen name="FeatureDetail" component={FeatureDetail} />
     <Stack.Screen name="HabitHealthDetail" component={HabitHealthDetails} />
-    <Stack.Screen name="Setting" component={SettingScreen} />
+   
     <Stack.Screen name="Profile" component={ProfileScreen} />
     <Stack.Screen name="Notification" component={NotificationScreen} />
     <Stack.Screen name="CreateLesion" component={CreateLesionScreen} />
@@ -45,6 +49,11 @@ export const DantaStack = () => (
     <Stack.Screen name="DentalEmergency" component={DentalEmergencyScreen} />
     <Stack.Screen name="DentalEmergencyDetails" component={DentalEmergencyDetail} />
     <Stack.Screen name="FeedbackReceivedToDanta" component={RecievedQuestionaryScreen} />
+     <Stack.Screen name="Setting" component={SettingScreen} />
+    <Stack.Screen name="SettingUpdateUser" component={EditUserScreen} />
+    <Stack.Screen name="SettingChangePassword" component={UpdatePasswordScreen} />
+    <Stack.Screen name="SettingForgotPassword" component={ForgotPasswordScreen} />
+    <Stack.Screen name="SettingForgotPasswordScreen" component={SettingForgotPasswordScreen} />
 
 
   </Stack.Navigator>
