@@ -27,7 +27,9 @@ export const DashboardScreen = ({ navigation }: any) => {
   return (
     <>
       <Layout>
-        <View style={{ marginBottom: 18, marginTop: 2 }}><Searchbar placeholderText="Search..." /></View>
+        <View style={{ marginBottom: 18, marginTop: 2 }}>
+          <Searchbar placeholderText="Search..." />
+        </View>
         <Slider navigation={navigation} />
         <FeaturesScreen navigation={navigation} />
         <TextSliderScreen navigation={navigation} />

@@ -4,12 +4,13 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
   Dimensions,
   Animated,
   StyleSheet,
-  ScrollView
+  ScrollView,
+  StatusBar
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Feather from 'react-native-vector-icons/Feather';
 import GradientButton from '../../resuable/Button';
@@ -124,7 +125,8 @@ export default function Login({ navigation }: { navigation: any }) {
   };
 
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView style={styles.wrapper} edges={['top', 'bottom']}>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <ScrollView showsVerticalScrollIndicator={false}>
         {showSuccessModal && <SuccessModal
           visible={showSuccessModal}

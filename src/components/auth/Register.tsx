@@ -347,10 +347,10 @@ import {
   TextInput,
   StyleSheet,
   Image,
-  SafeAreaView,
   ScrollView
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
@@ -370,6 +370,7 @@ import {
   useSendOtpMutation,
   useVerifyOtpMutation
 } from '../../store/services/user/userApi';
+import { StatusBar } from 'react-native';
 
 const VERIFIABLE_ROLES = ['admin', 'dantasurakshaks'] as const;
 
@@ -391,9 +392,9 @@ export default function Register({ navigation }: { navigation: any }) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState('');
 
-  
+
   const [countryCode, setCountryCode] = useState<Country['cca2']>('IN');
-  const [callingCode, setCallingCode] = useState<string>('91'); 
+  const [callingCode, setCallingCode] = useState<string>('91');
 
   const [register, { isLoading: isRegistering, error: registerError }] =
     useRegisterUserMutation();
@@ -440,7 +441,7 @@ export default function Register({ navigation }: { navigation: any }) {
   const handleSendOtp = async () => {
     try {
       const { requestId } = await sendOtp({ phoneNumber: `+${callingCode}${user.phoneNumber}` }).unwrap();
-     
+
       setRequestId(requestId);
       setOtpSent(true);
       setOtpVerified(false);
@@ -487,7 +488,8 @@ export default function Register({ navigation }: { navigation: any }) {
   };
 
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView style={styles.wrapper} edges={['top', 'bottom']}>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <ScrollView showsVerticalScrollIndicator={false}>
         {step === 1 ? (
           <View>

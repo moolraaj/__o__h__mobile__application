@@ -185,7 +185,7 @@ export const Slider = ({ navigation }: { navigation: any }) => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    height: 180,
+    height: 176,
     overflow: 'hidden',
   },
   center: {

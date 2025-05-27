@@ -7,7 +7,7 @@ import GradientText from '../common/GradientText';
 import LinearGradient from 'react-native-linear-gradient';
 import CardSkeletonItem from '../common/CardSkeletonItem';
 
-const SingleDisease = () => {
+const SingleDisease = ({ navigation }: { navigation: any }) => {
     const { id } = useRoute().params as { id: string };
     const { i18n } = useTranslation();
     const currentLanguage = i18n.language as keyof Language;

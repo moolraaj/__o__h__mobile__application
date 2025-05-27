@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
         borderRadius: 6,
     },
 
-    searchContainer: { flex: 1 },
+    searchContainer: { width: '100%' },
     searchWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
