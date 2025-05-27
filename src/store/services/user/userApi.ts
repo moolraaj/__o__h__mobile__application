@@ -1,5 +1,5 @@
 import { apiSlice } from '../apiSlice';
- 
+
 export const userApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
 
@@ -58,7 +58,37 @@ export const userApi = apiSlice.injectEndpoints({
         url: `/api/auth/register/send-verification/${userId}`,
         method: 'POST',
       }),
+
     }),
+    updateUser: builder.mutation({
+      query: ({ userId, userData }) => ({
+        url: `/api/auth/users/${userId}`,
+        method: 'PUT',
+        body: userData,
+      }),
+      invalidatesTags: ['User'],
+    }),
+    getSingleUser: builder.query({
+      query: (userId) => `/api/auth/users/${userId}`,
+      providesTags: ['User'],
+    }),
+
+    forgotPassword: builder.mutation<{ status: number; message: string }, { email: string }>({
+      query: ({ email }) => ({
+        url: '/api/auth/forgot-password',
+        method: 'POST',
+        body: { email },
+      }),
+    }),
+    resetPassword: builder.mutation<{ status: number; message: string; user?: { id: string; email: string; name: string } }, { otp: string; newPassword: string; confirmPassword: string }>({
+      query: ({ otp, newPassword, confirmPassword }) => ({
+        url: '/api/auth/reset-password',
+        method: 'POST',
+        body: { otp, newPassword, confirmPassword },
+      }),
+      invalidatesTags: ['User'],
+    }),
+
 
   }),
 });
@@ -69,5 +99,9 @@ export const {
   useSendOtpMutation,
   useVerifyOtpMutation,
   useLoginUserMutation,
-  useSendEmailVerificationMutation
+  useSendEmailVerificationMutation,
+  useUpdateUserMutation,
+  useGetSingleUserQuery,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
 } = userApi;

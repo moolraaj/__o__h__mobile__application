@@ -39,13 +39,13 @@ export default function Login({ navigation }: { navigation: any }) {
 
   // At the top of your component:
   const [countryCode, setCountryCode] = useState<Country['cca2']>('IN');
-  const [callingCode, setCallingCode] = useState<string>('91'); // Not string[]
+  const [callingCode, setCallingCode] = useState<string>('91');  
 
-  // NEW: which method is active?
+  
   const [loginMethod, setLoginMethod] = useState<'phone' | 'email'>('phone');
   const [showPassword, setShowPassword] = useState(false);
 
-  // PHONE flow state
+  
   const [phoneNumber, setPhoneNumber] = useState('');
   const [otp, setOtp] = useState('');
   const [requestId, setRequestId] = useState<string | null>(null);
@@ -55,11 +55,11 @@ export default function Login({ navigation }: { navigation: any }) {
   const [loginUser, { isLoading: loggingIn }] = useLoginUserMutation();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  // EMAIL flow state
+ 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // for PHONE slider
+ 
   const slideX = useRef(new Animated.Value(0)).current;
   const goToSlide = (index: number) => {
     Animated.timing(slideX, {
@@ -69,7 +69,7 @@ export default function Login({ navigation }: { navigation: any }) {
     }).start();
   };
 
-  // PHONE handlers
+ 
   const handleSendOtp = async () => {
     if (!phoneNumber) return ToastMessage('error', 'Please provide a valid number');
     try {
@@ -88,28 +88,21 @@ export default function Login({ navigation }: { navigation: any }) {
     try {
       const verifyRes = await verifyOtp({ requestId, otp }).unwrap();
       if (!verifyRes.isOTPVerified) return ToastMessage('error', 'Invalid OTP!');
-      // now login
+   
       setShowSuccessModal(true);
-      // const loginRes = await loginUser({ phoneNumber: `+${callingCode}${phoneNumber}` }).unwrap();
-      // await AsyncStorage.multiSet([
-      //   ['authToken', loginRes.token],
-      //   ['user', JSON.stringify(loginRes.user)],
-      // ]);
-      // setToken(loginRes.token);
-      // setUser(loginRes.user);
-
-      // ToastMessage('success', loginRes.message || 'Logged in successfully');
+  
 
     } catch (err: any) {
       ToastMessage('error', err?.data?.error || 'Server error');
     }
   };
 
-  // EMAIL handler
+ 
   const handleEmailLogin = async () => {
     if (!email || !password) return ToastMessage('error', 'Email and password required');
     try {
       const loginRes = await loginUser({ email, password }).unwrap();
+    
       await AsyncStorage.multiSet([
         ['authToken', loginRes.token],
         ['user', JSON.stringify(loginRes.user)],
@@ -133,7 +126,7 @@ export default function Login({ navigation }: { navigation: any }) {
           phoneNumber={phoneNumber}
           callingCode={callingCode}
         />}
-        {/* Header */}
+       
         <View style={{ margin: 20 }}>
           {loginMethod === 'email' ?
             <Text style={styles.headerText}>Login via Email</Text>
@@ -144,7 +137,7 @@ export default function Login({ navigation }: { navigation: any }) {
             <Text style={styles.headerSubtext}>Please enter your email and password to continue</Text> :
             <Text style={styles.headerSubtext}>Enter your phone number, and we’ll send you a confirmation code</Text>}
         </View>
-        {/* Toggle buttons */}
+     
         <View style={styles.toggleContainer}>
           <LinearGradient
             colors={['rgba(222, 32, 39, 0.16)', '#E39EFC']}
@@ -191,7 +184,7 @@ export default function Login({ navigation }: { navigation: any }) {
         </View>
         {
           loginMethod === 'email' ? (
-            // ——————— EMAIL LOGIN ———————
+            
             <View style={styles.slide}>
               <Input
                 placeholder="e.g. johndoe@example.com"

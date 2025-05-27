@@ -11,6 +11,9 @@ import MythFactScreen from '../screens/MythFactScreen';
 import LesionsReceivedList from '../screens/admin/LessionRecievedScreen';
 import QuestionReceivedList from '../screens/admin/QuestionnaireRecievedScreen';
 import { QuestionnaireFeedbackScreen } from '../screens/admin/QuestionnaireFeedbackScreen';
+import EditUserScreen from '../screens/settings/EditUserScreen';
+import UpdatePasswordScreen from '../screens/settings/ChangePassword';
+import { ForgotPasswordScreen } from '../screens/settings/ForgotPasswordScreen';
 
 const Stack = createNativeStackNavigator();
 export const AdminStack = () => (
@@ -25,6 +28,10 @@ export const AdminStack = () => (
     <Stack.Screen name="HabitHealthDetail" component={HabitHealthDetails} />
     <Stack.Screen name="Setting" component={SettingScreen} />
     <Stack.Screen name="QuestionnaireFeedback" component={QuestionnaireFeedbackScreen} />
+    <Stack.Screen name="SettingUpdateUser" component={EditUserScreen} />
+    <Stack.Screen name="SettingChangePassword" component={UpdatePasswordScreen} />
+    <Stack.Screen name="SettingForgotPassword" component={ForgotPasswordScreen} />
+    
 
 
   </Stack.Navigator>
