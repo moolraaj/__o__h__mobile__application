@@ -1,14 +1,20 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { ScrollView, RefreshControl, StyleSheet, Text, SafeAreaView } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  ScrollView,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  StatusBar,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Header } from './Header'
-import Footer from './Footer'
+import { Header } from './Header';
+import Footer from './Footer';
 import { invalidateAllCompanyApis } from '../store/Store/ApiDispatch';
 import { AppDispatch } from '../store/Store/Store';
 import { useDispatch } from 'react-redux';
 
 export function Layout({ children }: { children: React.ReactNode }) {
-
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -21,10 +27,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   const onRefresh = useCallback(async () => {
     if (refreshing) return;
-
     setRefreshing(true);
     await invalidateAllCompanyApis(dispatch);
-
     setTimeout(() => {
       setRefreshing(false);
       console.log('✅ Refresh complete');
@@ -32,9 +36,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
   }, [dispatch, refreshing]);
 
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <SafeAreaView style={styles.wrapper} edges={['top', 'bottom']}>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <Header />
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -48,7 +55,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </ScrollView>
       <Footer />
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -60,4 +67,4 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 16,
   },
-})
+});
