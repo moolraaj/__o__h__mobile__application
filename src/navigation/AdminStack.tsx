@@ -14,6 +14,10 @@ import { QuestionnaireFeedbackScreen } from '../screens/admin/QuestionnaireFeedb
 import EditUserScreen from '../screens/settings/EditUserScreen';
 import UpdatePasswordScreen from '../screens/settings/ChangePassword';
 import { ForgotPasswordScreen } from '../screens/settings/ForgotPasswordScreen';
+import { SettingForgotPasswordScreen } from '../screens/settings/SettingForgotPasswordScreen';
+import SingleDiseaseScreen from '../screens/SingleDiseaseScreen';
+import DentalEmergencyScreen from '../screens/DentalEmergencyScreen';
+import DentalEmergencyDetail from '../screens/SingleDentalEmergency';
 
 const Stack = createNativeStackNavigator();
 export const AdminStack = () => (
@@ -25,13 +29,17 @@ export const AdminStack = () => (
     <Stack.Screen name="SliderDetails" component={SliderDetails} />
     <Stack.Screen name="Features" component={FeaturesScreen} />
     <Stack.Screen name="FeatureDetail" component={FeatureDetail} />
+    <Stack.Screen name="SingleDisease" component={SingleDiseaseScreen} />
+    <Stack.Screen name="DentalEmergency" component={DentalEmergencyScreen} />
+    <Stack.Screen name="DentalEmergencyDetails" component={DentalEmergencyDetail} />
     <Stack.Screen name="HabitHealthDetail" component={HabitHealthDetails} />
-    <Stack.Screen name="Setting" component={SettingScreen} />
     <Stack.Screen name="QuestionnaireFeedback" component={QuestionnaireFeedbackScreen} />
+    <Stack.Screen name="Setting" component={SettingScreen} />
     <Stack.Screen name="SettingUpdateUser" component={EditUserScreen} />
     <Stack.Screen name="SettingChangePassword" component={UpdatePasswordScreen} />
     <Stack.Screen name="SettingForgotPassword" component={ForgotPasswordScreen} />
-    
+    <Stack.Screen name="SettingForgotPasswordScreen" component={SettingForgotPasswordScreen} />
+
 
 
   </Stack.Navigator>

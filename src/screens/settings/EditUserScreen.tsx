@@ -6,7 +6,8 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-
+  ActivityIndicator,
+  Platform,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useAuth } from '../../navigation/AuthContext';
@@ -14,6 +15,8 @@ import { useGetSingleUserQuery, useUpdateUserMutation } from '../../store/servic
 import { Layout } from '../../common/Layout';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { ToastMessage } from '../../resuable/Toast';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import GradientText from '../../common/GradientText';
 
 const EditUserScreen = ({ navigation }: { navigation: any }) => {
   const { user } = useAuth();
@@ -30,7 +33,6 @@ const EditUserScreen = ({ navigation }: { navigation: any }) => {
   });
 
   let data = userData?.user;
-  
 
   useEffect(() => {
     if (userData) {
@@ -47,124 +49,158 @@ const EditUserScreen = ({ navigation }: { navigation: any }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
- 
+  const handleSubmit = async () => {
+    try {
+      await updateUser({
+        userId,
+        userData: {
+          name: formData.name,
+          email: formData.email,
+        }
+      }).unwrap();
 
-const handleSubmit = async () => {
-  try {
- 
-    await updateUser({
-      userId,
-      userData: {
-        name: formData.name,
-        email: formData.email,
-      }
-    }).unwrap();
-
-    ToastMessage('success', 'Profile updated successfully');
-    navigation.goBack();
-  } catch (error) {
-    ToastMessage('error', 'Failed to update profile');
-  }
-};
-
-
-  if (isLoading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
+      ToastMessage('success', 'Profile updated successfully');
+      navigation.goBack();
+    } catch (error) {
+      ToastMessage('error', 'Failed to update profile');
+    }
+  };
 
   return (
     <Layout>
-      <ScrollView style={styles.container}>
-        <View style={styles.header}>
-
-          <Text style={styles.title}>Edit Profile</Text>
-          <View style={{ width: 24 }} />
+      {isLoading ?
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#6C63FF" />
         </View>
-
-
-        <View style={[
-          styles.verificationBadge,
-          {
-            backgroundColor: data?.isVerified ? '#4CAF50' : '#FFC107',
-            alignSelf: 'flex-start',
-            marginLeft: 16,
-            marginBottom: 10
-          }
-        ]}>
-          <Ionicons
-            name={data?.isVerified ? "checkmark-circle" : "time"}
-            size={16}
-            color="#fff"
-          />
-          <Text style={styles.verificationText}>
-            {data?.isVerified ? 'Verified' : 'Pending Verification'}
-          </Text>
-        </View>
-
-        <LinearGradient
-          colors={['#F8E4FF', '#FFD7D8']}
-          locations={[0.2081, 1]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.formContainer}
+        :
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
         >
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Full Name</Text>
-            <TextInput
-              style={styles.input}
-              value={formData.name}
-              onChangeText={(text) => handleChange('name', text)}
-              placeholder="Enter your name"
-            />
+
+          <View style={styles.profileHeader}>
+            <LinearGradient
+              colors={['#56235E', '#C1392D']}
+              locations={[0.2081, 1]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.profileIcon}
+            >
+              <FontAwesome5 name="user-edit" size={24} color="#FFF" />
+            </LinearGradient>
+            <Text style={styles.profileHeaderText}>Update Your Information</Text>
           </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={styles.input}
-              value={formData.email}
-              onChangeText={(text) => handleChange('email', text)}
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              autoCapitalize="none"
+          <View style={[
+            styles.verificationBadge,
+            {
+              backgroundColor: data?.isVerified ? '#4CAF50' : '#FFC107',
+            }
+          ]}>
+            <Ionicons
+              name={data?.isVerified ? "checkmark-circle" : "time"}
+              size={16}
+              color="#fff"
             />
+            <Text style={styles.verificationText}>
+              {data?.isVerified ? 'Verified Account' : 'Pending Verification'}
+            </Text>
           </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Phone Number</Text>
-            <TextInput
-              style={[styles.input, { color: '#888' }]}
-              value={formData.phoneNumber}
-              editable={false}
-            />
+          <View style={styles.formContainer}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Full Name</Text>
+              <View style={styles.inputWrapper}>
+                <Text style={styles.inputIcon}>
+                  <GradientText text={<Ionicons name="person-outline" size={20} color="#6C63FF" />} size={20} />
+                </Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.name}
+                  onChangeText={(text) => handleChange('name', text)}
+                  placeholder="John Doe"
+                  placeholderTextColor="#999"
+                />
+              </View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Email Address</Text>
+              <View style={styles.inputWrapper}>
+                <Text style={styles.inputIcon}>
+                  <GradientText text={<Ionicons name="mail-outline" size={20} color="#6C63FF" />} size={20} />
+                </Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.email}
+                  onChangeText={(text) => handleChange('email', text)}
+                  placeholder="example@email.com"
+                  placeholderTextColor="#999"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+              </View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Phone Number</Text>
+              <View style={styles.inputWrapper}>
+                <Text style={styles.inputIcon}>
+                  <GradientText text={<Ionicons name="call-outline" size={20} color="#6C63FF" />} size={20} />
+                </Text>
+                <TextInput
+                  style={[styles.input, { color: '#888' }]}
+                  value={formData.phoneNumber}
+                  editable={false}
+                  placeholder="+91 9876543210"
+                  placeholderTextColor="#999"
+                />
+              </View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Account Role</Text>
+              <View style={styles.inputWrapper}>
+                <Text style={styles.inputIcon}>
+                  <GradientText text={<Ionicons name="key-outline" size={20} color="#6C63FF" />} size={20} />
+                </Text>
+                <TextInput
+                  style={[styles.input, { color: '#888' }]}
+                  value={data.role}
+                  editable={false}
+                  placeholder="Your role"
+                  placeholderTextColor="#999"
+                />
+              </View>
+            </View>
           </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Role</Text>
-
-
-            <TextInput
-              style={[styles.input, { color: '#888' }]}
-              value={data.role}
-              editable={false}
-            />
-
-          </View>
-        </LinearGradient>
-        <TouchableOpacity
-          style={styles.saveButton}
-          onPress={handleSubmit}
-          disabled={isUpdating}
-        >
-          <Text style={styles.saveButtonText}>
-            {isUpdating ? 'Saving...' : 'Save Changes'}
-          </Text>
-        </TouchableOpacity>
-      </ScrollView>
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={handleSubmit}
+            disabled={isUpdating}
+            activeOpacity={0.8}
+          >
+            <LinearGradient
+              colors={['#56235E', '#C1392D']}
+              locations={[0.2081, 1]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.gradientButton}
+            >
+              {isUpdating ? (
+                <ActivityIndicator color="#FFF" />
+              ) : (
+                <>
+                  <Ionicons name="save-outline" size={20} color="#FFF" style={styles.buttonIcon} />
+                  <Text style={styles.saveButtonText}>Save Changes</Text>
+                </>
+              )}
+            </LinearGradient>
+          </TouchableOpacity>
+        </ScrollView>
+      }
     </Layout>
   );
 };
@@ -172,88 +208,108 @@ const handleSubmit = async () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+  },
+  scrollContent: {
+    paddingBottom: 40,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  profileHeader: {
     alignItems: 'center',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    marginBottom: 10,
   },
-  title: {
-    fontSize: 20,
+  profileIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  profileHeaderText: {
+    fontSize: 18,
     fontWeight: '600',
-    color: '#80225E',
+    color: '#444',
   },
   verificationBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
+    alignSelf: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
     borderRadius: 20,
-    marginTop: 10,
+    marginVertical: 10,
   },
   verificationText: {
     color: '#fff',
     fontSize: 14,
     fontWeight: '500',
-    marginLeft: 5,
+    marginLeft: 8,
   },
   formContainer: {
-    margin: 16,
-    padding: 20,
-    borderRadius: 12,
+    marginTop: 20,
+    paddingHorizontal: 20,
   },
   inputContainer: {
     marginBottom: 20,
   },
   label: {
     fontSize: 14,
-    color: '#80225E',
+    color: '#666',
     marginBottom: 8,
     fontWeight: '500',
+    marginLeft: 8,
   },
-  input: {
-    height: 50,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-  },
-  roleContainer: {
+  inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 50,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    paddingHorizontal: 16,
+    backgroundColor: '#FFF',
+    borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: '#EEE',
   },
-  roleIcon: {
-    marginLeft: 10,
+  inputIcon: {
+    marginLeft: 12,
+  },
+  input: {
+    flex: 1,
+    height: 50,
+    paddingHorizontal: 12,
+    fontSize: 16,
+    color: '#333',
   },
   saveButton: {
-    backgroundColor: '#80225E',
-    borderRadius: 8,
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 16,
+    marginHorizontal: 20,
     marginTop: 20,
-    marginBottom: 40,
+    borderRadius: 10,
+    overflow: 'hidden',
+    ...Platform.select({
+      android: {
+        elevation: 4,
+      },
+      ios: {
+        shadowColor: '#6C63FF',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+      },
+    }),
+  },
+  gradientButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+  },
+  buttonIcon: {
+    marginRight: 10,
   },
   saveButtonText: {
-    color: '#fff',
+    color: '#FFF',
     fontSize: 16,
     fontWeight: '600',
   },

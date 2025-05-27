@@ -9,12 +9,12 @@ import {
     Modal,
     Pressable,
     Alert,
+    ActivityIndicator,
 } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
-import Loader from '../../common/Loader';
 import { Layout } from '../../common/Layout';
 import {
     useGetQuestionnairesQuery,
@@ -199,87 +199,96 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
                 </View>
             </View>
 
-            {isLoading ? <Loader /> : error ? (
-                <Text style={styles.errorText}>Failed to load data</Text>
-            ) : (
-                <ScrollView style={{ marginTop: 8,  }}>
-                    {data?.data?.map((item: QuestionnaireTypes, i: number) => (
-                        <View key={item._id || i} style={styles.card}>
-                            <View style={[styles.caseRow, styles.caseNumberRow]}>
-                                <Text style={styles.caseText}>Case Number :</Text>
-                                <Text style={styles.caseNumber}>{item?.case_number}</Text>
-                            </View>
-                            {[
-                                ['Patient Name', item.name],
-                                ['Gender', item.gender],
-                                ['Status', item.status]
-                            ].map(([label, value], idx) => (
-                                <View key={idx} style={[styles.caseRow, styles.caseTextRow]}>
-                                    <GradientText
-                                        text={`${label} :`}
-                                        size={14}
-                                        colors={['#5E346D', '#C13439']}
-                                    />
-                                    <Text style={styles.cardText}>{typeof value === 'string' || typeof value === 'number' ? value : 'N/A'}</Text>
+            {isLoading ?
+                <View style={styles.center}>
+                    <ActivityIndicator size="large" />
+                </View>
+                : error ? (
+                    <Text style={styles.errorText}>Failed to load data</Text>
+                ) : (
+                    <ScrollView style={{ marginTop: 8, }}>
+                        {data?.data?.map((item: QuestionnaireTypes, i: number) => (
+                            <View key={item._id || i} style={styles.card}>
+                                <View style={[styles.caseRow, styles.caseNumberRow]}>
+                                    <Text style={styles.caseText}>Case Number :</Text>
+                                    <Text style={styles.caseNumber}>{item?.case_number}</Text>
                                 </View>
-                            ))}
+                                {[
+                                    ['Patient Name', item.name],
+                                    ['Gender', item.gender],
+                                    ['Status', item.status]
+                                ].map(([label, value], idx) => (
+                                    <View key={idx} style={[styles.caseRow, styles.caseTextRow]}>
+                                        <GradientText
+                                            text={`${label} :`}
+                                            size={14}
+                                            colors={['#5E346D', '#C13439']}
+                                        />
+                                        <Text style={styles.cardText}>{typeof value === 'string' || typeof value === 'number' ? value : 'N/A'}</Text>
+                                    </View>
+                                ))}
 
-                            <View style={styles.cardActions}>
-                                <TouchableOpacity
-                                    style={[styles.filterBtn]}
-                                    onPress={() => openModal(item)}
-                                >
-                                    <Text style={styles.filterBtnText}>View</Text>
-                                </TouchableOpacity>
+                                <View style={styles.cardActions}>
+                                    <TouchableOpacity
+                                        style={[styles.filterBtn]}
+                                        onPress={() => openModal(item)}
+                                    >
+                                        <Text style={styles.filterBtnText}>View</Text>
+                                    </TouchableOpacity>
 
-                                <TouchableOpacity
-                                    style={[
-                                        styles.filterBtn,
-                                        (item.status === 'submit') && styles.disabledButton
-                                    ]}
-                                    onPress={() => navigation.navigate('UpdateQuestionnaire', { id: item._id })}
-                                    disabled={item.status === 'submit' || sendingId === item._id}
-                                >
+                                    <TouchableOpacity
+                                        style={[
+                                            styles.filterBtn,
+                                            (item.status === 'submit') && styles.disabledButton
+                                        ]}
+                                        onPress={() => navigation.navigate('UpdateQuestionnaire', { id: item._id })}
+                                        disabled={item.status === 'submit' || sendingId === item._id}
+                                    >
 
-                                    <Text style={[styles.filterBtnText, (item.status === 'submit') && styles.disabledButtonColor]}>Edit</Text>
-                                </TouchableOpacity>
+                                        <Text style={[styles.filterBtnText, (item.status === 'submit') && styles.disabledButtonColor]}>Edit</Text>
+                                    </TouchableOpacity>
 
-                                <TouchableOpacity
-                                    style={[
-                                        styles.filterBtn,
-                                        (item.status === 'submit') && styles.disabledButton
-                                    ]}
-                                    onPress={() => handleSubmit(item._id)}
-                                    disabled={item.status === 'submit'}
-                                >
+                                    <TouchableOpacity
+                                        style={[
+                                            styles.filterBtn,
+                                            (item.status === 'submit') && styles.disabledButton
+                                        ]}
+                                        onPress={() => handleSubmit(item._id)}
+                                        disabled={item.status === 'submit'}
+                                    >
 
-                                    <Text style={[styles.filterBtnText, (item.status === 'submit') && styles.disabledButtonColor]}>
-                                        {item.status === 'submit'
-                                            ? 'Submit'
-                                            : sendingId === item._id
-                                                ? 'Sending...'
-                                                : 'Send'}
-                                    </Text>
-                                </TouchableOpacity>
+                                        <Text style={[styles.filterBtnText, (item.status === 'submit') && styles.disabledButtonColor]}>
+                                            {item.status === 'submit'
+                                                ? 'Submit'
+                                                : sendingId === item._id
+                                                    ? 'Sending...'
+                                                    : 'Send'}
+                                        </Text>
+                                    </TouchableOpacity>
 
-                                <TouchableOpacity
-                                    style={[styles.filterBtn]}
-                                    onPress={() => handleDelete(item._id)}
-                                >
+                                    <TouchableOpacity
+                                        style={[styles.filterBtn]}
+                                        onPress={() => handleDelete(item._id)}
+                                    >
 
-                                    <Text style={styles.filterBtnText}>Delete</Text>
-                                </TouchableOpacity>
+                                        <Text style={styles.filterBtnText}>Delete</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-                        </View>
-                    ))}
-                </ScrollView>
-            )}
+                        ))}
+                    </ScrollView>
+                )}
             {renderModal()}
         </Layout>
     );
 }
 
 const styles = StyleSheet.create({
+    center: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     headerRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',

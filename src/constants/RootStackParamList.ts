@@ -4,4 +4,5 @@ export type RootStackParamList = {
     User: undefined;
     Setting: undefined;
     Notification: undefined;
+    MythsAndFacts: undefined;
 };

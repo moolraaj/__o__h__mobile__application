@@ -478,7 +478,7 @@ export default function LesionsReceivedList() {
             </View>
 
             {isLoading ? (
-                <View style={styles.loaderContainer}>
+                <View style={styles.center}>
                     <ActivityIndicator size="large" color="#6a3093" />
                 </View>
             ) : error ? (
@@ -554,6 +554,11 @@ export default function LesionsReceivedList() {
 }
 
 const styles = StyleSheet.create({
+    center: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     headerContainer: {
         marginBottom: 20,
     },

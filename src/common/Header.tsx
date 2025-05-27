@@ -341,7 +341,8 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   View, StyleSheet, Text, TouchableOpacity,
-  Modal, Animated, Easing, Image, Platform
+  Modal, Animated, Easing, Image, Platform,
+  Alert
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native';
@@ -356,13 +357,14 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export function Header() {
+  const { t } = useTranslation();
   const { i18n } = useTranslation();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
   const [modalVisible, setModalVisible] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
   const [roleModalVisible, setRoleModalVisible] = useState(false);
-  const { user } = useAuth();
+  const { user, setToken, setUser } = useAuth();
   const slideAnim = useRef(new Animated.Value(300)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -440,23 +442,48 @@ export function Header() {
   };
 
   const getRoleBasedLinks = () => {
+    const commonLinks = [
+      { label: 'Myths & Facts', screen: 'MythsAndFacts', icon: 'book-open' },
+    ];
     if (user?.role === 'dantasurakshaks') {
       return [
         { label: 'Lesions', screen: 'AllLesions', icon: 'file-medical' },
         { label: 'Feedback Received', screen: 'FeedbackReceivedToDanta', icon: 'comment-medical' },
         { label: 'Questionnaire', screen: 'AllQuestionnaire', icon: 'question-circle' },
+        ...commonLinks,
       ];
     } else if (user?.role === 'admin') {
       return [
         { label: 'Lesions Received', screen: 'AdminLesions', icon: 'file-medical' },
         { label: 'Question Received', screen: 'AdminQuestion', icon: 'question-circle' },
-        { label: 'User Management', screen: 'UserManagement', icon: 'users-cog' },
+        // { label: 'User Management', screen: 'UserManagement', icon: 'users-cog' },
+        ...commonLinks,
       ];
     }
     return [];
   };
 
   const roleLinks = getRoleBasedLinks();
+
+  const handleLogout = () => {
+    Alert.alert(
+      t('logoutTitle', 'Logout'),
+      t('logoutMsg', 'Are you sure?'),
+      [
+        { text: t('cancel', 'Cancel') },
+        {
+          text: t('logout', 'Logout'),
+          style: 'destructive',
+          onPress: async () => {
+            await AsyncStorage.multiRemove(['authToken', 'user']);
+            setToken(null);
+            setUser(null);
+            closeRoleModal();
+          },
+        },
+      ]
+    );
+  };
 
   return (
     <>
@@ -616,10 +643,7 @@ export function Header() {
 
             <TouchableOpacity
               style={styles.signOutButton}
-              onPress={() => {
-                // Handle sign out
-                closeRoleModal();
-              }}
+              onPress={handleLogout}
               activeOpacity={0.8}
             >
               <LinearGradient
@@ -869,8 +893,8 @@ const styles = StyleSheet.create({
   roleModalItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
     gap: 20,
   },
   roleModalText: {

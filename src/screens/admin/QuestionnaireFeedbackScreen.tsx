@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
 import { useRoute } from "@react-navigation/native";
 import { Layout } from "../../common/Layout";
-import { Text, View, ScrollView, StyleSheet,   Pressable, TextInput } from "react-native";
+import { Text, View, ScrollView, StyleSheet, Pressable, TextInput, ActivityIndicator } from "react-native";
 import { useGetAdminQuestionnaireByIdQuery, useSendQuestionnaireFeedbackMutation } from "../../store/services/questionnaire/questionnaireApi";
 import GradientText from "../../common/GradientText";
 import Loader from '../../common/Loader';
 import { ToastMessage } from '../../resuable/Toast';
 
-export const QuestionnaireFeedbackScreen = ({navigation}:{navigation:any}) => {
+export const QuestionnaireFeedbackScreen = ({ navigation }: { navigation: any }) => {
   const route = useRoute();
   const { id } = route.params as { id: string };
   const { data } = useGetAdminQuestionnaireByIdQuery(id);
- 
+
   const [formData, setFormData] = useState({
     questionary_type: '',
     diagnosis_notes: '',
     recomanded_actions: '',
     comments_or_notes: '',
   });
-  
+
   const [sendFeedback, { isLoading }] = useSendQuestionnaireFeedbackMutation();
 
   const handleSubmit = async () => {
@@ -30,18 +30,18 @@ export const QuestionnaireFeedbackScreen = ({navigation}:{navigation:any}) => {
 
     console.log(`form`)
     console.log(form)
-    
-    try {
-      let resp=await sendFeedback({ id, formData: form }).unwrap();
 
-      if(resp){
-        ToastMessage('success',resp?.message)
+    try {
+      let resp = await sendFeedback({ id, formData: form }).unwrap();
+
+      if (resp) {
+        ToastMessage('success', resp?.message)
       }
 
       console.log(`resp`)
       console.log(resp)
       navigation.navigate('AdminQuestion')
-     
+
     } catch (error) {
       console.error('Failed to send feedback:', error);
     }
@@ -169,85 +169,88 @@ export const QuestionnaireFeedbackScreen = ({navigation}:{navigation:any}) => {
           ))}
         </View>
 
-      
+
       </ScrollView>
 
-      
-   
-       
-            
-            <ScrollView style={modalStyles.scrollContainer}>
-              <View style={modalStyles.inputGroup}>
-                <GradientText text="Questionary Type:" size={14} colors={['#5E346D', '#C13439']} />
-                <TextInput
-                  style={modalStyles.input}
-                  value={formData.questionary_type}
-                  onChangeText={(text) => setFormData({...formData, questionary_type: text})}
-                  placeholder="Enter questionary type"
-                />
-              </View>
-              
-              <View style={modalStyles.inputGroup}>
-                <GradientText text="Diagnosis Notes:" size={14} colors={['#5E346D', '#C13439']} />
-                <TextInput
-                  style={[modalStyles.input, modalStyles.multilineInput]}
-                  value={formData.diagnosis_notes}
-                  onChangeText={(text) => setFormData({...formData, diagnosis_notes: text})}
-                  placeholder="Enter diagnosis notes"
-                  multiline
-                />
-              </View>
-              
-              <View style={modalStyles.inputGroup}>
-                <GradientText text="Recommended Actions:" size={14} colors={['#5E346D', '#C13439']} />
-                <TextInput
-                  style={[modalStyles.input, modalStyles.multilineInput]}
-                  value={formData.recomanded_actions}
-                  onChangeText={(text) => setFormData({...formData, recomanded_actions: text})}
-                  placeholder="Enter recommended actions"
-                  multiline
-                />
-              </View>
-              
-              <View style={modalStyles.inputGroup}>
-                <GradientText text="Comments/Notes:" size={14} colors={['#5E346D', '#C13439']} />
-                <TextInput
-                  style={[modalStyles.input, modalStyles.multilineInput]}
-                  value={formData.comments_or_notes}
-                  onChangeText={(text) => setFormData({...formData, comments_or_notes: text})}
-                  placeholder="Enter additional comments"
-                  multiline
-                />
-              </View>
-            </ScrollView>
-            
-            <View style={modalStyles.buttonContainer}>
-              <Pressable 
-                style={[modalStyles.button, modalStyles.cancelButton]} 
-                
-                disabled={isLoading}
-              >
-                <Text style={modalStyles.buttonText}>Cancel</Text>
-              </Pressable>
-              
-              <Pressable 
-                style={[modalStyles.button, modalStyles.submitButton]} 
-                onPress={handleSubmit}
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <Loader/>
-                ) : (
-                  <Text style={modalStyles.buttonText}>Submit Feedback</Text>
-                )}
-              </Pressable>
+      <ScrollView style={modalStyles.scrollContainer}>
+        <View style={modalStyles.inputGroup}>
+          <GradientText text="Questionary Type:" size={14} colors={['#5E346D', '#C13439']} />
+          <TextInput
+            style={modalStyles.input}
+            value={formData.questionary_type}
+            onChangeText={(text) => setFormData({ ...formData, questionary_type: text })}
+            placeholder="Enter questionary type"
+          />
+        </View>
+
+        <View style={modalStyles.inputGroup}>
+          <GradientText text="Diagnosis Notes:" size={14} colors={['#5E346D', '#C13439']} />
+          <TextInput
+            style={[modalStyles.input, modalStyles.multilineInput]}
+            value={formData.diagnosis_notes}
+            onChangeText={(text) => setFormData({ ...formData, diagnosis_notes: text })}
+            placeholder="Enter diagnosis notes"
+            multiline
+          />
+        </View>
+
+        <View style={modalStyles.inputGroup}>
+          <GradientText text="Recommended Actions:" size={14} colors={['#5E346D', '#C13439']} />
+          <TextInput
+            style={[modalStyles.input, modalStyles.multilineInput]}
+            value={formData.recomanded_actions}
+            onChangeText={(text) => setFormData({ ...formData, recomanded_actions: text })}
+            placeholder="Enter recommended actions"
+            multiline
+          />
+        </View>
+
+        <View style={modalStyles.inputGroup}>
+          <GradientText text="Comments/Notes:" size={14} colors={['#5E346D', '#C13439']} />
+          <TextInput
+            style={[modalStyles.input, modalStyles.multilineInput]}
+            value={formData.comments_or_notes}
+            onChangeText={(text) => setFormData({ ...formData, comments_or_notes: text })}
+            placeholder="Enter additional comments"
+            multiline
+          />
+        </View>
+      </ScrollView>
+
+      <View style={modalStyles.buttonContainer}>
+        <Pressable
+          style={[modalStyles.button, modalStyles.cancelButton]}
+
+          disabled={isLoading}
+        >
+          <Text style={modalStyles.buttonText}>Cancel</Text>
+        </Pressable>
+
+        <Pressable
+          style={[modalStyles.button, modalStyles.submitButton]}
+          onPress={handleSubmit}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <View style={styles.center}>
+              <ActivityIndicator size="large" color="#6a3093" />
             </View>
-          
+          ) : (
+            <Text style={modalStyles.buttonText}>Submit Feedback</Text>
+          )}
+        </Pressable>
+      </View>
+
     </Layout>
   );
 };
 
 const styles = StyleSheet.create({
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     padding: 16,

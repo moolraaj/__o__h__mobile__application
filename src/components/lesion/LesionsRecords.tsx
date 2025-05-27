@@ -11,12 +11,12 @@ import {
   Modal,
   Pressable,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
-import Loader from '../../common/Loader';
- 
+
 import {
   useFetchAllLesionsQuery,
   useSubmitLesionMutation,
@@ -150,7 +150,7 @@ export default function AllLesionsRecords({ navigation }: { navigation: any }) {
 
   return (
     <>
- 
+
       <View style={{ alignItems: 'flex-start', marginBottom: 15 }}>
         <View style={styles.headerRow}>
           <GradientText text="Lesions" size={18} />
@@ -160,7 +160,7 @@ export default function AllLesionsRecords({ navigation }: { navigation: any }) {
         </View>
       </View>
 
- 
+
       <View style={styles.searchContainer}>
         <LinearGradient
           colors={['#FBEAFF', '#FFD6D6']}
@@ -192,7 +192,9 @@ export default function AllLesionsRecords({ navigation }: { navigation: any }) {
 
       {/* LIST */}
       {isLoading ? (
-        <Loader />
+        <View style={styles.center}>
+          <ActivityIndicator size="large" />
+        </View>
       ) : error ? (
         <Text style={styles.errorText}>Failed to load data</Text>
       ) : (
@@ -254,6 +256,11 @@ export default function AllLesionsRecords({ navigation }: { navigation: any }) {
 }
 
 const styles = StyleSheet.create({
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -278,7 +285,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   searchInput: { flex: 1, color: '#660033' },
-  filterRow: { flexDirection: 'row', justifyContent: 'space-between',marginTop: 20, gap: 12 },
+  filterRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 20, gap: 12 },
   filterBtnAll: { paddingVertical: 6, paddingHorizontal: 20, borderRadius: 8 },
   filterBtnAllText: { color: 'white', fontWeight: 'bold' },
   addBtnGradient: { borderRadius: 22, padding: 1 },
