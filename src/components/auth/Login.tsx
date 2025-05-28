@@ -130,16 +130,16 @@ export default function Login({ navigation }: { navigation: any }) {
 
 
     try {
-      const loginRes = await loginUser({ email, password }).unwrap();
-      await AsyncStorage.multiSet([
-        ['authToken', loginRes.token],
-        ['user', JSON.stringify(loginRes.user)],
-      ]);
-      setToken(loginRes.token);
-      setUser(loginRes.user);
+      // const loginRes = await loginUser({ email, password }).unwrap();
+      // await AsyncStorage.multiSet([
+      //   ['authToken', loginRes.token],
+      //   ['user', JSON.stringify(loginRes.user)],
+      // ]);
+      // setToken(loginRes.token);
+      // setUser(loginRes.user);
 
       if (!email || !password) {
-        return ToastMessage('error', loginRes.message || 'Logged in successfully');
+        return ToastMessage('error', 'Plese Provide Valid Credentails!');
       }
       setShowSuccessModal(true);
     } catch (err: any) {

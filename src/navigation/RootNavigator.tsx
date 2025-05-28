@@ -1,20 +1,16 @@
-import { View } from 'react-native';
 import { useAuth } from './AuthContext';
 import { AuthStack } from './AuthStack';
-import Loader from '../common/Loader';
 import { NavigationContainer } from '@react-navigation/native';
 import RoleSwitcher from './RoleSwithcer';
+import Splash from '../screens/splash';
+import { useState } from 'react';
 
 export function RootNavigator() {
-    const { token, loading } = useAuth();
+    const { token } = useAuth();
+    const [splashFinished, setSplashFinished] = useState(false);
 
-    if (loading) {
-
-        return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <Loader />
-            </View>
-        );
+    if (!splashFinished) {
+        return <Splash onFinish={() => setSplashFinished(true)} />;
     }
 
     return (

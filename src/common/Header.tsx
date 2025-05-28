@@ -506,7 +506,7 @@ export function Header() {
         <View style={styles.rightContainer}>
           <TouchableOpacity
             onPress={() => navigation.navigate('Notification' as keyof RootStackParamList)}
-            style={styles.iconButton}
+            style={styles.notificationButton}
           >
             <View style={styles.notificationBadge}>
               <Text style={styles.badgeText}>3</Text>
@@ -697,9 +697,8 @@ const styles = StyleSheet.create({
   rightContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 15,
   },
-  iconButton: {
+  notificationButton: {
     position: 'relative',
   },
   notificationBadge: {
@@ -726,6 +725,8 @@ const styles = StyleSheet.create({
     gap: 4,
     paddingHorizontal: 8,
     paddingVertical: 6,
+    marginRight: 8,
+    marginLeft: 14,
     borderRadius: 16,
     backgroundColor: 'rgba(108, 99, 255, 0.1)',
   },
