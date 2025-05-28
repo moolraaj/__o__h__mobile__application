@@ -117,7 +117,7 @@ export default function Login({ navigation }: { navigation: any }) {
   const handleEmailLogin = async () => {
     setEmailError('');
     setPasswordError('');
-    
+
     if (!email) {
       setEmailError('Email is required');
       return;
@@ -127,8 +127,8 @@ export default function Login({ navigation }: { navigation: any }) {
       return;
     }
 
-   
-    
+
+
     try {
       const loginRes = await loginUser({ email, password }).unwrap();
       await AsyncStorage.multiSet([
@@ -138,8 +138,8 @@ export default function Login({ navigation }: { navigation: any }) {
       setToken(loginRes.token);
       setUser(loginRes.user);
 
-      if(!email||!password){
-        return  ToastMessage('error', loginRes.message || 'Logged in successfully');
+      if (!email || !password) {
+        return ToastMessage('error', loginRes.message || 'Logged in successfully');
       }
       ToastMessage('success', loginRes.message || 'Logged in successfully');
       setShowSuccessModal(true);
@@ -165,7 +165,6 @@ export default function Login({ navigation }: { navigation: any }) {
           phoneNumber={phoneNumber}
           callingCode={callingCode}
         />}
-    
         <View style={{ margin: 20 }}>
           {loginMethod === 'email' ?
             <Text style={styles.headerText}>Login via Email</Text>
@@ -176,7 +175,7 @@ export default function Login({ navigation }: { navigation: any }) {
             <Text style={styles.headerSubtext}>Please enter your email and password to continue</Text> :
             <Text style={styles.headerSubtext}>Enter your phone number, and we'll send you a confirmation code</Text>}
         </View>
-      
+
         <View style={styles.toggleContainer}>
           <LinearGradient
             colors={['rgba(222, 32, 39, 0.16)', '#E39EFC']}
@@ -223,7 +222,7 @@ export default function Login({ navigation }: { navigation: any }) {
         </View>
         {
           loginMethod === 'email' ? (
-            // ——————— EMAIL LOGIN ———————
+        
             <View style={styles.slide}>
               <Input
                 placeholder="e.g. johndoe@example.com"
@@ -266,7 +265,7 @@ export default function Login({ navigation }: { navigation: any }) {
               )}
             </View>
           ) : (
-            // ——————— PHONE LOGIN (OTP) ———————
+   
             <>
               <Animated.View
                 style={[styles.slider, { transform: [{ translateX: slideX }] }]}
