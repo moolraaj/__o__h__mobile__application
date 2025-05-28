@@ -9,7 +9,8 @@ import {
     StyleSheet,
     TextInput,
     Modal,
-    Pressable
+    Pressable,
+    ActivityIndicator
 } from 'react-native';
 import React, { useState } from 'react';
 import { Layout } from '../../common/Layout';
@@ -23,6 +24,26 @@ import { useAuth } from '../../navigation/AuthContext';
 
 import { useFetchDantaRecievedQuestionnairesQuery } from '../../store/services/questionnaire/questionnaireApi';
 
+
+type AssignTo = {
+    _id: string;
+    name?: string;
+};
+
+type QuestionnaireTypes = {
+    _id?: string;
+    assignTo?: AssignTo;
+    send_email_to_dantasurakshaks?: boolean;
+    questionary_type?: string;
+    diagnosis_notes?: string;
+    recomanded_actions?: string;
+    comments_or_notes?: string;
+    case_number?: string;
+    name?: string;
+    gender?: string;
+    cardNumber?: string;
+    // add other fields as needed
+};
 
 export default function RecievedQuestionaryScreen() {
     const { user } = useAuth();
@@ -109,66 +130,70 @@ export default function RecievedQuestionaryScreen() {
                     </LinearGradient>
                 </View>
             </View>
-            {isLoading ? <Loader /> : error ? (
-                <Text style={styles.errorText}>Failed to load data</Text>
-            ) : (
-                <ScrollView style={{ marginTop: 8 }}>
-                    {data?.data?.map((item, i) => (
-                        <View key={item._id || i} style={styles.card}>
-                            <View>
-                                <LinearGradient
-                                    colors={['#56235E', '#C1392D']}
-                                    style={styles.gradientTextWrapper}
-                                >
-                                    <Text style={styles.statusText}>
-                                        {item.send_email_to_dantasurakshaks === true ? (
-                                            item.assignTo?._id === user?.id && (
-                                                `Received Questionnaire form ( ${user?.name} )`
-                                            )
-                                        ) : ''}
-                                    </Text>
-                                </LinearGradient>
-                            </View>
-                            <View style={[styles.caseRow, styles.caseNumberRow]}>
-                                <Text style={styles.caseText}>Case Number :</Text>
-                                <View style={styles.statusContainer}>
-
-                                    <Text style={styles.caseNumber}>{item.case_number}</Text>
-
+            {isLoading ?
+                <View style={styles.center}>
+                    <ActivityIndicator size="large" />
+                </View>
+                : error ? (
+                    <Text style={styles.errorText}>Failed to load data</Text>
+                ) : (
+                    <ScrollView style={{ marginTop: 8 }}>
+                        {data?.data?.map((item: QuestionnaireTypes, i: number) => (
+                            <View key={item._id || i} style={styles.card}>
+                                <View>
+                                    <LinearGradient
+                                        colors={['#56235E', '#C1392D']}
+                                        style={styles.gradientTextWrapper}
+                                    >
+                                        <Text style={styles.statusText}>
+                                            {item.send_email_to_dantasurakshaks === true ? (
+                                                item.assignTo?._id === user?.id && (
+                                                    `Received Questionnaire form ( ${user?.name} )`
+                                                )
+                                            ) : ''}
+                                        </Text>
+                                    </LinearGradient>
                                 </View>
-                            </View>
-                            {[
-                                ['Name', item.name],
-                                ['Gender', item.gender],
-                                ['CardNumber', item.cardNumber],
+                                <View style={[styles.caseRow, styles.caseNumberRow]}>
+                                    <Text style={styles.caseText}>Case Number :</Text>
+                                    <View style={styles.statusContainer}>
 
-                            ].map(([label, value], idx) => (
-                                <View key={idx} style={[styles.caseRow, styles.caseTextRow]}>
-                                    <GradientText
-                                        text={`${label} :`}
-                                        size={14}
-                                        colors={['#5E346D', '#C13439']}
-                                    />
-                                    <Text style={styles.cardText}>{value || 'N/A'}</Text>
+                                        <Text style={styles.caseNumber}>{item.case_number}</Text>
+
+                                    </View>
                                 </View>
-                            ))}
+                                {[
+                                    ['Name', item.name],
+                                    ['Gender', item.gender],
+                                    ['CardNumber', item.cardNumber],
+
+                                ].map(([label, value], idx) => (
+                                    <View key={idx} style={[styles.caseRow, styles.caseTextRow]}>
+                                        <GradientText
+                                            text={`${label} :`}
+                                            size={14}
+                                            colors={['#5E346D', '#C13439']}
+                                        />
+                                        <Text style={styles.cardText}>{value || 'N/A'}</Text>
+                                    </View>
+                                ))}
 
 
-                            <View style={[styles.caseRow, styles.caseActionRow]}>
+                                <View style={[styles.caseRow, styles.caseActionRow]}>
 
 
-                                <TouchableOpacity
-                                    style={styles.filterBtnView}
-                                    onPress={() => openModal(item)}
-                                >
-                                    <Text style={styles.filterBtnTextView}>view Feedback sent by {item?.assignTo?.name}</Text>
-                                </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.filterBtnView}
+                                        onPress={() => openModal(item)}
+                                    >
+                                        <Text style={styles.filterBtnTextView}>view Feedback sent by {item?.assignTo?.name}</Text>
+                                    </TouchableOpacity>
+                                </View>
+
                             </View>
-
-                        </View>
-                    ))}
-                </ScrollView>
-            )}
+                        ))}
+                    </ScrollView>
+                )}
             {renderModal()}
 
         </Layout>
@@ -176,6 +201,11 @@ export default function RecievedQuestionaryScreen() {
 }
 
 const styles = StyleSheet.create({
+    center: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     gradientTextWrapper: {
         paddingHorizontal: 8,
         paddingVertical: 7,

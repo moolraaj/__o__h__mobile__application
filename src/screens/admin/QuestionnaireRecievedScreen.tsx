@@ -738,7 +738,7 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                                         end={{ x: 1, y: 0 }}
                                         style={styles.feedbackHeader}
                                     >
-                                        <Text style={styles.feedbackTitle}>Danta Surakshak Feedback</Text>
+                                        <Text style={styles.feedbackTitle}>Your Given Feedback :</Text>
                                     </LinearGradient>
                                     <View style={styles.feedbackContent}>
                                         {[

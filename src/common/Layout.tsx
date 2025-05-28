@@ -65,5 +65,6 @@ const styles = StyleSheet.create({
   content: {
     flexGrow: 1,
     padding: 16,
+    paddingBottom: 80, // Space for footer
   },
 });

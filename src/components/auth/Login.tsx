@@ -141,7 +141,6 @@ export default function Login({ navigation }: { navigation: any }) {
       if (!email || !password) {
         return ToastMessage('error', loginRes.message || 'Logged in successfully');
       }
-      ToastMessage('success', loginRes.message || 'Logged in successfully');
       setShowSuccessModal(true);
     } catch (err: any) {
       const errorMessage = err?.data?.error || 'provide valid credentials';
@@ -160,10 +159,17 @@ export default function Login({ navigation }: { navigation: any }) {
       <ScrollView showsVerticalScrollIndicator={false}>
         {showSuccessModal && <SuccessModal
           visible={showSuccessModal}
-          message="Otp Verified successful!"
+          message={
+            loginMethod === 'phone'
+              ? "OTP Verified successfully!"
+              : "Logged in successfully!"
+          }
           onClose={() => setShowSuccessModal(false)}
           phoneNumber={phoneNumber}
+          email={email}
+          password={password}
           callingCode={callingCode}
+          loginMethod={loginMethod}
         />}
         <View style={{ margin: 20 }}>
           {loginMethod === 'email' ?
