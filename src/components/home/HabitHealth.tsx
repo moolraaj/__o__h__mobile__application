@@ -11,23 +11,45 @@ import { useGetHabitHealthQuery } from '../../store/services/habithealth/habithe
 import { useTranslation } from 'react-i18next'
 import GradientText from '../../common/GradientText'
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient'
 import CardSkeletonItem from '../../common/CardSkeletonItem'
 
 export default function HabitHealthList({ navigation }: { navigation: any }) {
   const { i18n } = useTranslation()
   const lang = i18n.language
-  const { data, isLoading, error } = useGetHabitHealthQuery({ page: 1, lang },
+  const { data, isLoading, error, refetch } = useGetHabitHealthQuery({ page: 1, lang },
     {
       refetchOnMountOrArgChange: true,
     })
   const records = data?.result.slice(0, 2) ?? []
 
-  if (error) return <Text>Error loading habits</Text>
 
   return (
     <View style={styles.listContainer}>
-      {isLoading ? <CardSkeletonItem count={2} /> :
+      {isLoading ? <CardSkeletonItem count={2} /> : error || !data?.result ?
+        (
+          <View style={styles.errorCardsContainer}>
+            {Array(2).fill(null).map((_, index) => (
+              <TouchableOpacity
+                key={`error-card-${index}`}
+                style={[styles.card, styles.errorCard]}
+                onPress={() => refetch()}
+                activeOpacity={0.8}
+              >
+                <View style={styles.errorContent}>
+                  <View style={styles.errorIconContainer}>
+                    <Icon5 name="exclamation-triangle" size={15} color="#FF5E62" />
+                  </View>
+                  <Text style={styles.errorTitle}>Content Unavailable</Text>
+                  <Text style={styles.errorMessage}>
+                    Failed to load health habits
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        ) :
         <FlatList
           data={records}
           keyExtractor={(r) => r._id}
@@ -84,6 +106,56 @@ export default function HabitHealthList({ navigation }: { navigation: any }) {
 }
 
 const styles = StyleSheet.create({
+  errorCardsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+  errorCard: {
+    flex: 1,
+    aspectRatio: 1 / 0.6,
+    backgroundColor: '#FFF5F5',
+    borderWidth: 1,
+    borderColor: '#FFCDD2',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  errorContent: {
+    alignItems: 'center',
+    padding: 10,
+  },
+  errorIconContainer: {
+    backgroundColor: '#FFEBEE',
+    width: 30,
+    height: 30,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  errorTitle: {
+    color: '#D32F2F',
+    fontSize: 14,
+    fontWeight: '700',
+    marginBottom: 4,
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
+  errorMessage: {
+    color: '#D32F2F',
+    fontSize: 10,
+    fontWeight: '500',
+    opacity: 0.9,
+    textAlign: 'center',
+    includeFontPadding: false,
+    lineHeight: 16,
+  },
   listContainer: {
     flex: 1,
   },

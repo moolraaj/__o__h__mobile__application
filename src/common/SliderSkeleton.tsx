@@ -37,7 +37,7 @@ const SliderSkeleton = () => {
 const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
-        height: 180,
+        height: 176,
         overflow: 'hidden',
     },
     slide: {
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 14,
+        marginTop: 10,
     },
     skeletonDot: {
         width: 8,

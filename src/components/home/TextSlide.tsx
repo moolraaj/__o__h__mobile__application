@@ -6,6 +6,7 @@ import {
     Dimensions,
     StyleSheet,
     Animated,
+    Text,
 } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 import { useGetTextSliderQuery } from '../../store/services/textslider/slideTextApi'
@@ -13,6 +14,7 @@ import { useTranslation } from 'react-i18next'
 import LinearGradient from 'react-native-linear-gradient'
 import GradientText from '../../common/GradientText'
 import Shimmer from '../../common/Shimmer'
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 type SliderItem = {
     _id: string
@@ -27,7 +29,7 @@ export default function TextSlide({ navigation }: { navigation: any }) {
     const { i18n } = useTranslation()
     const lang = i18n.language
 
-    const { data, isLoading } = useGetTextSliderQuery({ page: 1, limit: 10, lang },
+    const { data, isLoading, error, refetch } = useGetTextSliderQuery({ page: 1, limit: 10, lang },
         {
             refetchOnMountOrArgChange: true,
         })
@@ -90,58 +92,154 @@ export default function TextSlide({ navigation }: { navigation: any }) {
                         ))}
                     </View>
                 </View>
-                :
-                <>
-                    <FlatList
-                        ref={flatRef}
-                        data={slides}
-                        keyExtractor={i => i._id}
-                        horizontal
-                        pagingEnabled
-                        showsHorizontalScrollIndicator={false}
-                        onViewableItemsChanged={onViewableItemsChanged.current}
-                        viewabilityConfig={viewConfig.current}
-                        contentContainerStyle={{ paddingHorizontal: CARD_MARGIN }}
-                        snapToInterval={CARD_WIDTH + CARD_MARGIN * 2}
-                        decelerationRate="fast"
-                        renderItem={({ item }) => (
-                            <LinearGradient
-                                colors={['#FBEAFF', '#FFD6D6']}
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 0 }}
-                                style={styles.slide}
-                            >
-                                <GradientText text={item.slider_text[lang]} />
+                : error || !data.data ?
+                    (<View style={styles.errorWrapper}>
+                        <LinearGradient
+                            colors={['#56235E', '#C1392D']}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 1 }}
+                            style={styles.errorContainer}
+                        >
+                            <View style={styles.errorContent}>
+                                <View style={styles.errorIconContainer}>
+                                    <LinearGradient
+                                        colors={['#fff', '#f8f8f8']}
+                                        style={styles.errorIconBackground}
+                                    >
+                                        <Icon name="exclamation-triangle" size={20} color="#FF416C" />
+                                    </LinearGradient>
+                                </View>
 
-                                <TouchableOpacity onPress={goPrev} style={[styles.arrow, styles.leftArrow]}>
-                                    <Feather name="chevron-left" size={14} />
+                                <View style={styles.errorTextContainer}>
+                                    <GradientText
+                                        text="Loading Error"
+                                        colors={['#fff', '#f8f8f8']}
+                                    />
+                                    <Text style={styles.errorMessage}>
+                                        We couldn't load the slider content. Please try again later.
+                                    </Text>
+                                </View>
+
+                                <TouchableOpacity
+                                    style={styles.retryButton}
+                                    onPress={() => refetch()}
+                                >
+                                    <Text style={styles.retryButtonText}>Retry</Text>
                                 </TouchableOpacity>
+                            </View>
+                        </LinearGradient>
+                    </View>) :
+                    <>
+                        <FlatList
+                            ref={flatRef}
+                            data={slides}
+                            keyExtractor={i => i._id}
+                            horizontal
+                            pagingEnabled
+                            showsHorizontalScrollIndicator={false}
+                            onViewableItemsChanged={onViewableItemsChanged.current}
+                            viewabilityConfig={viewConfig.current}
+                            contentContainerStyle={{ paddingHorizontal: CARD_MARGIN }}
+                            snapToInterval={CARD_WIDTH + CARD_MARGIN * 2}
+                            decelerationRate="fast"
+                            renderItem={({ item }) => (
+                                <LinearGradient
+                                    colors={['#FBEAFF', '#FFD6D6']}
+                                    start={{ x: 0, y: 0 }}
+                                    end={{ x: 1, y: 0 }}
+                                    style={styles.slide}
+                                >
+                                    <GradientText text={item.slider_text[lang]} />
 
-                                <TouchableOpacity onPress={goNext} style={[styles.arrow, styles.rightArrow]}>
-                                    <Feather name="chevron-right" size={14} />
-                                </TouchableOpacity>
-                            </LinearGradient>
-                        )}
-                    />
+                                    <TouchableOpacity onPress={goPrev} style={[styles.arrow, styles.leftArrow]}>
+                                        <Feather name="chevron-left" size={14} />
+                                    </TouchableOpacity>
 
-                    <View style={styles.pagination}>
-                        {slides.map((_, index) => (
-                            <View
-                                key={index}
-                                style={[
-                                    styles.dot,
-                                    currentIndex === index ? styles.activeDot : {},
-                                ]}
-                            />
-                        ))}
-                    </View>
-                </>
+                                    <TouchableOpacity onPress={goNext} style={[styles.arrow, styles.rightArrow]}>
+                                        <Feather name="chevron-right" size={14} />
+                                    </TouchableOpacity>
+                                </LinearGradient>
+                            )}
+                        />
+
+                        <View style={styles.pagination}>
+                            {slides.map((_, index) => (
+                                <View
+                                    key={index}
+                                    style={[
+                                        styles.dot,
+                                        currentIndex === index ? styles.activeDot : {},
+                                    ]}
+                                />
+                            ))}
+                        </View>
+                    </>
             }
         </View>
     )
 }
 
 const styles = StyleSheet.create({
+    errorWrapper: {
+        width: '100%',
+        height: 80,
+        overflow: 'hidden'
+    },
+    errorContainer: {
+        flex: 1,
+        borderRadius: 12,
+        paddingHorizontal: 12,
+        justifyContent: 'center',
+        elevation: 8,
+        shadowColor: '#FF416C',
+        shadowOpacity: 0.3,
+        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 5 },
+    },
+    errorContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        overflow: 'hidden'
+    },
+    errorIconContainer: {
+        marginRight: 15,
+    },
+    errorIconBackground: {
+        width: 40,
+        height: 40,
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    errorTextContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    errorHeading: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginBottom: 4,
+    },
+    errorMessage: {
+        color: '#fff',
+        fontSize: 10,
+        opacity: 0.9,
+        textAlign: 'center'
+    },
+    retryButton: {
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.5)',
+        paddingVertical: 2,
+        paddingHorizontal: 12,
+        borderRadius: 20,
+        marginLeft: 10,
+    },
+    retryButtonText: {
+        color: '#fff',
+        fontWeight: '600',
+    },
     wrapper: {
         alignItems: 'center',
         marginVertical: 20,

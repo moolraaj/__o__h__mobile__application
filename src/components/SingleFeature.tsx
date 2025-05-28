@@ -8,13 +8,14 @@ import Disease from './Disease'
 import GradientText from '../common/GradientText'
 import LinearGradient from 'react-native-linear-gradient'
 import Entypo from 'react-native-vector-icons/Entypo'
+import { AppError } from '../common/AppError'
 
 const SingleFeature = ({ navigation }: { navigation: any }) => {
     const route = useRoute()
     const { i18n } = useTranslation();
     const currentLanguage = i18n.language;
     const { id } = route.params as { id: string }
-    const { data, isLoading, error } = useGetSingleFeatureCategoryQuery({ id, lang: currentLanguage },
+    const { data, isLoading, error, refetch } = useGetSingleFeatureCategoryQuery({ id, lang: currentLanguage },
         {
             refetchOnMountOrArgChange: true,
         })
@@ -26,12 +27,8 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
             </View>
         )
     }
-    if (error) {
-        return (
-            <View style={styles.center}>
-                <Text style={styles.error}>Error fetching category</Text>
-            </View>
-        )
+    if (error || !data) {
+        return <AppError onRetry={() => refetch()} />
     }
     const result = data?.data
     return (

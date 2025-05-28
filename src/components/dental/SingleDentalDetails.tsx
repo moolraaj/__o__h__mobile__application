@@ -16,6 +16,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import LinearGradient from 'react-native-linear-gradient'
+import { AppError } from '../../common/AppError'
 
 const SingleDentalEmergencyDetail = () => {
     const { id } = useRoute().params as { id: string }
@@ -23,7 +24,7 @@ const SingleDentalEmergencyDetail = () => {
     const currentLanguage = i18n.language as keyof Language;
     const [expandedTab, setExpandedTab] = useState<string | null>(null);
 
-    const { data, isLoading, isError, error } = useGetSingleDentalEmergencyQuery({ id })
+    const { data, isLoading, error, refetch } = useGetSingleDentalEmergencyQuery({ id })
 
     const toggleTab = (tabIndex: string) => {
         setExpandedTab(prev => prev === tabIndex ? null : tabIndex)
@@ -37,12 +38,8 @@ const SingleDentalEmergencyDetail = () => {
         )
     }
 
-    if (isError) {
-        return (
-            <View style={styles.center}>
-                <Text>Error: {error?.toString()}</Text>
-            </View>
-        )
+    if (error || !data) {
+        return <AppError onRetry={() => refetch()} />
     }
 
     const emergency = data?.result

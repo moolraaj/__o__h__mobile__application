@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../common/GradientText';
 import SliderSkeleton from '../common/SliderSkeleton';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width * 0.8;
@@ -22,7 +23,7 @@ const CARD_SPACING = 5;
 export const Slider = ({ navigation }: { navigation: any }) => {
   const { i18n } = useTranslation();
   const currentLanguage = i18n.language;
-  const { data, error, isLoading } = useGetSlidersQuery({
+  const { data, error, isLoading, refetch } = useGetSlidersQuery({
     page: 1,
     limit: 10,
     lang: currentLanguage,
@@ -53,8 +54,41 @@ export const Slider = ({ navigation }: { navigation: any }) => {
 
   if (error || !data?.result) {
     return (
-      <View style={styles.center}>
-        <Text style={{ color: 'red' }}>Failed to load sliders</Text>
+      <View style={styles.errorWrapper}>
+        <LinearGradient
+          colors={['#56235E', '#C1392D']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.errorContainer}
+        >
+          <View style={styles.errorContent}>
+            <View style={styles.errorIconContainer}>
+              <LinearGradient
+                colors={['#fff', '#f8f8f8']}
+                style={styles.errorIconBackground}
+              >
+                <Icon name="exclamation-triangle" size={28} color="#FF416C" />
+              </LinearGradient>
+            </View>
+
+            <View style={styles.errorTextContainer}>
+              <GradientText
+                text="Loading Error"
+                colors={['#fff', '#f8f8f8']}
+              />
+              <Text style={styles.errorMessage}>
+                We couldn't load the slider content. Please try again later.
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              style={styles.retryButton}
+              onPress={() => refetch()}
+            >
+              <Text style={styles.retryButtonText}>Retry</Text>
+            </TouchableOpacity>
+          </View>
+        </LinearGradient>
       </View>
     );
   }
@@ -113,7 +147,7 @@ export const Slider = ({ navigation }: { navigation: any }) => {
   ];
 
   return (
-    <View style={styles.wrapper}>
+    <View style={styles.slideWrapper}>
       <FlatList
         ref={sliderRef}
         data={slides}
@@ -184,15 +218,70 @@ export const Slider = ({ navigation }: { navigation: any }) => {
 };
 
 const styles = StyleSheet.create({
-  wrapper: {
+  errorWrapper: {
+    height: 100,
+    marginBottom: 20,
+    overflow: 'hidden'
+  },
+  errorContainer: {
+    flex: 1,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    elevation: 8,
+    shadowColor: '#FF416C',
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
+  },
+  errorContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  errorIconContainer: {
+    marginRight: 15,
+  },
+  errorIconBackground: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorTextContainer: {
+    flex: 1,
+  },
+  errorHeading: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  errorMessage: {
+    color: '#fff',
+    fontSize: 14,
+    opacity: 0.9,
+  },
+  retryButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    marginLeft: 10,
+  },
+  retryButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+  slideWrapper: {
     height: 176,
     overflow: 'hidden',
   },
   center: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    height: 180,
+    height: 176,
   },
   slide: {
     width: CARD_WIDTH,
@@ -243,7 +332,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 14,
+    marginTop: 10,
   },
   dotContainer: {
     marginHorizontal: 4,

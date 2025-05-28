@@ -14,8 +14,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import Loader from '../../common/Loader';
 import { ActivityIndicator } from 'react-native';
+import { AppError } from '../../common/AppError';
 
 interface HabitHealthInnerRepeater {
     habit_health_suggesion_icon: string;
@@ -26,18 +26,21 @@ export default function HabitHealthDetails() {
     const { id } = useRoute().params as { id: string };
     const { i18n } = useTranslation();
     const lang = i18n.language;
-    const { data, isLoading, error } = useGetSingleHabitHealthQuery({ id, lang },
+    const { data, isLoading, error, refetch } = useGetSingleHabitHealthQuery({ id, lang },
         {
             refetchOnMountOrArgChange: true,
         });
 
-    if (isLoading || error || !data?.data) {
+    if (isLoading) {
         return (
             <View style={styles.center}>
                 <ActivityIndicator size="large" />
-                {error && <Text>Error loading details.</Text>}
             </View>
         );
+    }
+
+    if (error || !data) {
+        return <AppError onRetry={() => refetch()} />
     }
 
     const { data: item } = data;

@@ -6,23 +6,27 @@ import { useTranslation } from 'react-i18next';
 import GradientText from '../common/GradientText';
 import LinearGradient from 'react-native-linear-gradient';
 import CardSkeletonItem from '../common/CardSkeletonItem';
+import { AppError } from '../common/AppError';
 
 const SingleDisease = ({ navigation }: { navigation: any }) => {
     const { id } = useRoute().params as { id: string };
     const { i18n } = useTranslation();
     const currentLanguage = i18n.language as keyof Language;
-    const { data, isLoading } = useGetSingleDiseasesQuery({ id, lang: currentLanguage },
+    const { data, isLoading, error, refetch } = useGetSingleDiseasesQuery({ id, lang: currentLanguage },
         {
             refetchOnMountOrArgChange: true,
         });
     const [activeTab, setActiveTab] = useState('what_is');
 
-    if (!data?.data) {
+    if (isLoading) {
         return (
             <View style={styles.center}>
                 <ActivityIndicator size="large" />
             </View>
         )
+    }
+    if (error || !data) {
+        return <AppError onRetry={() => refetch()} />
     }
 
     const diseaseData = data.data;
