@@ -9,34 +9,44 @@ type Option = {
 type Props = {
     label?: string;
     options: Option[];
-    selectedValue: string;
-    onChange: (value: string) => void;
+    selectedValues: string[];
+    onChange: (values: string[]) => void;
 };
 
-const RadioButtonGroup: React.FC<Props> = ({
+const CheckboxGroup: React.FC<Props> = ({
     label,
     options,
-    selectedValue,
+    selectedValues = [],
     onChange,
 }) => {
+    const handleCheckboxChange = (value: string) => {
+        const newValues = selectedValues.includes(value)
+            ? selectedValues.filter(v => v !== value) // Remove if already selected
+            : [...selectedValues, value]; // Add if not selected
+
+        onChange(newValues);
+    };
+
     return (
         <>
             {label && <Text style={styles.label}>{label}</Text>}
-            <View style={styles.radioGroup}>
+            <View style={styles.checkboxGroup}>
                 {options.map((option) => (
                     <TouchableOpacity
                         key={option.value}
                         style={[
-                            styles.radioButton,
-                            selectedValue === option.value && styles.radioButtonSelected,
+                            styles.checkboxButton,
+                            selectedValues.includes(option.value) && styles.checkboxButtonSelected,
                         ]}
-                        onPress={() => onChange(option.value)}
+                        onPress={() => handleCheckboxChange(option.value)}
                         activeOpacity={0.7}
                     >
-                        <View style={styles.radioCircle}>
-                            {selectedValue === option.value && <View style={styles.selectedDot} />}
+                        <View style={styles.checkboxSquare}>
+                            {selectedValues.includes(option.value) && (
+                                <View style={styles.checkboxTick} />
+                            )}
                         </View>
-                        <Text style={styles.radioText}>{option.label}</Text>
+                        <Text style={styles.checkboxText}>{option.label}</Text>
                     </TouchableOpacity>
                 ))}
             </View>
@@ -51,13 +61,13 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         color: '#333',
     },
-    radioGroup: {
+    checkboxGroup: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: 12,
         marginBottom: 16,
     },
-    radioButton: {
+    checkboxButton: {
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 8,
@@ -66,16 +76,16 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#E0E0E0',
         backgroundColor: '#FFFFFF',
-        flex: 1
+        minWidth: '48%',
     },
-    radioButtonSelected: {
+    checkboxButtonSelected: {
         borderColor: '#D1C4E9',
         backgroundColor: '#F3E5F5',
     },
-    radioCircle: {
+    checkboxSquare: {
         height: 20,
         width: 20,
-        borderRadius: 10,
+        borderRadius: 4,
         borderWidth: 1.5,
         borderColor: '#BDBDBD',
         backgroundColor: '#FAFAFA',
@@ -83,16 +93,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginRight: 8,
     },
-    selectedDot: {
-        height: 10,
-        width: 10,
-        borderRadius: 5,
-        backgroundColor: '#56235E',
+    checkboxSquareSelected: {
+        borderColor: '#7E57C2',
+        backgroundColor: '#EDE7F6',
     },
-    radioText: {
+    checkboxTick: {
+        width: 10,
+        height: 10,
+        backgroundColor: '#7E57C2',
+        borderRadius: 2,
+    },
+    checkboxText: {
         fontSize: 16,
-        color: '#333',
+        color: '#424242',
     },
 });
 
-export default RadioButtonGroup;
+export default CheckboxGroup;

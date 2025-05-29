@@ -6,11 +6,12 @@ import { useGetMythsAndFactsQuery } from '../store/services/mythsfacts/mythfactA
 import { useTranslation } from 'react-i18next';
 import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
+import { AppError } from '../common/AppError';
 
 export default function MythFactScreen() {
     const { i18n } = useTranslation();
     const lang = i18n.language as keyof Language;
-    const { data, isLoading, error } = useGetMythsAndFactsQuery({ page: 1, lang });
+    const { data, isLoading, error, refetch } = useGetMythsAndFactsQuery({ page: 1, lang });
 
     const item = data?.result?.[0];
 
@@ -20,8 +21,8 @@ export default function MythFactScreen() {
                 <View style={styles.center}>
                     <ActivityIndicator size="large" />
                 </View>
-            ) : error ? (
-                <Text>Error loading myths and facts.</Text>
+            ) : error || !data ? (
+                <AppError onRetry={() => refetch()} />
             ) : (
                 <View style={styles.container}>
                     {/* Header Section */}

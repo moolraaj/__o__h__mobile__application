@@ -24,18 +24,16 @@ import BackButton from '../../resuable/BackButton';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
 import Loader from '../../common/Loader';
-import { API_BASE_URL } from '@env'
 import CountryPicker, { Country } from 'react-native-country-picker-modal';
 import SuccessModal from './SuccessModal';
+import { FlatList } from 'react-native';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function Login({ navigation }: { navigation: any }) {
 
-  console.log(`API_BASE_URL`)
-  console.log(API_BASE_URL)
-
-  const { setToken, setUser } = useAuth();
+  // NEW: For horizontal scroll tracking
+  const flatListRef = useRef<FlatList>(null);
 
   // At the top of your component:
   const [countryCode, setCountryCode] = useState<Country['cca2']>('IN');
@@ -71,6 +69,31 @@ export default function Login({ navigation }: { navigation: any }) {
       duration: 300,
       useNativeDriver: true,
     }).start();
+  };
+
+  // Also update your handleScrollEnd function to properly handle the index:
+  const handleScrollEnd = (event: any) => {
+    const contentOffset = event.nativeEvent.contentOffset.x;
+    const index = Math.round(contentOffset / SCREEN_WIDTH);
+    setLoginMethod(index === 0 ? 'email' : 'phone');
+  };
+
+  const switchTab = (index: number) => {
+    const method = index === 0 ? 'email' : 'phone';
+    setLoginMethod(method);
+    flatListRef.current?.scrollToIndex({
+      index,
+      animated: true,
+    });
+
+    // If switching to phone tab, reset the phone flow to initial state
+    if (method === 'phone') {
+      setPhoneNumber('');
+      setOtp('');
+      setRequestId(null);
+      setPhoneError('');
+      setOtpError('');
+    }
   };
 
   // PHONE handlers
@@ -113,7 +136,6 @@ export default function Login({ navigation }: { navigation: any }) {
     }
   };
 
-
   const handleEmailLogin = async () => {
     setEmailError('');
     setPasswordError('');
@@ -130,14 +152,7 @@ export default function Login({ navigation }: { navigation: any }) {
 
 
     try {
-      // const loginRes = await loginUser({ email, password }).unwrap();
-      // await AsyncStorage.multiSet([
-      //   ['authToken', loginRes.token],
-      //   ['user', JSON.stringify(loginRes.user)],
-      // ]);
-      // setToken(loginRes.token);
-      // setUser(loginRes.user);
-
+      await loginUser({ email, password }).unwrap();
       if (!email || !password) {
         return ToastMessage('error', 'Plese Provide Valid Credentails!');
       }
@@ -195,7 +210,9 @@ export default function Login({ navigation }: { navigation: any }) {
                   styles.toggleButton,
                   loginMethod === 'email' && styles.activeButton,
                 ]}
-                onPress={() => setLoginMethod('email')}
+                onPress={() => {
+                  switchTab(0);
+                }}
               >
                 <Text
                   style={[
@@ -212,7 +229,9 @@ export default function Login({ navigation }: { navigation: any }) {
                   styles.toggleButton,
                   loginMethod === 'phone' && styles.activeButton,
                 ]}
-                onPress={() => setLoginMethod('phone')}
+                onPress={() => {
+                  switchTab(1);
+                }}
               >
                 <Text
                   style={[
@@ -226,134 +245,151 @@ export default function Login({ navigation }: { navigation: any }) {
             </View>
           </LinearGradient>
         </View>
-        {
-          loginMethod === 'email' ? (
-        
-            <View style={styles.slide}>
-              <Input
-                placeholder="e.g. johndoe@example.com"
-                keyboardType="email-address"
-                value={email}
-                onChangeText={(text) => {
-                  setEmail(text);
-                  setEmailError('');
-                }}
-                icon="mail"
-                name='Email'
-                error={emailError}
-              />
-              <Input
-                placeholder="e.g. securepassword"
-                keyboardType="default"
-                value={password}
-                onChangeText={(text) => {
-                  setPassword(text);
-                  setPasswordError('');
-                }}
-                icon="lock"
-                secureTextEntry={!showPassword}
-                name='Password'
-                isPassword
-                showPassword={showPassword}
-                toggleShowPassword={() => setShowPassword(!showPassword)}
-                error={passwordError}
-              />
-
-              {loggingIn ? (
-                <Loader />
-              ) : (
-                <View style={{ marginTop: 30 }}>
-                  <GradientButton
-                    label="Login"
-                    onPress={handleEmailLogin}
-                  />
-                </View>
-              )}
-            </View>
-          ) : (
-   
-            <>
-              <Animated.View
-                style={[styles.slider, { transform: [{ translateX: slideX }] }]}
-              >
+        <FlatList
+          ref={flatListRef}
+          data={['email', 'phone']}
+          horizontal
+          pagingEnabled
+          initialScrollIndex={loginMethod === 'phone' ? 1 : 0}
+          getItemLayout={(data, index) => ({
+            length: SCREEN_WIDTH,
+            offset: SCREEN_WIDTH * index,
+            index,
+          })}
+          showsHorizontalScrollIndicator={false}
+          onMomentumScrollEnd={handleScrollEnd}
+          renderItem={({ item }) => (
+            <View style={{ width: SCREEN_WIDTH }}>
+              {item === 'email' ? (
                 <View style={styles.slide}>
-                  <View style={styles.inputWrapper}>
-                    <Text style={styles.label}>Phone Number</Text>
-                    <View style={styles.inputRow}>
-                      <CountryPicker
-                        countryCode={countryCode}
-                        withFlag
-                        withCallingCode
-                        withFilter
-                        withEmoji
-                        onSelect={(country: Country) => {
-                          setCountryCode(country.cca2);
-                          setCallingCode(country.callingCode[0]);
-                        }}
-                      />
-                      <View style={styles.phoneInputField}>
-                        <Text style={styles.prefixText}>+{callingCode}</Text>
-                        <TextInput
-                          style={styles.phoneInput}
-                          placeholder="0000 000 000"
-                          keyboardType="phone-pad"
-                          value={phoneNumber}
-                          onChangeText={(text) => {
-                            setPhoneNumber(text);
-                            setPhoneError('');
-                          }}
-                          maxLength={10}
-                        />
-                      </View>
-                    </View>
-                    {phoneError ? <Text style={styles.errorText}>{phoneError}</Text> : null}
-                  </View>
+                  <Input
+                    placeholder="e.g. johndoe@example.com"
+                    keyboardType="email-address"
+                    value={email}
+                    onChangeText={(text) => {
+                      setEmail(text);
+                      setEmailError('');
+                    }}
+                    icon="mail"
+                    name='Email'
+                    error={emailError}
+                  />
+                  <Input
+                    placeholder="e.g. securepassword"
+                    keyboardType="default"
+                    value={password}
+                    onChangeText={(text) => {
+                      setPassword(text);
+                      setPasswordError('');
+                    }}
+                    icon="lock"
+                    secureTextEntry={!showPassword}
+                    name='Password'
+                    isPassword
+                    showPassword={showPassword}
+                    toggleShowPassword={() => setShowPassword(!showPassword)}
+                    error={passwordError}
+                  />
 
                   <View style={{ marginTop: 30 }}>
                     <GradientButton
-                      label={sending ? 'Sending OTP...' : 'Send OTP'}
-                      onPress={handleSendOtp}
+                      label={loggingIn ? 'Login...' : 'Login'}
+                      onPress={handleEmailLogin}
                     />
                   </View>
-                </View>
-                <View style={styles.slide}>
-                  <View style={styles.header}>
-                    <BackButton onPress={() => goToSlide(0)} />
-                    <Text style={styles.subtitle}>OTP</Text>
-                  </View>
-                  <Input
-                    placeholder="6-digit OTP"
-                    keyboardType="number-pad"
-                    maxLength={6}
-                    value={otp}
-                    name='Enter Otp'
-                    onChangeText={(text) => {
-                      setOtp(text);
-                      setOtpError('');
-                    }}
-                    icon="key"
-                    textCenter
-                    error={otpError}
-                  />
-                  {verifying || loggingIn ? (
-                    <Loader />
-                  ) : (
-                    <GradientButton
-                      label="Verify OTP"
-                      onPress={handleVerifyOtp}
-                    />
-                  )}
-                  <TouchableOpacity onPress={handleSendOtp} style={{ marginTop: 10 }}>
-                    <Text style={{ textAlign: 'center', color: 'black' }}>
-                      Resend OTP
-                    </Text>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('ForgotPassword')}
+                    style={styles.forgotPasswordLink}
+                  >
+                    <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
                   </TouchableOpacity>
                 </View>
-              </Animated.View>
+              ) : (
+                <Animated.View
+                  style={[styles.slider, { transform: [{ translateX: slideX }] }]}
+                >
+                  <View style={styles.slide}>
+                    <View style={styles.inputWrapper}>
+                      <Text style={styles.label}>Phone Number</Text>
+                      <View style={styles.inputRow}>
+                        <CountryPicker
+                          countryCode={countryCode}
+                          withFlag
+                          withCallingCode
+                          withFilter
+                          withEmoji
+                          onSelect={(country: Country) => {
+                            setCountryCode(country.cca2);
+                            setCallingCode(country.callingCode[0]);
+                          }}
+                        />
+                        <View style={styles.phoneInputField}>
+                          <Text style={styles.prefixText}>+{callingCode}</Text>
+                          <TextInput
+                            style={styles.phoneInput}
+                            placeholder="0000 000 000"
+                            keyboardType="phone-pad"
+                            value={phoneNumber}
+                            onChangeText={(text) => {
+                              setPhoneNumber(text);
+                              setPhoneError('');
+                            }}
+                            maxLength={10}
+                          />
+                        </View>
+                      </View>
+                      {phoneError ? <Text style={styles.errorText}>{phoneError}</Text> : null}
+                    </View>
 
-            </>
-          )
-        }
+                    <View style={{ marginTop: 30 }}>
+                      <GradientButton
+                        label={sending ? 'Sending OTP...' : 'Send OTP'}
+                        onPress={handleSendOtp}
+                      />
+                    </View>
+                    <TouchableOpacity
+                      onPress={() => navigation.navigate('ForgotPassword')}
+                      style={styles.forgotPasswordLink}
+                    >
+                      <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.slide}>
+                    <View style={styles.header}>
+                      <BackButton onPress={() => goToSlide(0)} />
+                      <Text style={styles.subtitle}>OTP</Text>
+                    </View>
+                    <Input
+                      placeholder="6-digit OTP"
+                      keyboardType="number-pad"
+                      maxLength={6}
+                      value={otp}
+                      name='Enter Otp'
+                      onChangeText={(text) => {
+                        setOtp(text);
+                        setOtpError('');
+                      }}
+                      icon="key"
+                      error={otpError}
+                    />
+                    <GradientButton
+                      label={verifying || loggingIn ? 'verifying...' : 'Verify OTP'}
+                      onPress={handleVerifyOtp}
+                    />
+                    <TouchableOpacity onPress={handleSendOtp} style={{ marginTop: 10 }}>
+                      <Text style={{ textAlign: 'center', color: 'black' }}>
+                        Resend OTP
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </Animated.View>
+              )}
+            </View>
+          )}
+          keyExtractor={(item) => item}
+        />
+
+
         <View style={styles.footerLink}>
           <Text style={{ textAlign: 'center' }}>Do you have an account?</Text>
           <TouchableOpacity onPress={() => navigation.navigate('Register')}>
@@ -565,9 +601,21 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   errorText: {
+    position: 'absolute',
+    bottom: -16,
     color: '#DE2027',
     fontSize: 12,
-    marginTop: 4,
+    marginLeft: 12
+  },
+  forgotPasswordLink: {
+    alignSelf: 'flex-end',
+    marginHorizontal: 20,
+  },
+  forgotPasswordText: {
+    color: '#6a3093',
+    fontSize: 14,
+    fontWeight: '500',
+    textDecorationLine: 'underline'
   },
   footerLink: {
     padding: 18,

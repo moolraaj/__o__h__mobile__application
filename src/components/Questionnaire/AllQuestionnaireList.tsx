@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Feather from 'react-native-vector-icons/Feather';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
 import { Layout } from '../../common/Layout';
@@ -22,6 +23,9 @@ import {
     useSubmitQuestionnaireMutation
 } from '../../store/services/questionnaire/questionnaireApi';
 import { ToastMessage } from '../../resuable/Toast';
+import { Dimensions } from 'react-native';
+
+const { width } = Dimensions.get('window');
 
 export default function QuestionnaireLists({ navigation }: { navigation: any }) {
     const { data, isLoading, error, refetch } = useGetQuestionnairesQuery({ page: 1 });
@@ -97,60 +101,131 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
         );
     };
     const renderModal = () => (
-        <Modal animationType="slide" transparent visible={modalVisible} onRequestClose={closeModal}>
+        <Modal animationType="fade" transparent visible={modalVisible} onRequestClose={closeModal}>
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContainer}>
-                    <Text style={styles.modalTitle}>Questionnaire Details</Text>
+                    <LinearGradient
+                        colors={['#5E346D', '#C13439']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                        style={styles.modalHeader}
+                    >
+                        <Text style={styles.modalTitle}>Questionnaire Details</Text>
+                        <TouchableOpacity onPress={closeModal} style={styles.closeIcon}>
+                            <Ionicons name="close" size={24} color="#fff" />
+                        </TouchableOpacity>
+                    </LinearGradient>
+
                     {selectedItem && (
-                        <ScrollView style={styles.modalScroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-                            {[
-                                ['Name', selectedItem.name],
-                                ['Age', selectedItem.age?.toString()],
-                                ['Gender', selectedItem.gender],
-                                ['Card Number', selectedItem.cardNumber?.toString()],
-                                ['Phone', selectedItem.phoneNumber],
-                                ['Address', selectedItem.address],
-                                ['Blood Group', selectedItem.bloodGroup],
-                                ['ID Card', selectedItem.idCardAvailable ? 'Yes' : 'No'],
-                                ['Religion', selectedItem.religion],
-                                ['Education', selectedItem.education],
-                                ['Occupation', selectedItem.occupation],
-                                ['Income', selectedItem.income?.toString()],
-                                ['Family History', selectedItem.familyHistory],
-                                ['Diabetes', selectedItem.diabetes ? 'Yes' : 'No'],
-                                ['Hypertension', selectedItem.hypertension ? 'Yes' : 'No'],
-                                ['Diet History', selectedItem.dietHistory],
-                                ['Fruits', selectedItem.fruitsConsumption],
-                                ['Vegetables', selectedItem.vegetableConsumption],
-                                ['Habits', selectedItem.habitHistory],
-                                ['Tobacco Chewer', selectedItem.tobaccoChewer ? 'Yes' : 'No'],
-                                ['Tobacco Type', selectedItem.tobaccoType],
-                                ['Discontinued Habit', selectedItem.discontinuedHabit ? 'Yes' : 'No'],
-                                ['Duration', selectedItem.durationOfDiscontinuingHabit],
-                                ['Alcohol Consumption', selectedItem.alcoholConsumption ? 'Yes' : 'No'],
-                                ['Smoking', selectedItem.smoking ? 'Yes' : 'No'],
-                                ['Oral Exam', selectedItem.oralCavityExamination],
-                                ['Lesion Present', selectedItem.presenceOfLesion ? 'Yes' : 'No'],
-                                ['Sharp Teeth', selectedItem.presenceOfSharpTeeth ? 'Yes' : 'No'],
-                                ['Decayed Teeth', selectedItem.presenceOfDecayedTeeth ? 'Yes' : 'No'],
-                                ['Fluorosis', selectedItem.presenceOfFluorosis ? 'Yes' : 'No'],
-                                ['Gum Disease', selectedItem.presenceOfGumDisease?.join(', ')],
-                                ['Mouth Opening', selectedItem.reductionInMouthOpening ? 'Yes' : 'No'],
-                                ['Weight Loss', selectedItem.suddenWeightLoss ? 'Yes' : 'No'],
-                                ['Symptoms', selectedItem.symptoms?.join(', ')],
-                                ['Prev Treatment', selectedItem.previous_dental_treatement?.join(', ')],
-                                ['Status', selectedItem.status]
-                            ].map(([label, value], idx) => (
-                                <View key={idx} style={styles.modelTextRow}>
-                                    <GradientText text={`${label} :`} size={14} colors={['#5E346D', '#C13439']} />
-                                    <Text style={styles.modalText}>{value || 'N/A'}</Text>
+                        <ScrollView
+                            style={styles.modalScroll}
+                            contentContainerStyle={styles.scrollContent}
+                            showsVerticalScrollIndicator={false}
+                        >
+                            <View style={styles.patientInfoContainer}>
+                                <View style={styles.avatarPlaceholder}>
+                                    <Ionicons name="person" size={32} color="#6a3093" />
                                 </View>
-                            ))}
+                                <View style={styles.patientInfoText}>
+                                    <Text style={styles.patientName}>{selectedItem.name}</Text>
+                                    <View style={styles.infoRow}>
+                                        <Text style={styles.infoLabel}>Case #:</Text>
+                                        <Text style={styles.infoValue}>{selectedItem.case_number}</Text>
+                                    </View>
+                                    <View style={styles.infoRow}>
+                                        <Text style={styles.infoLabel}>Age/Gender:</Text>
+                                        <Text style={styles.infoValue}>{selectedItem.age} / {selectedItem.gender}</Text>
+                                    </View>
+                                </View>
+                            </View>
+
+                            <View style={styles.sectionContainer}>
+                                <Text style={styles.sectionTitle}>Personal Information</Text>
+                                <View style={styles.detailsGrid}>
+                                    {[
+                                        ['Card Number', selectedItem.cardNumber],
+                                        ['Phone', selectedItem.phoneNumber],
+                                        ['Address', selectedItem.address],
+                                        ['Blood Group', selectedItem.bloodGroup],
+                                        ['Religion', selectedItem.religion],
+                                        ['Education', selectedItem.education],
+                                        ['Occupation', selectedItem.occupation],
+                                        ['Income', selectedItem.income],
+                                    ].map(([label, value], idx) => (
+                                        <View key={`personal-${idx}`} style={styles.detailItem}>
+                                            <Text style={styles.detailLabel}>{label}</Text>
+                                            <Text style={styles.detailValue}>{value || 'N/A'}</Text>
+                                        </View>
+                                    ))}
+                                </View>
+                            </View>
+
+                            <View style={styles.sectionContainer}>
+                                <Text style={styles.sectionTitle}>Medical History</Text>
+                                <View style={styles.detailsGrid}>
+                                    {[
+                                        ['Family History', selectedItem.familyHistory],
+                                        ['Diabetes', selectedItem.diabetes ? 'Yes' : 'No'],
+                                        ['Hypertension', selectedItem.hypertension ? 'Yes' : 'No'],
+                                        ['Height', selectedItem.height],
+                                        ['Oral Lesion', selectedItem.presenceOfLesion ? 'Yes' : 'No'],
+                                        ['Mouth Opening', selectedItem.reductionInMouthOpening ? 'Reduced' : 'Normal'],
+                                        ['Weight Loss', selectedItem.suddenWeightLoss ? 'Yes' : 'No'],
+                                    ].map(([label, value], idx) => (
+                                        <View key={`medical-${idx}`} style={styles.detailItem}>
+                                            <Text style={styles.detailLabel}>{label}</Text>
+                                            <Text style={styles.detailValue}>{value || 'N/A'}</Text>
+                                        </View>
+                                    ))}
+                                </View>
+                            </View>
+
+                            <View style={styles.sectionContainer}>
+                                <Text style={styles.sectionTitle}>Habit History</Text>
+                                <View style={styles.detailsGrid}>
+                                    {[
+                                        ['Tobacco Use', selectedItem.tobaccoChewer ? 'Yes' : 'No'],
+                                        ['Tobacco Type', selectedItem.tobaccoType],
+                                        ['Alcohol', selectedItem.alcoholConsumption ? 'Yes' : 'No'],
+                                        ['Smoking', selectedItem.smoking ? 'Yes' : 'No'],
+                                        ['Discontinued', selectedItem.discontinuedHabit ? 'Yes' : 'No'],
+                                        ['Duration', selectedItem.durationOfDiscontinuingHabit],
+                                    ].map(([label, value], idx) => (
+                                        <View key={`habit-${idx}`} style={styles.detailItem}>
+                                            <Text style={styles.detailLabel}>{label}</Text>
+                                            <Text style={styles.detailValue}>{value || 'N/A'}</Text>
+                                        </View>
+                                    ))}
+                                </View>
+                            </View>
+
+                            {selectedItem.send_email_to_dantasurakshaks === true && (
+                                <View style={styles.sectionContainer}>
+                                    <LinearGradient
+                                        colors={['#5E346D', '#C13439']}
+                                        start={{ x: 0, y: 0 }}
+                                        end={{ x: 1, y: 0 }}
+                                        style={styles.feedbackHeader}
+                                    >
+                                        <Text style={styles.feedbackTitle}>Feedback details:</Text>
+                                    </LinearGradient>
+                                    <View style={styles.feedbackContent}>
+                                        {[
+                                            ['Questionary Type', selectedItem.questionary_type],
+                                            ['Diagnosis Notes', selectedItem.diagnosis_notes],
+                                            ['Recommended Actions', selectedItem.recomanded_actions],
+                                            ['Comments', selectedItem.comments_or_notes],
+                                        ].map(([label, value], idx) => (
+                                            <View key={`feedback-${idx}`} style={styles.feedbackItem}>
+                                                <Text style={styles.feedbackLabel}>{label}</Text>
+                                                <Text style={styles.feedbackValue}>{value || 'N/A'}</Text>
+                                            </View>
+                                        ))}
+                                    </View>
+                                </View>
+                            )}
                         </ScrollView>
                     )}
-                    <Pressable style={styles.closeButton} onPress={closeModal}>
-                        <Text style={styles.closeButtonText}>Close</Text>
-                    </Pressable>
                 </View>
             </View>
         </Modal>
@@ -229,51 +304,61 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
                                 ))}
 
                                 <View style={styles.cardActions}>
+                                    {/* View Button */}
                                     <TouchableOpacity
-                                        style={[styles.filterBtn]}
+                                        style={styles.filterBtn}
                                         onPress={() => openModal(item)}
                                     >
-                                        <Text style={styles.filterBtnText}>View</Text>
+                                        <Feather name="eye" size={16} color="#56235E" />
+                                        <Text style={styles.filterBtnText}> View</Text>
                                     </TouchableOpacity>
 
+                                    {/* Edit Button */}
                                     <TouchableOpacity
-                                        style={[
-                                            styles.filterBtn,
-                                            (item.status === 'submit') && styles.disabledButton
-                                        ]}
+                                        style={[styles.filterBtn, item.status === 'submit' && styles.disabledButton]}
                                         onPress={() => navigation.navigate('UpdateQuestionnaire', { id: item._id })}
                                         disabled={item.status === 'submit' || sendingId === item._id}
                                     >
-
-                                        <Text style={[styles.filterBtnText, (item.status === 'submit') && styles.disabledButtonColor]}>Edit</Text>
-                                    </TouchableOpacity>
-
-                                    <TouchableOpacity
-                                        style={[
-                                            styles.filterBtn,
-                                            (item.status === 'submit') && styles.disabledButton
-                                        ]}
-                                        onPress={() => handleSubmit(item._id)}
-                                        disabled={item.status === 'submit'}
-                                    >
-
-                                        <Text style={[styles.filterBtnText, (item.status === 'submit') && styles.disabledButtonColor]}>
-                                            {item.status === 'submit'
-                                                ? 'Submit'
-                                                : sendingId === item._id
-                                                    ? 'Sending...'
-                                                    : 'Send'}
+                                        <Feather
+                                            name="edit"
+                                            size={16}
+                                            color={item.status === 'submit' ? '#999' : '#56235E'}
+                                        />
+                                        <Text style={[styles.filterBtnText, item.status === 'submit' && styles.disabledButtonColor]}>
+                                            Edit
                                         </Text>
                                     </TouchableOpacity>
 
+                                    {/* Send Button */}
                                     <TouchableOpacity
-                                        style={[styles.filterBtn]}
+                                        style={[styles.filterBtn, item.status === 'submit' && styles.disabledButton]}
+                                        onPress={() => handleSubmit(item._id)}
+                                        disabled={item.status === 'submit'}
+                                    >
+                                        {sendingId === item._id ? (
+                                            <ActivityIndicator size="small" color="#56235E" />
+                                        ) : (
+                                            <Feather
+                                                name={item.status === 'submit' ? 'check-circle' : 'send'}
+                                                size={16}
+                                                color={item.status === 'submit' ? '#4CAF50' : '#56235E'}
+                                            />
+                                        )}
+                                        <Text style={[styles.filterBtnText, item.status === 'submit' && styles.disabledButtonColor]}>
+                                            {item.status === 'submit' ? ' Sent' : sendingId === item._id ? 'Sending…' : ' Send'}
+                                        </Text>
+                                    </TouchableOpacity>
+
+                                    {/* Delete Button */}
+                                    <TouchableOpacity
+                                        style={styles.filterBtn}
                                         onPress={() => handleDelete(item._id)}
                                     >
-
-                                        <Text style={styles.filterBtnText}>Delete</Text>
+                                        <Feather name="trash-2" size={16} color="#DE2027" />
+                                        <Text style={[styles.filterBtnText, { color: '#DE2027' }]}> Delete</Text>
                                     </TouchableOpacity>
                                 </View>
+
                             </View>
                         ))}
                     </ScrollView>
@@ -340,47 +425,160 @@ const styles = StyleSheet.create({
     cardText: { marginBottom: 5, color: '#000', textTransform: 'capitalize', paddingHorizontal: 10 },
 
     cardActions: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, paddingHorizontal: 10, paddingBottom: 10, gap: 8 },
-    filterBtn: { backgroundColor: '#e5fff2', paddingVertical: 8, paddingHorizontal: 16, borderRadius: 6 },
-    filterBtnText: { color: '#660033', fontWeight: 'bold' },
-    disabledButton: { backgroundColor: '#999' },
-    disabledButtonColor: { color: '#fff' },
+    filterBtn: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 12,
+        paddingVertical: 5,
+        borderRadius: 6,
+        backgroundColor: '#F3E5F5',
+        marginHorizontal: 4,
+        gap: 2
+    },
+    filterBtnText: {
+        color: '#56235E',
+        fontSize: 12,
+        fontWeight: '500',
+    },
+    disabledButton: {
+        backgroundColor: '#EEEEEE',
+    },
+    disabledButtonColor: {
+        color: '#999999',
+    },
 
     errorText: { color: 'red', textAlign: 'center' },
 
+    // Modal styles
     modalOverlay: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.5)',
+        backgroundColor: 'rgba(0,0,0,0.6)',
         justifyContent: 'center',
         alignItems: 'center',
     },
     modalContainer: {
-        backgroundColor: 'white',
-        borderRadius: 10,
-        padding: 20,
-        width: '85%',
+        width: width - 40,
         maxHeight: '90%',
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        overflow: 'hidden',
     },
-    modalTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 12,
-        color: '#660033',
-    },
-    modalScroll: { marginTop: 10 },
-    scrollContent: { paddingBottom: 20 },
-    modelTextRow: {
+    modalHeader: {
+        padding: 16,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 6,
-        paddingBottom: 6,
-        gap: 10,
-        flexWrap: 'wrap',
-        borderBottomWidth: 1.5,
-        borderBottomColor: '#B1D6FF',
-        borderStyle: 'dashed',
     },
-    modalText: { marginBottom: 8, color: '#333' },
-    closeButton: { marginTop: 20, backgroundColor: '#660033', paddingVertical: 10, borderRadius: 8 },
-    closeButtonText: { color: 'white', textAlign: 'center', fontWeight: 'bold' },
+    modalTitle: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: '600',
+    },
+    closeIcon: {
+        padding: 4,
+    },
+    modalScroll: {
+        maxHeight: '90%',
+    },
+    scrollContent: {
+        padding: 16,
+    },
+    patientInfoContainer: {
+        flexDirection: 'row',
+        marginBottom: 20,
+    },
+    avatarPlaceholder: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        backgroundColor: '#f0e6ff',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 16,
+    },
+    patientInfoText: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    infoRow: {
+        flexDirection: 'row',
+        marginBottom: 2,
+    },
+    patientName: {
+        fontSize: 15,
+        fontWeight: '600',
+        color: '#333',
+        marginRight: 10,
+    },
+    infoLabel: {
+        color: '#666',
+        fontWeight: '600',
+        marginRight: 8,
+        fontSize: 13,
+    },
+    infoValue: {
+        color: '#333',
+        fontSize: 13,
+    },
+    sectionContainer: {
+        marginBottom: 20,
+    },
+    sectionTitle: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#6a3093',
+        marginBottom: 12,
+        paddingBottom: 6,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f0f0f0',
+    },
+    detailsGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+    },
+    detailItem: {
+        width: '48%',
+        marginBottom: 12,
+    },
+    detailLabel: {
+        color: '#666',
+        fontSize: 13,
+        marginBottom: 2,
+    },
+    detailValue: {
+        color: '#333',
+        fontSize: 14,
+        fontWeight: '500',
+    },
+    feedbackHeader: {
+        padding: 12,
+        borderRadius: 8,
+        marginBottom: 12,
+    },
+    feedbackTitle: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+    feedbackContent: {
+        backgroundColor: '#f9f5ff',
+        borderRadius: 8,
+        padding: 12,
+    },
+    feedbackItem: {
+        marginBottom: 10,
+    },
+    feedbackLabel: {
+        color: '#6a3093',
+        fontSize: 14,
+        fontWeight: '600',
+        marginBottom: 4,
+    },
+    feedbackValue: {
+        color: '#333',
+        fontSize: 14,
+        lineHeight: 20,
+    },
 });

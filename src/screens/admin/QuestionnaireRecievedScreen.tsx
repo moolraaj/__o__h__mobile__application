@@ -589,7 +589,6 @@ import { Layout } from '../../common/Layout';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
-import Loader from '../../common/Loader';
 import { useFetchAdminAllQuestionnairesQuery, useTakeoverQuestionnaireMutation } from '../../store/services/questionnaire/questionnaireApi';
 import { useAuth } from '../../navigation/AuthContext';
 import { ToastMessage } from '../../resuable/Toast';
@@ -1090,6 +1089,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingHorizontal: 10,
+        paddingBottom: 12
     },
     viewButton: {
         flexDirection: 'row',
@@ -1107,7 +1107,7 @@ const styles = StyleSheet.create({
     approveButton: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: 8,
+        paddingVertical: 5,
         paddingHorizontal: 16,
         borderRadius: 8,
         backgroundColor: '#6a3093',
@@ -1123,7 +1123,7 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         paddingHorizontal: 16,
         borderRadius: 8,
-        backgroundColor: '#6a3093',
+        backgroundColor: '#660033',
     },
     feedbackButtonText: {
         color: '#fff',
@@ -1136,7 +1136,6 @@ const styles = StyleSheet.create({
     approvedByContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 12,
         paddingVertical: 8,
         paddingHorizontal: 10,
         borderTopWidth: 1,
@@ -1216,7 +1215,7 @@ const styles = StyleSheet.create({
         padding: 4,
     },
     modalScroll: {
-        maxHeight: '80%',
+        maxHeight: '90%',
     },
     scrollContent: {
         padding: 16,

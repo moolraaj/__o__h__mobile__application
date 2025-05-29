@@ -429,8 +429,8 @@ export function Header() {
 
   const getUserInitials = (name: string | null) => {
     if (name) {
-      const names = name.split(' ');
-      const initials = names.map((n) => n.charAt(0).toUpperCase()).join('');
+      const names = name.trim().split(' ').filter(Boolean);
+      const initials = names.slice(0, 2).map(n => n.charAt(0).toUpperCase()).join('');
       return initials;
     }
     return '';
@@ -479,6 +479,7 @@ export function Header() {
             setToken(null);
             setUser(null);
             closeRoleModal();
+            navigation.navigate('Login')
           },
         },
       ]

@@ -796,7 +796,7 @@ const styles = StyleSheet.create({
         padding: 4,
     },
     modalScroll: {
-        maxHeight: '80%',
+        maxHeight: '90%',
     },
     scrollContent: {
         padding: 16,

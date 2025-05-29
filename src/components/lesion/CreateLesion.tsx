@@ -54,8 +54,8 @@ type FormErrors = {
 
 const CreateLesion = ({ navigation }: { navigation: any }) => {
   const { user } = useAuth();
-  const scrollViewRef = useRef(null);
-  const fieldRefs = useRef<{[key: string]: View | null}>({});
+  const scrollViewRef = useRef<ScrollView>(null);
+  const fieldRefs = useRef<{ [key: string]: View | null }>({});
 
   const [formData, setFormData] = useState<FormDataType>({
     fullname: '',
@@ -92,13 +92,19 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
   const scrollToField = (fieldName: string) => {
     const fieldRef = fieldRefs.current[fieldName];
     if (fieldRef && scrollViewRef.current) {
-      fieldRef.measureLayout(
-        scrollViewRef.current.getInnerViewNode(),
-        (x, y) => {
-          scrollViewRef.current?.scrollTo({ y: y - 100, animated: true });
-        },
-        () => {}
-      );
+      // Use findNodeHandle to get the native node handle
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { findNodeHandle } = require('react-native');
+      const scrollViewNode = findNodeHandle(scrollViewRef.current);
+      if (scrollViewNode) {
+        fieldRef.measureLayout(
+          scrollViewNode,
+          (x, y) => {
+            scrollViewRef.current?.scrollTo({ y: y - 100, animated: true });
+          },
+          () => { }
+        );
+      }
     }
   };
 
@@ -114,7 +120,7 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
     if (!value.trim()) {
       return 'This field is required';
     }
-    
+
     if (name === 'contact_number') {
       if (!/^\d+$/.test(value)) {
         return 'Phone number should contain only numbers';
@@ -123,14 +129,14 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
         return 'Phone number must be 10 digits';
       }
     }
-    
+
     if (name === 'age') {
       const ageNum = parseInt(value);
       if (isNaN(ageNum) || ageNum <= 0 || ageNum > 80) {
         return 'Please enter a valid age (1-80)';
       }
     }
-    
+
     return undefined;
   };
 
@@ -141,7 +147,7 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
     // Validate all fields
     Object.keys(formData).forEach((field) => {
       if (field !== 'dental_images') {
-        const error = validateField(field, formData[field as keyof FormDataType]);
+        const error = validateField(field, formData[field as keyof FormDataType] as string);
         if (error) {
           newErrors[field as keyof FormErrors] = error;
           isValid = false;
@@ -269,9 +275,9 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
 
       <View style={styles.formContainer}>
         {/* Full Name */}
-        <View 
+        <View
           style={styles.formGroup}
-          ref={ref => fieldRefs.current.fullname = ref}
+          ref={ref => { fieldRefs.current.fullname = ref; }}
         >
           <Text style={styles.label}>Full Name *</Text>
           <View style={[
@@ -294,9 +300,9 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
 
         {/* Age and Gender Row */}
         <View style={styles.row}>
-          <View 
+          <View
             style={[styles.formGroup, { flex: 1, marginRight: 10 }]}
-            ref={ref => fieldRefs.current.age = ref}
+            ref={ref => { fieldRefs.current.age = ref; }}
           >
             <Text style={styles.label}>Age *</Text>
             <View style={[
@@ -318,13 +324,13 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
             {errors.age && <Text style={styles.errorText}>{errors.age}</Text>}
           </View>
 
-          <View 
+          <View
             style={[styles.formGroup, { flex: 1 }]}
-            ref={ref => fieldRefs.current.gender = ref}
+            ref={ref => { fieldRefs.current.gender = ref; }}
           >
             <Text style={styles.label}>Gender *</Text>
             <View style={[
-              styles.inputContainer, 
+              styles.inputContainer,
               { paddingLeft: 10 },
               errors.gender && styles.inputError
             ]}>
@@ -351,9 +357,9 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
         </View>
 
         {/* Contact Number */}
-        <View 
+        <View
           style={styles.formGroup}
-          ref={ref => fieldRefs.current.contact_number = ref}
+          ref={ref => { fieldRefs.current.contact_number = ref; }}
         >
           <Text style={styles.label}>Contact Number *</Text>
           <View style={[
@@ -377,9 +383,9 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
         </View>
 
         {/* Location */}
-        <View 
+        <View
           style={styles.formGroup}
-          ref={ref => fieldRefs.current.location = ref}
+          ref={ref => { fieldRefs.current.location = ref; }}
         >
           <Text style={styles.label}>Location *</Text>
           <View style={[
@@ -401,13 +407,13 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
         </View>
 
         {/* Symptoms */}
-        <View 
+        <View
           style={styles.formGroup}
-          ref={ref => fieldRefs.current.symptoms = ref}
+          ref={ref => { fieldRefs.current.symptoms = ref; }}
         >
           <Text style={styles.label}>Symptoms *</Text>
           <View style={[
-            styles.inputContainer, 
+            styles.inputContainer,
             styles.textAreaContainer,
             errors.symptoms && styles.inputError
           ]}>
@@ -428,9 +434,9 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
         </View>
 
         {/* Disease Time */}
-        <View 
+        <View
           style={styles.formGroup}
-          ref={ref => fieldRefs.current.disease_time = ref}
+          ref={ref => { fieldRefs.current.disease_time = ref; }}
         >
           <Text style={styles.label}>Duration of Condition *</Text>
           <View style={[
@@ -452,13 +458,13 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
         </View>
 
         {/* Existing Habits */}
-        <View 
+        <View
           style={styles.formGroup}
-          ref={ref => fieldRefs.current.existing_habits = ref}
+          ref={ref => { fieldRefs.current.existing_habits = ref; }}
         >
           <Text style={styles.label}>Existing Habits *</Text>
           <View style={[
-            styles.inputContainer, 
+            styles.inputContainer,
             styles.textAreaContainer,
             errors.existing_habits && styles.inputError
           ]}>
@@ -479,13 +485,13 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
         </View>
 
         {/* Previous Dental Treatment */}
-        <View 
+        <View
           style={styles.formGroup}
-          ref={ref => fieldRefs.current.previous_dental_treatement = ref}
+          ref={ref => { fieldRefs.current.previous_dental_treatement = ref; }}
         >
           <Text style={styles.label}>Previous Dental Treatment *</Text>
           <View style={[
-            styles.inputContainer, 
+            styles.inputContainer,
             styles.textAreaContainer,
             errors.previous_dental_treatement && styles.inputError
           ]}>
@@ -506,9 +512,9 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
         </View>
 
         {/* Dental Images */}
-        <View 
+        <View
           style={styles.formGroup}
-          ref={ref => fieldRefs.current.dental_images = ref}
+          ref={ref => { fieldRefs.current.dental_images = ref; }}
         >
           <Text style={styles.label}>Dental Images *</Text>
           <Text style={styles.imageSubtext}>Upload clear photos of the affected area (max 5)</Text>
@@ -620,7 +626,6 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     paddingBottom: 30,
-    paddingHorizontal: 15,
   },
   formGroup: {
     marginBottom: 12,

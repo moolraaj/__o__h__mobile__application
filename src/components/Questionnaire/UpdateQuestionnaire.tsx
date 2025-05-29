@@ -18,6 +18,7 @@ import { useRoute } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
 import RadioButtonGroup from '../../common/RadioButtonGroup';
+import CheckboxGroup from '../../common/CheckboxGroup';
 
 const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
 
@@ -241,9 +242,10 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
             </LinearGradient>
 
             <Text style={styles.sectionHeader}>
-                <GradientText text="Demographics" size={20} />
+                <GradientText text="Personal Information" size={20} />
             </Text>
 
+            <Text style={styles.label}>Demographics *</Text>
             <TextInput
                 style={styles.input}
                 value={formData.demographics}
@@ -463,54 +465,6 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 </Picker>
             </View>
 
-            {/* <Text style={styles.label}>Diabetes *</Text>
-            <View style={styles.radioGroup}>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.diabetes === 'yes' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('diabetes', 'yes')}
-                >
-                    <Text style={styles.radioText}>Yes</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.diabetes === 'no' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('diabetes', 'no')}
-                >
-                    <Text style={styles.radioText}>No</Text>
-                </TouchableOpacity>
-            </View>
-
-            <Text style={styles.label}>Hypertension *</Text>
-            <View style={styles.radioGroup}>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.hypertension === 'yes' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('hypertension', 'yes')}
-                >
-                    <Text style={styles.radioText}>Yes</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.hypertension === 'no' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('hypertension', 'no')}
-                >
-                    <Text style={styles.radioText}>No</Text>
-                </TouchableOpacity>
-            </View>
-
-            <Text style={styles.label}>Diet History *</Text>
-            <View style={styles.radioGroup}>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.dietHistory === 'Vegetarian' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('dietHistory', 'Vegetarian')}
-                >
-                    <Text style={styles.radioText}>Vegetarian</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.dietHistory === 'Mixed' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('dietHistory', 'Mixed')}
-                >
-                    <Text style={styles.radioText}>Mixed</Text>
-                </TouchableOpacity>
-            </View> */}
-
             <RadioButtonGroup
                 label="Do you have Diabetes? *"
                 options={[
@@ -692,101 +646,67 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 </Picker>
             </View>
 
-            <Text style={styles.label}>Reduction in Mouth Opening *</Text>
-            <View style={styles.radioGroup}>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.reductionInMouthOpening === 'yes' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('reductionInMouthOpening', 'yes')}
-                >
-                    <Text style={styles.radioText}>Yes</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.reductionInMouthOpening === 'no' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('reductionInMouthOpening', 'no')}
-                >
-                    <Text style={styles.radioText}>No</Text>
-                </TouchableOpacity>
-            </View>
+            <RadioButtonGroup
+                label="Reduction in Mouth Opening? *"
+                options={[
+                    { label: 'Yes', value: 'yes' },
+                    { label: 'No', value: 'no' },
+                ]}
+                selectedValue={formData.reductionInMouthOpening}
+                onChange={(value) => handleChange('reductionInMouthOpening', value)}
+            />
 
-            <Text style={styles.label}>Sudden Weight Loss *</Text>
-            <View style={styles.radioGroup}>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.suddenWeightLoss === 'yes' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('suddenWeightLoss', 'yes')}
-                >
-                    <Text style={styles.radioText}>Yes</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.suddenWeightLoss === 'no' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('suddenWeightLoss', 'no')}
-                >
-                    <Text style={styles.radioText}>No</Text>
-                </TouchableOpacity>
-            </View>
+            <RadioButtonGroup
+                label="Sudden Weight Loss? *"
+                options={[
+                    { label: 'Yes', value: 'yes' },
+                    { label: 'No', value: 'no' },
+                ]}
+                selectedValue={formData.suddenWeightLoss}
+                onChange={(value) => handleChange('suddenWeightLoss', value)}
+            />
 
-            <Text style={styles.label}>Presence of Sharp Teeth *</Text>
-            <View style={styles.radioGroup}>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.presenceOfSharpTeeth === 'yes' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('presenceOfSharpTeeth', 'yes')}
-                >
-                    <Text style={styles.radioText}>Yes</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.presenceOfSharpTeeth === 'no' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('presenceOfSharpTeeth', 'no')}
-                >
-                    <Text style={styles.radioText}>No</Text>
-                </TouchableOpacity>
-            </View>
+            <RadioButtonGroup
+                label="Presence of Sharp Teeth? *"
+                options={[
+                    { label: 'Yes', value: 'yes' },
+                    { label: 'No', value: 'no' },
+                ]}
+                selectedValue={formData.presenceOfSharpTeeth}
+                onChange={(value) => handleChange('presenceOfSharpTeeth', value)}
+            />
 
-            <Text style={styles.label}>Presence of Decayed Teeth *</Text>
-            <View style={styles.radioGroup}>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.presenceOfDecayedTeeth === 'yes' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('presenceOfDecayedTeeth', 'yes')}
-                >
-                    <Text style={styles.radioText}>Yes</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.presenceOfDecayedTeeth === 'no' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('presenceOfDecayedTeeth', 'no')}
-                >
-                    <Text style={styles.radioText}>No</Text>
-                </TouchableOpacity>
-            </View>
+            <RadioButtonGroup
+                label="Presence of Decayed Teeth? *"
+                options={[
+                    { label: 'Yes', value: 'yes' },
+                    { label: 'No', value: 'no' },
+                ]}
+                selectedValue={formData.presenceOfDecayedTeeth}
+                onChange={(value) => handleChange('presenceOfDecayedTeeth', value)}
+            />
 
-            <Text style={styles.label}>Presence of Gum Disease *</Text>
-            <View style={styles.checkboxGroup}>
-                {['No', 'Loose teeth', 'Bleeding gums on brushing', 'Bad breath'].map((option) => (
-                    <TouchableOpacity
-                        key={option}
-                        style={[
-                            styles.checkboxButton,
-                            formData.presenceOfGumDisease.includes(option) && styles.checkboxButtonSelected
-                        ]}
-                        onPress={() => handleGumDiseaseChange(option, !formData.presenceOfGumDisease.includes(option))}
-                    >
-                        <Text style={styles.checkboxText}>{option}</Text>
-                    </TouchableOpacity>
-                ))}
-            </View>
+            <CheckboxGroup
+                label="Presence of Gum Disease *"
+                options={[
+                    { label: 'No', value: 'No' },
+                    { label: 'Loose teeth', value: 'Loose teeth' },
+                    { label: 'Bleeding gums on brushing', value: 'Bleeding gums on brushing' },
+                    { label: 'Bad breath', value: 'Bad breath' },
+                ]}
+                selectedValues={formData.presenceOfGumDisease}
+                onChange={(values) => handleChange('presenceOfGumDisease', values)}
+            />
 
-            <Text style={styles.label}>Presence of Fluorosis *</Text>
-            <View style={styles.radioGroup}>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.presenceOfFluorosis === 'yes' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('presenceOfFluorosis', 'yes')}
-                >
-                    <Text style={styles.radioText}>Yes</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.radioButton, formData.presenceOfFluorosis === 'no' && styles.radioButtonSelected]}
-                    onPress={() => handleChange('presenceOfFluorosis', 'no')}
-                >
-                    <Text style={styles.radioText}>No</Text>
-                </TouchableOpacity>
-            </View>
+            <RadioButtonGroup
+                label="Presence of Fluorosis? *"
+                options={[
+                    { label: 'Yes', value: 'yes' },
+                    { label: 'No', value: 'no' },
+                ]}
+                selectedValue={formData.presenceOfFluorosis}
+                onChange={(value) => handleChange('presenceOfFluorosis', value)}
+            />
 
             <Text style={styles.adminInfo}>
                 This questionnaire will be sent to {admins.length} admin(s)

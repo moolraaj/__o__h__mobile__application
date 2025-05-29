@@ -449,7 +449,6 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: { marginTop: 30 },
   footerLink: {
-    padding: 18,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

@@ -30,24 +30,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
 }) => {
     const { setToken, setUser } = useAuth();
     const [loginUser, { isLoading: loggingIn }] = useLoginUserMutation();
-
-    // const handleModalContinue = async () => {
-    //     try {
-    //         const loginRes = await loginUser({ phoneNumber: `+${callingCode}${phoneNumber}` }).unwrap();
-    //         await AsyncStorage.multiSet([
-    //             ['authToken', loginRes.token],
-    //             ['user', JSON.stringify(loginRes.user)],
-    //         ]);
-    //         setToken(loginRes.token);
-    //         setUser(loginRes.user);
-    //         onClose();
-    //         ToastMessage('success', loginRes.message || 'Logged in successfully');
-    //     } catch (err: any) {
-    //         onClose();
-    //         ToastMessage('error', err?.data?.error || 'Login failed');
-    //     }
-    // };
-
+    
     const handleModalContinue = async () => {
         try {
             let loginPayload: any = {};
@@ -110,7 +93,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
                             {loggingIn ? (
                                 <ActivityIndicator color="#fff" />
                             ) : (
-                                <Text style={styles.buttonText}>Continue Login</Text>
+                                <Text style={styles.buttonText}>Continue</Text>
                             )}
                         </LinearGradient>
                     </TouchableOpacity>

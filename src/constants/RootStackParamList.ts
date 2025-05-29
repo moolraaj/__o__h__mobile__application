@@ -5,4 +5,5 @@ export type RootStackParamList = {
     Setting: undefined;
     Notification: undefined;
     MythsAndFacts: undefined;
+    Login: undefined;
 };

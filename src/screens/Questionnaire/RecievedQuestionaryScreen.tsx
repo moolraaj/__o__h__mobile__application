@@ -10,20 +10,19 @@ import {
     TextInput,
     Modal,
     Pressable,
-    ActivityIndicator
+    ActivityIndicator,
+    Dimensions
 } from 'react-native';
 import React, { useState } from 'react';
 import { Layout } from '../../common/Layout';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
-import Loader from '../../common/Loader';
-
-
 import { useAuth } from '../../navigation/AuthContext';
-
 import { useFetchDantaRecievedQuestionnairesQuery } from '../../store/services/questionnaire/questionnaireApi';
+import { AppError } from '../../common/AppError';
 
+const { width } = Dimensions.get('window');
 
 type AssignTo = {
     _id: string;
@@ -48,7 +47,8 @@ type QuestionnaireTypes = {
 export default function RecievedQuestionaryScreen() {
     const { user } = useAuth();
     const id = user?.id
-    const { data, isLoading, error } = useFetchDantaRecievedQuestionnairesQuery(id);
+    const { data, isLoading, error, refetch } = useFetchDantaRecievedQuestionnairesQuery(id);
+    console.log('werwerwer', data)
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedQuestionnaire, setSelectedQuestionnaire] = useState<QuestionnaireTypes | null>(null);
     const openModal = (item: QuestionnaireTypes) => {
@@ -63,13 +63,37 @@ export default function RecievedQuestionaryScreen() {
         <Modal animationType="slide" transparent visible={modalVisible} onRequestClose={closeModal}>
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContainer}>
-                    <Text style={styles.modalTitle}>Feedback Details</Text>
+                    <LinearGradient
+                        colors={['#5E346D', '#C13439']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                        style={styles.modalHeader}
+                    >
+                        <Text style={styles.modalTitle}>Feedback Details</Text>
+                        <TouchableOpacity onPress={closeModal} style={styles.closeIcon}>
+                            <Ionicons name="close" size={24} color="#fff" />
+                        </TouchableOpacity>
+                    </LinearGradient>
+
                     {selectedQuestionnaire && (
                         <ScrollView
                             style={styles.modalScroll}
                             contentContainerStyle={styles.scrollContent}
                             showsVerticalScrollIndicator={false}
                         >
+                            <View style={styles.patientInfoContainer}>
+                                <View style={styles.avatarPlaceholder}>
+                                    <Ionicons name="person" size={25} color="#6a3093" />
+                                </View>
+                                <View style={styles.patientInfoText}>
+                                    <Text style={styles.patientName}>{selectedQuestionnaire.name}</Text>
+                                    <View style={styles.infoRow}>
+                                        <Text style={styles.infoLabel}>Case #:</Text>
+                                        <Text style={styles.infoValue}>{selectedQuestionnaire.case_number}</Text>
+                                    </View>
+                                </View>
+                            </View>
+
                             {selectedQuestionnaire.send_email_to_dantasurakshaks === true && (
                                 <>
                                     <View style={styles.sectionDivider} />
@@ -79,7 +103,7 @@ export default function RecievedQuestionaryScreen() {
                                         ['Recommended Actions', selectedQuestionnaire.recomanded_actions],
                                         ['Comments/Notes', selectedQuestionnaire.comments_or_notes],
                                     ].map(([label, value], idx) => (
-                                        <View key={`feedback-${idx}`} style={styles.modelTextNewRow}>
+                                        <View key={`feedback-${idx}`} style={styles.modelTextRow}>
                                             <GradientText
                                                 text={`${label} :`}
                                                 size={14}
@@ -92,9 +116,6 @@ export default function RecievedQuestionaryScreen() {
                             )}
                         </ScrollView>
                     )}
-                    <Pressable style={styles.closeButton} onPress={closeModal}>
-                        <Text style={styles.closeButtonText}>Close</Text>
-                    </Pressable>
                 </View>
             </View>
         </Modal>
@@ -103,7 +124,7 @@ export default function RecievedQuestionaryScreen() {
         <Layout>
             <View style={{ alignItems: 'flex-start', marginBottom: 15 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center', gap: 10 }}>
-                    <GradientText text="Questionnaires Received" size={18} />
+                    <GradientText text="Feedback Received" size={18} />
                     <View style={{
                         backgroundColor: '#FFD6D6',
                         paddingVertical: 4,
@@ -134,25 +155,19 @@ export default function RecievedQuestionaryScreen() {
                 <View style={styles.center}>
                     <ActivityIndicator size="large" />
                 </View>
-                : error ? (
-                    <Text style={styles.errorText}>Failed to load data</Text>
+                : error || !data ? (
+                    <View style={styles.errorContainer}>
+                        <Ionicons name="alert-circle" size={40} color="#ff6b6b" />
+                        <Text style={styles.errorText}>Failed to load lesions</Text>
+                        <TouchableOpacity onPress={refetch} style={styles.retryButton}>
+                            <Text style={styles.retryText}>Retry</Text>
+                        </TouchableOpacity>
+                    </View>
                 ) : (
                     <ScrollView style={{ marginTop: 8 }}>
                         {data?.data?.map((item: QuestionnaireTypes, i: number) => (
                             <View key={item._id || i} style={styles.card}>
                                 <View>
-                                    <LinearGradient
-                                        colors={['#56235E', '#C1392D']}
-                                        style={styles.gradientTextWrapper}
-                                    >
-                                        <Text style={styles.statusText}>
-                                            {item.send_email_to_dantasurakshaks === true ? (
-                                                item.assignTo?._id === user?.id && (
-                                                    `Received Questionnaire form ( ${user?.name} )`
-                                                )
-                                            ) : ''}
-                                        </Text>
-                                    </LinearGradient>
                                 </View>
                                 <View style={[styles.caseRow, styles.caseNumberRow]}>
                                     <Text style={styles.caseText}>Case Number :</Text>
@@ -168,7 +183,7 @@ export default function RecievedQuestionaryScreen() {
                                     ['CardNumber', item.cardNumber],
 
                                 ].map(([label, value], idx) => (
-                                    <View key={idx} style={[styles.caseRow, styles.caseTextRow]}>
+                                    <View key={idx} style={styles.caseRow}>
                                         <GradientText
                                             text={`${label} :`}
                                             size={14}
@@ -180,16 +195,25 @@ export default function RecievedQuestionaryScreen() {
 
 
                                 <View style={[styles.caseRow, styles.caseActionRow]}>
-
-
+                                    {item.send_email_to_dantasurakshaks === true ?
+                                        <View style={styles.approvedByContainer}>
+                                            <Ionicons name="person-circle" size={14} color="#6a3093" />
+                                            <Text style={styles.approvedByText}>
+                                                {item.assignTo?._id === user?.id && (
+                                                    `feedback sent by ${user?.name}`
+                                                )}
+                                            </Text>
+                                        </View>
+                                        : ''
+                                    }
                                     <TouchableOpacity
-                                        style={styles.filterBtnView}
+                                        style={styles.viewButton}
                                         onPress={() => openModal(item)}
                                     >
-                                        <Text style={styles.filterBtnTextView}>view Feedback sent by {item?.assignTo?.name}</Text>
+                                        <Ionicons name="eye" size={16} color="#6a3093" />
+                                        <Text style={styles.viewButtonText}>View Details</Text>
                                     </TouchableOpacity>
                                 </View>
-
                             </View>
                         ))}
                     </ScrollView>
@@ -221,7 +245,7 @@ const styles = StyleSheet.create({
     filterBtnView: { backgroundColor: '#e5fff2', paddingVertical: 8, paddingHorizontal: 16, borderRadius: 6, justifyContent: 'center' },
     filterBtnTextView: { color: '#660033', fontWeight: 'bold' },
     searchContainer: {
-        flex: 1
+        width: '100%'
     },
     searchWrapper: {
         flexDirection: 'row',
@@ -260,9 +284,37 @@ const styles = StyleSheet.create({
         color: '#660033',
         fontWeight: 'bold'
     },
+    approvedByContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    approvedByText: {
+        color: '#666',
+        fontSize: 12,
+        marginLeft: 6,
+    },
+    errorContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 40,
+    },
     errorText: {
-        color: 'red',
-        textAlign: 'center'
+        color: '#ff6b6b',
+        fontSize: 16,
+        marginTop: 10,
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    retryButton: {
+        backgroundColor: '#6a3093',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 8,
+    },
+    retryText: {
+        color: '#fff',
+        fontWeight: '600',
     },
     card: {
         backgroundColor: 'white',
@@ -281,10 +333,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 10,
+        paddingVertical: 2,
         borderColor: '#eee',
-    },
-    caseTextRow: {
-        marginVertical: 4
     },
     caseNumberRow: {
         justifyContent: 'space-between',
@@ -292,9 +342,25 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
     },
     caseActionRow: {
-        borderTopWidth: 1,
         justifyContent: 'space-between',
+        alignItems: 'center',
         paddingVertical: 8,
+        borderTopWidth: 1,
+        borderTopColor: '#f0f0f0',
+    },
+    viewButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 5,
+        paddingHorizontal: 12,
+        borderRadius: 8,
+        backgroundColor: '#f0e6ff',
+    },
+    viewButtonText: {
+        color: '#6a3093',
+        fontWeight: '600',
+        marginLeft: 6,
+        fontSize: 12,
     },
     caseText: {
         fontWeight: 'bold',
@@ -375,29 +441,78 @@ const styles = StyleSheet.create({
         marginLeft: 8
     },
     modalScroll: {
-        marginTop: 10,
+        maxHeight: '80%',
     },
     scrollContent: {
-        paddingBottom: 20,
+        padding: 16,
     },
     modalOverlay: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.5)',
+        backgroundColor: 'rgba(0,0,0,0.6)',
         justifyContent: 'center',
         alignItems: 'center',
     },
     modalContainer: {
-        backgroundColor: 'white',
-        borderRadius: 10,
-        padding: 20,
-        width: '85%',
+        width: width - 40,
         maxHeight: '90%',
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        overflow: 'hidden',
+    },
+    modalHeader: {
+        padding: 16,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     modalTitle: {
+        color: '#fff',
         fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 12,
-        color: '#660033',
+        fontWeight: '600',
+    },
+    closeIcon: {
+        padding: 4,
+    },
+    patientInfoContainer: {
+        flexDirection: 'row',
+    },
+    avatarPlaceholder: {
+        width: 50,
+        height: 50,
+        borderRadius: 30,
+        backgroundColor: '#f0e6ff',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 16,
+    },
+    patientInfoText: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    infoRow: {
+        flexDirection: 'row',
+        marginBottom: 2,
+    },
+    infoLabel: {
+        color: '#666',
+        fontWeight: '600',
+        marginRight: 8,
+        fontSize: 13,
+    },
+    infoValue: {
+        color: '#333',
+        fontSize: 13,
+    },
+    patientName: {
+        fontSize: 15,
+        fontWeight: '600',
+        color: '#333',
+        marginRight: 10,
+    },
+    patientGender: {
+        fontSize: 14,
+        color: '#666',
+        textTransform: 'capitalize',
     },
     modelTextRow: {
         flexDirection: 'row',
@@ -407,51 +522,12 @@ const styles = StyleSheet.create({
         paddingBottom: 6,
         gap: 10,
         flexWrap: 'wrap',
-        borderBottomWidth: 1.5,
+        borderBottomWidth: 1,
         borderBottomColor: '#B1D6FF',
         borderStyle: 'dashed',
-    },
-    modelTextNewRow: {
-        textAlign: 'left',
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-        marginBottom: 6,
-        paddingBottom: 6,
-        gap: 10,
-        flexWrap: 'nowrap',
-        borderBottomWidth: 1.5,
-        borderBottomColor: '#B1D6FF',
-        borderStyle: 'dashed',
-
-    },
-    modelText: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 6,
-        paddingBottom: 6,
-        gap: 10,
-        flexWrap: 'wrap',
-        borderBottomWidth: 1.5,
-        borderBottomColor: '#B1D6FF',
-        borderStyle: 'dashed',
-        fontSize: 40
-
     },
     modalText: {
         marginBottom: 8,
         color: '#333',
     },
-    closeButton: {
-        marginTop: 20,
-        backgroundColor: '#660033',
-        paddingVertical: 10,
-        borderRadius: 8,
-    },
-    closeButtonText: {
-        color: 'white',
-        textAlign: 'center',
-        fontWeight: 'bold',
-    },
-
 });
