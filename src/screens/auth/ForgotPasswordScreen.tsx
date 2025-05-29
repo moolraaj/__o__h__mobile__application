@@ -77,115 +77,132 @@ export const SettingForgotPasswordScreen = ({ navigation }: { navigation: any })
     };
 
     return (
-            <ScrollView
-                contentContainerStyle={styles.scrollContent}
-                showsVerticalScrollIndicator={false}
-            >
-                <View style={styles.profileHeader}>
-                    <LinearGradient
-                        colors={['#56235E', '#C1392D']}
-                        style={styles.profileIcon}
-                    >
-                        <FontAwesome5 name="shield-alt" size={24} color="#FFF" />
-                    </LinearGradient>
-                    <Text style={styles.profileHeaderText}>Reset Your Password</Text>
-                    <Text style={styles.emailText}>Email: {email}</Text>
-                </View>
-
-                {/* OTP Input */}
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>OTP</Text>
-                    <View style={[styles.inputWrapper, errors.otp && styles.errorWrapper]}>
-                        <Text style={styles.inputIcon} >
-                            <GradientText text={<Ionicons name="keypad-outline" size={20} color="#6C63FF" />} size={20} />
-                        </Text>
-                        <TextInput
-                            style={styles.input}
-                            keyboardType="numeric"
-                            placeholder="Enter OTP"
-                            value={otp}
-                            onChangeText={(text) => {
-                                setOtp(text);
-                                setErrors(prev => ({ ...prev, otp: '' }));
-                            }}
-                            placeholderTextColor="#999"
-                        />
-                    </View>
-                    {errors.otp ? <Text style={styles.errorText}>{errors.otp}</Text> : null}
-                </View>
-
-                {/* New Password Input */}
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>New Password</Text>
-                    <View style={[styles.inputWrapper, errors.newPassword && styles.errorWrapper]}>
-                        <Text style={styles.inputIcon} >
-                            <GradientText text={<Ionicons name="lock-open-outline" size={20} color="#6C63FF" />} size={20} />
-                        </Text>
-                        <TextInput
-                            style={styles.input}
-                            secureTextEntry
-                            placeholder="Enter new password"
-                            value={newPassword}
-                            onChangeText={(text) => {
-                                setNewPassword(text);
-                                setErrors(prev => ({ ...prev, newPassword: '' }));
-                            }}
-                            placeholderTextColor="#999"
-                        />
-                    </View>
-                    {errors.newPassword ? <Text style={styles.errorText}>{errors.newPassword}</Text> : null}
-                </View>
-
-                {/* Confirm Password Input */}
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Confirm Password</Text>
-                    <View style={[styles.inputWrapper, errors.confirmPassword && styles.errorWrapper]}>
-                        <Text style={styles.inputIcon} >
-                            <GradientText text={<Ionicons name="lock-closed-outline" size={20} color="#6C63FF" />} size={20} />
-                        </Text>
-                        <TextInput
-                            style={styles.input}
-                            secureTextEntry
-                            placeholder="Confirm password"
-                            value={confirmPassword}
-                            onChangeText={(text) => {
-                                setConfirmPassword(text);
-                                setErrors(prev => ({ ...prev, confirmPassword: '' }));
-                            }}
-                            placeholderTextColor="#999"
-                        />
-                    </View>
-                    {errors.confirmPassword ? <Text style={styles.errorText}>{errors.confirmPassword}</Text> : null}
-                </View>
-
-                {/* Submit Button */}
-                <TouchableOpacity
-                    style={styles.saveButton}
-                    onPress={handleReset}
-                    disabled={isLoading}
-                    activeOpacity={0.8}
+        <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+        >
+            <View style={styles.profileHeader}>
+                <LinearGradient
+                    colors={['#56235E', '#C1392D']}
+                    style={styles.profileIcon}
                 >
-                    <LinearGradient
-                        colors={['#56235E', '#C1392D']}
-                        style={styles.gradientButton}
-                    >
-                        {isLoading ? (
-                            <ActivityIndicator color="#FFF" />
-                        ) : (
-                            <>
-                                <Ionicons name="refresh-outline" size={20} color="#FFF" style={styles.buttonIcon} />
-                                <Text style={styles.saveButtonText}>Reset Password</Text>
-                            </>
-                        )}
-                    </LinearGradient>
+                    <FontAwesome5 name="shield-alt" size={24} color="#FFF" />
+                </LinearGradient>
+                <Text style={styles.profileHeaderText}>Reset Your Password</Text>
+                <Text style={styles.emailText}>Email: {email}</Text>
+            </View>
+
+            {/* OTP Input */}
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>OTP</Text>
+                <View style={[styles.inputWrapper, errors.otp && styles.errorWrapper]}>
+                    <Text style={styles.inputIcon} >
+                        <GradientText text={<Ionicons name="keypad-outline" size={20} color="#6C63FF" />} size={20} />
+                    </Text>
+                    <TextInput
+                        style={styles.input}
+                        keyboardType="numeric"
+                        placeholder="Enter OTP"
+                        value={otp}
+                        onChangeText={(text) => {
+                            setOtp(text);
+                            setErrors(prev => ({ ...prev, otp: '' }));
+                        }}
+                        placeholderTextColor="#999"
+                    />
+                </View>
+                {errors.otp ? <Text style={styles.errorText}>{errors.otp}</Text> : null}
+            </View>
+
+            {/* New Password Input */}
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>New Password</Text>
+                <View style={[styles.inputWrapper, errors.newPassword && styles.errorWrapper]}>
+                    <Text style={styles.inputIcon} >
+                        <GradientText text={<Ionicons name="lock-open-outline" size={20} color="#6C63FF" />} size={20} />
+                    </Text>
+                    <TextInput
+                        style={styles.input}
+                        secureTextEntry
+                        placeholder="Enter new password"
+                        value={newPassword}
+                        onChangeText={(text) => {
+                            setNewPassword(text);
+                            setErrors(prev => ({ ...prev, newPassword: '' }));
+                        }}
+                        placeholderTextColor="#999"
+                    />
+                </View>
+                {errors.newPassword ? <Text style={styles.errorText}>{errors.newPassword}</Text> : null}
+            </View>
+
+            {/* Confirm Password Input */}
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>Confirm Password</Text>
+                <View style={[styles.inputWrapper, errors.confirmPassword && styles.errorWrapper]}>
+                    <Text style={styles.inputIcon} >
+                        <GradientText text={<Ionicons name="lock-closed-outline" size={20} color="#6C63FF" />} size={20} />
+                    </Text>
+                    <TextInput
+                        style={styles.input}
+                        secureTextEntry
+                        placeholder="Confirm password"
+                        value={confirmPassword}
+                        onChangeText={(text) => {
+                            setConfirmPassword(text);
+                            setErrors(prev => ({ ...prev, confirmPassword: '' }));
+                        }}
+                        placeholderTextColor="#999"
+                    />
+                </View>
+                {errors.confirmPassword ? <Text style={styles.errorText}>{errors.confirmPassword}</Text> : null}
+            </View>
+
+            {/* Submit Button */}
+            <TouchableOpacity
+                style={styles.saveButton}
+                onPress={handleReset}
+                disabled={isLoading}
+                activeOpacity={0.8}
+            >
+                <LinearGradient
+                    colors={['#56235E', '#C1392D']}
+                    style={styles.gradientButton}
+                >
+                    {isLoading ? (
+                        <ActivityIndicator color="#FFF" />
+                    ) : (
+                        <>
+                            <Ionicons name="refresh-outline" size={20} color="#FFF" style={styles.buttonIcon} />
+                            <Text style={styles.saveButtonText}>Reset Password</Text>
+                        </>
+                    )}
+                </LinearGradient>
+            </TouchableOpacity>
+            <View style={styles.footerLink}>
+                <Text style={{ textAlign: 'center' }}>Back to login</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                    <GradientText text="Login" />
                 </TouchableOpacity>
-            </ScrollView>
+            </View>
+            <View style={styles.bottomContainer}>
+                <Text style={styles.bottomText}>By clicking Continue, you agree to our </Text>
+                <TouchableOpacity onPress={() => navigation.navigate('TermsOfService')}>
+                    <GradientText text="Terms of Service" size={12} />
+                </TouchableOpacity>
+                <Text style={styles.bottomText}> and </Text>
+                <TouchableOpacity onPress={() => navigation.navigate('PrivacyPolicy')}>
+                    <GradientText text="Privacy Policy" size={12} />
+                </TouchableOpacity>
+            </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     scrollContent: {
-        paddingBottom: 40,
+        padding: 20,
+        flex: 1
     },
     profileHeader: {
         alignItems: 'center',
@@ -271,6 +288,26 @@ const styles = StyleSheet.create({
         color: '#FFF',
         fontSize: 16,
         fontWeight: '600',
+    },
+    footerLink: {
+        padding: 18,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 5,
+    },
+    bottomContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 20,
+        gap: 5,
+    },
+    bottomText: {
+        fontSize: 12,
+        color: '#555',
+        textAlign: 'center',
     },
 });
 
