@@ -65,7 +65,7 @@ export const SettingForgotPasswordScreen = ({ navigation }: { navigation: any })
         try {
             const res = await resetPwd({ otp, newPassword, confirmPassword }).unwrap();
             ToastMessage('success', res.message);
-            navigation.navigate('Setting');
+            navigation.replace('Login');
         } catch (err: any) {
             if (err.data?.error === 'Invalid OTP.') {
                 setErrors(prev => ({ ...prev, otp: 'Invalid OTP' }));

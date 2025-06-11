@@ -290,6 +290,12 @@ export default function Login({ navigation }: { navigation: any }) {
                     toggleShowPassword={() => setShowPassword(!showPassword)}
                     error={passwordError}
                   />
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('ForgotPassword')}
+                    style={styles.forgotPasswordLink}
+                  >
+                    <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+                  </TouchableOpacity>
 
                   <View style={{ marginTop: 30 }}>
                     <GradientButton
@@ -297,12 +303,6 @@ export default function Login({ navigation }: { navigation: any }) {
                       onPress={handleEmailLogin}
                     />
                   </View>
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate('ForgotPassword')}
-                    style={styles.forgotPasswordLink}
-                  >
-                    <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-                  </TouchableOpacity>
                 </View>
               ) : (
                 <Animated.View
@@ -347,12 +347,6 @@ export default function Login({ navigation }: { navigation: any }) {
                         onPress={handleSendOtp}
                       />
                     </View>
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate('ForgotPassword')}
-                      style={styles.forgotPasswordLink}
-                    >
-                      <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-                    </TouchableOpacity>
                   </View>
                   <View style={styles.slide}>
                     <View style={styles.header}>
@@ -609,7 +603,7 @@ const styles = StyleSheet.create({
   },
   forgotPasswordLink: {
     alignSelf: 'flex-end',
-    marginHorizontal: 20,
+    marginHorizontal: 2,
   },
   forgotPasswordText: {
     color: '#6a3093',

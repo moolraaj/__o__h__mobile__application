@@ -262,7 +262,6 @@ export default function AllLesionsRecords({ navigation }: { navigation: any }) {
                   onPress={() => openModal(item)}
                 >
                   <Feather name="eye" size={16} color="#56235E" />
-                  <Text style={styles.filterBtnText}> View</Text>
                 </TouchableOpacity>
 
                 {/* Edit Button */}
@@ -307,7 +306,6 @@ export default function AllLesionsRecords({ navigation }: { navigation: any }) {
                   onPress={() => handleDelete(item._id)}
                 >
                   <Feather name="trash-2" size={16} color="#DE2027" />
-                  <Text style={[styles.filterBtnText, { color: '#DE2027' }]}> Delete</Text>
                 </TouchableOpacity>
               </View>
             </View>

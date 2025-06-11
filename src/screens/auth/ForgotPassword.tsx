@@ -21,7 +21,6 @@ export const ForgotPasswordScreen = ({ navigation }: { navigation: any }) => {
     const { data: adminData } = useGetUsersQuery({
         page: 1,
         limit: 100,
-        role: 'admin',
     });
     console.log('werwer', adminData)
     const [email, setEmail] = useState('');
