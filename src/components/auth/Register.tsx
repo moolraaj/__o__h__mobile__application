@@ -1,5 +1,4 @@
-
-
+// File: screens/Register.tsx
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -8,7 +7,8 @@ import {
   TextInput,
   StyleSheet,
   Image,
-  ScrollView
+  ScrollView,
+  StatusBar,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,22 +18,14 @@ import Feather from 'react-native-vector-icons/Feather';
 import Toast from 'react-native-toast-message';
 import Loader from '../../common/Loader';
 import CountryPicker, { Country } from 'react-native-country-picker-modal';
-
 import {
   BACK_ARROW_COLOR,
   INPUT_ICON_COLOR,
-  INPUT_ICON_SIZE
+  INPUT_ICON_SIZE,
 } from '../../constants/Variables';
 import GradientButton from '../../resuable/Button';
 import GradientText from '../../common/GradientText';
-import {
-  useRegisterUserMutation,
-  useSendOtpMutation,
-  useVerifyOtpMutation
-} from '../../store/services/user/userApi';
-import { StatusBar } from 'react-native';
-
-
+import { useRegisterUserMutation } from '../../store/services/user/userApi';
 
 export default function Register({ navigation }: { navigation: any }) {
   const [step, setStep] = useState(1);
@@ -43,49 +35,33 @@ export default function Register({ navigation }: { navigation: any }) {
     email: '',
     password: '',
     phoneNumber: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
-  const [otp, setOtp] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpVerified, setOtpVerified] = useState(false);
-  const [requestId, setRequestId] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState('');
-
-
   const [countryCode, setCountryCode] = useState<Country['cca2']>('IN');
   const [callingCode, setCallingCode] = useState<string>('91');
 
   const [register, { isLoading: isRegistering, error: registerError }] =
     useRegisterUserMutation();
-  const [sendOtp, { isLoading: isSendingOtp }] = useSendOtpMutation();
-  const [verifyOtp, { isLoading: isVerifyingOtp }] = useVerifyOtpMutation();
 
   useEffect(() => {
     if (!registerError) return;
     const err = registerError as any;
     const msg =
-      err.data?.error
-        ? err.data.error
-        : err.error
-        || 'Registration failed';
+      err.data?.error || err.error || 'Registration failed';
     Toast.show({ type: 'error', text1: msg });
   }, [registerError]);
 
   const roles = [
     { key: 'user', label: 'User', color: '#FFA500', icon: 'people-circle-outline' },
     { key: 'dantasurakshaks', label: 'Dantasurakshaks', color: '#FF5C5C', icon: 'alert-circle-outline' },
-    { key: 'admin', label: 'Admin', color: '#8A2BE2', icon: 'person-outline' }
+    { key: 'admin', label: 'Admin', color: '#8A2BE2', icon: 'person-outline' },
   ];
 
   const onChangeField = (field: keyof typeof user, val: string) => {
     setUsers(prev => ({ ...prev, [field]: val }));
-    if (field === 'phoneNumber') {
-      setOtpSent(false);
-      setOtpVerified(false);
-      setOtp('');
-    }
   };
 
   const handleNext = () => {
@@ -93,53 +69,22 @@ export default function Register({ navigation }: { navigation: any }) {
       return Toast.show({
         type: 'error',
         position: 'top',
-        text1: 'Role is required!'
+        text1: 'Role is required!',
       });
     }
     setStep(2);
-  };
-
-  const handleSendOtp = async () => {
-    try {
-      const { requestId } = await sendOtp({ phoneNumber: `+${callingCode}${user.phoneNumber}` }).unwrap();
-
-      setRequestId(requestId);
-      setOtpSent(true);
-      setOtpVerified(false);
-      setOtp('');
-      Toast.show({ type: 'success', text1: 'OTP sent!' });
-    } catch (e: any) {
-      const msg = e.data?.error || e.error || 'Failed to send OTP. Please try again.';
-      Toast.show({ type: 'error', text1: msg });
-    }
-  };
-
-  const handleVerifyOtp = async () => {
-    if (otp.length !== 6 || !requestId)
-      return Toast.show({ type: 'error', text1: 'Enter the full 6‑digit OTP.' });
-
-    try {
-      const { isOTPVerified } = await verifyOtp({ requestId, otp }).unwrap();
-      if (!isOTPVerified) throw new Error('Invalid OTP');
-      setOtpVerified(true);
-      Toast.show({ type: 'success', text1: 'OTP verified!' });
-    } catch (e: any) {
-      const msg = e.message || e.data?.error || 'OTP verification failed.';
-      Toast.show({ type: 'error', text1: msg });
-    }
   };
 
   const handleRegister = async () => {
     try {
       const registrationData = {
         ...user,
-        phoneNumber: `+${callingCode}${user.phoneNumber}`
+        phoneNumber: `+${callingCode}${user.phoneNumber}`,
       };
       const result = await register(registrationData).unwrap();
-
       navigation.navigate('EmailVerification', {
         email: user.email,
-        userId: result.id
+        userId: result.id,
       });
     } catch (e: any) {
       const msg =
@@ -163,7 +108,7 @@ export default function Register({ navigation }: { navigation: any }) {
                 style={[
                   styles.roleContainer,
                   user.role === r.key && { backgroundColor: r.color },
-                  { borderColor: user.role === r.key ? 'white' : r.color }
+                  { borderColor: user.role === r.key ? 'white' : r.color },
                 ]}
               >
                 <View style={styles.roleWrapper}>
@@ -181,7 +126,6 @@ export default function Register({ navigation }: { navigation: any }) {
                     {r.label}
                   </Text>
                 </View>
-
                 <View
                   style={[
                     styles.radioOuter,
@@ -209,41 +153,29 @@ export default function Register({ navigation }: { navigation: any }) {
         ) : (
           <View>
             <View style={styles.header}>
-              <TouchableOpacity
-                onPress={() => setStep(1)}
-                style={styles.prevButton}
-              >
-                <Ionicons
-                  name="chevron-back"
-                  size={24}
-                  color={BACK_ARROW_COLOR}
-                />
+              <TouchableOpacity onPress={() => setStep(1)} style={styles.prevButton}>
+                <Ionicons name="chevron-back" size={24} color={BACK_ARROW_COLOR} />
               </TouchableOpacity>
               <Text style={styles.headerTitle}>Create Account</Text>
             </View>
             <View style={styles.textInputMainWrapper}>
               {(['name', 'email', 'password'] as const).map(field => (
                 <View key={field} style={styles.textInputWrapper}>
-                  <Text style={styles.label}>{field[0].toUpperCase() + field.slice(1)}</Text>
+                  <Text style={styles.label}>
+                    {field[0].toUpperCase() + field.slice(1)}
+                  </Text>
                   <View style={styles.inputRow}>
-                    {field === 'name' && (
-                      <AntDesign name="user" size={INPUT_ICON_SIZE}
-                        color={INPUT_ICON_COLOR} />
-                    )}
-                    {field === 'email' && (
-                      <AntDesign name="mail" size={INPUT_ICON_SIZE} color={INPUT_ICON_COLOR} />
-                    )}
-                    {field === 'password' && (
-                      <AntDesign name="lock" size={INPUT_ICON_SIZE} color={INPUT_ICON_COLOR} />
-                    )}
+                    {field === 'name' && <AntDesign name="user" size={INPUT_ICON_SIZE} color={INPUT_ICON_COLOR} />}
+                    {field === 'email' && <AntDesign name="mail" size={INPUT_ICON_SIZE} color={INPUT_ICON_COLOR} />}
+                    {field === 'password' && <AntDesign name="lock" size={INPUT_ICON_SIZE} color={INPUT_ICON_COLOR} />}
                     <TextInput
                       style={styles.textInput}
                       placeholder={
                         field === 'name'
                           ? 'e.g. John Doe'
                           : field === 'email'
-                            ? 'e.g. johndoe@example.com'
-                            : 'e.g. securepassword'
+                          ? 'e.g. johndoe@example.com'
+                          : 'e.g. securepassword'
                       }
                       value={(user as any)[field]}
                       onChangeText={v => onChangeField(field, v)}
@@ -259,7 +191,6 @@ export default function Register({ navigation }: { navigation: any }) {
                 </View>
               ))}
 
-              {/* Confirm Password */}
               <View style={styles.textInputWrapper}>
                 <Text style={styles.label}>Confirm Password</Text>
                 <View style={styles.inputRow}>
@@ -287,7 +218,6 @@ export default function Register({ navigation }: { navigation: any }) {
                 )}
               </View>
 
-              {/* Phone Number */}
               <View style={styles.textInputWrapper}>
                 <Text style={styles.label}>Phone Number</Text>
                 <View style={styles.inputRow}>
@@ -314,52 +244,6 @@ export default function Register({ navigation }: { navigation: any }) {
               </View>
             </View>
 
-            {!otpSent && user.phoneNumber && (
-              <GradientButton
-                label={isSendingOtp ? 'Sending OTP...' : 'Send OTP'}
-                onPress={handleSendOtp}
-              />
-            )}
-
-            {otpSent && (
-              <View >
-                <Text style={{ marginBottom: 8 }}>Enter OTP:</Text>
-                <View style={[styles.inputRow, { width: 120, margin: 0 }]}>
-                  <Feather name="key" size={22} color="#56235E" />
-                  <TextInput
-                    style={styles.textInput}
-                    placeholder="123456"
-                    value={otp}
-                    onChangeText={setOtp}
-                    keyboardType="number-pad"
-                    maxLength={6}
-                  />
-                </View>
-                {!otpVerified ? (
-                  isVerifyingOtp ? (
-                    <Loader />
-                  ) : (
-                    <View style={{ marginTop: 20 }}>
-                      <GradientButton
-                        label="Verify OTP"
-                        onPress={handleVerifyOtp}
-                      />
-                    </View>
-                  )
-                ) : null}
-                {!otpVerified && (
-                  <TouchableOpacity
-                    onPress={handleSendOtp}
-                    style={{ marginTop: 10 }}
-                  >
-                    <Text style={{ color: 'blue', textAlign: 'center' }}>
-                      Resend OTP
-                    </Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-            )}
-
             <View style={styles.buttonWrapper}>
               <GradientButton
                 label={isRegistering ? 'Registering…' : 'Create Account'}
@@ -382,7 +266,7 @@ export default function Register({ navigation }: { navigation: any }) {
 
 const styles = StyleSheet.create({
   wrapper: { flex: 1, padding: 18, backgroundColor: '#fff' },
-  title: { fontSize: 22, marginBottom: 20, textAlign: 'center', fontWeight: '700', },
+  title: { fontSize: 22, marginBottom: 20, textAlign: 'center', fontWeight: '700' },
   roleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -390,7 +274,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 8,
     borderWidth: 1,
-    borderRadius: 8
+    borderRadius: 8,
   },
   prefixText: {
     fontSize: 16,
@@ -405,7 +289,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   radioInner: { height: 12, width: 12, borderRadius: 6 },
   header: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
@@ -413,11 +297,10 @@ const styles = StyleSheet.create({
   headerTitle: { fontSize: 18, fontWeight: '700', marginLeft: 10 },
   textInputMainWrapper: { marginBottom: 20 },
   textInputWrapper: {
-    position: 'relative',
     width: '100%',
     marginBottom: 15,
     alignItems: 'flex-start',
-    color: "#222222",
+    color: '#222222',
   },
   label: {
     marginBottom: 4,
@@ -434,13 +317,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 4,
     backgroundColor: '#fff',
-    position: 'relative',
     justifyContent: 'space-between',
   },
   textInput: {
     flex: 1,
     marginLeft: 5,
-    textAlign: 'left'
+    textAlign: 'left',
   },
   errorText: {
     color: 'red',
