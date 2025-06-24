@@ -447,15 +447,15 @@ export function Header() {
     ];
     if (user?.role === 'dantasurakshaks') {
       return [
-        { label: 'Lesions', screen: 'AllLesions', icon: 'file-medical' },
-        { label: 'Feedback Received', screen: 'FeedbackReceivedToDanta', icon: 'comment-medical' },
-        { label: 'Questionnaire', screen: 'AllQuestionnaire', icon: 'question-circle' },
+        // { label: 'Lesions', screen: 'AllLesions', icon: 'file-medical' },
+        { label: 'Questionnaires Feedback Received', screen: 'FeedbackReceivedToDanta', icon: 'comment-medical' },
+        { label: 'Questionnaires', screen: 'AllQuestionnaire', icon: 'question-circle' },
         ...commonLinks,
       ];
     } else if (user?.role === 'admin') {
       return [
-        { label: 'Lesions Received', screen: 'AdminLesions', icon: 'file-medical' },
-        { label: 'Question Received', screen: 'AdminQuestion', icon: 'question-circle' },
+        // { label: 'Lesions Received', screen: 'AdminLesions', icon: 'file-medical' },
+        { label: 'Questionnaires Received', screen: 'AdminQuestion', icon: 'question-circle' },
         // { label: 'User Management', screen: 'UserManagement', icon: 'users-cog' },
         ...commonLinks,
       ];

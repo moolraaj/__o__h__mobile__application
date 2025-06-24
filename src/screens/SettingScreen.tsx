@@ -89,15 +89,15 @@ const SettingScreen = ({ navigation }: { navigation: any }) => {
             label="Security"
             onPress={handleSecurity}
           />
-          <SettingOption
+          {/* <SettingOption
             icon="notifications-outline"
             label="Notifications"
             onPress={handleNotifications}
-          />
+          /> */}
 
         </LinearGradient>
 
-        <Text style={styles.sectionTitle}>Support & Feedback</Text>
+        {/* <Text style={styles.sectionTitle}>Support & Feedback</Text>
         <LinearGradient
           colors={['#F8E4FF', '#FFD7D8']}
           locations={[0.2081, 1]}
@@ -115,7 +115,7 @@ const SettingScreen = ({ navigation }: { navigation: any }) => {
             label="Terms And Policies"
             onPress={handleTermsPolicies}
           />
-        </LinearGradient>
+        </LinearGradient> */}
 
         <Text style={styles.sectionTitle}>Logout</Text>
         <LinearGradient
