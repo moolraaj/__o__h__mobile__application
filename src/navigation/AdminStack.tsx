@@ -19,6 +19,8 @@ import SingleDiseaseScreen from '../screens/SingleDiseaseScreen';
 import DentalEmergencyScreen from '../screens/DentalEmergencyScreen';
 import DentalEmergencyDetail from '../screens/SingleDentalEmergency';
 import NotificationScreen from '../screens/NotificationScreen';
+import TermConditionScreen from '../screens/TermConditionScreen';
+import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
 
 const Stack = createNativeStackNavigator();
 export const AdminStack = () => (
@@ -41,6 +43,8 @@ export const AdminStack = () => (
     <Stack.Screen name="SettingChangePassword" component={UpdatePasswordScreen} />
     <Stack.Screen name="SettingForgotPassword" component={ForgotPasswordScreen} />
     <Stack.Screen name="SettingForgotPasswordScreen" component={SettingForgotPasswordScreen} />
+    <Stack.Screen name="TermConditionScreen" component={TermConditionScreen} />
+    <Stack.Screen name="PrivacypoliciesScreen" component={PrivacyPolicyScreen} />
 
 
 

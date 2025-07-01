@@ -24,6 +24,8 @@ export default function HabitHealthList({ navigation }: { navigation: any }) {
     })
   const records = data?.result.slice(0, 2) ?? []
 
+ 
+
 
   return (
     <View style={styles.listContainer}>
@@ -59,13 +61,13 @@ export default function HabitHealthList({ navigation }: { navigation: any }) {
               onPress={() => navigation.navigate('HabitHealthDetail', { id: item._id })}
             >
               <Image
-                source={{ uri: item.habits_health_main_image }}
+                source={{ uri: item.habit_health_main_image }}
                 style={styles.image}
                 resizeMode="cover"
               />
               <View style={styles.titleContainer}>
                 <Text style={styles.title}>
-                  {item.habits_health_main_title[lang]}
+                  {item.habit_health_main_title[lang]}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -94,7 +96,7 @@ export default function HabitHealthList({ navigation }: { navigation: any }) {
           end={{ x: 1, y: 0 }}
           style={styles.gradientBorder}
         >
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('FaqsScreen')}>
             <GradientText text={<Icon name="question-answer" size={20} style={{ marginRight: 6 }} />} size={20} />
             <Text style={styles.buttonText}>FAQs</Text>
           </TouchableOpacity>

@@ -364,7 +364,7 @@ export function Header() {
   const [modalVisible, setModalVisible] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
   const [roleModalVisible, setRoleModalVisible] = useState(false);
-  const { user, setToken, setUser } = useAuth();
+  const { user, setToken, setUser,logout } = useAuth();
   const slideAnim = useRef(new Animated.Value(300)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -442,22 +442,22 @@ export function Header() {
   };
 
   const getRoleBasedLinks = () => {
-    const commonLinks = [
-      { label: 'Myths & Facts', screen: 'MythsAndFacts', icon: 'book-open' },
-    ];
+    // const commonLinks = [
+    //   { label: 'Myths & Facts', screen: 'MythsAndFacts', icon: 'book-open' },
+    // ];
     if (user?.role === 'dantasurakshaks') {
       return [
         // { label: 'Lesions', screen: 'AllLesions', icon: 'file-medical' },
         { label: 'Questionnaires Feedback Received', screen: 'FeedbackReceivedToDanta', icon: 'comment-medical' },
         { label: 'Questionnaires', screen: 'AllQuestionnaire', icon: 'question-circle' },
-        ...commonLinks,
+        // ...commonLinks,
       ];
     } else if (user?.role === 'admin') {
       return [
         // { label: 'Lesions Received', screen: 'AdminLesions', icon: 'file-medical' },
         { label: 'Questionnaires Received', screen: 'AdminQuestion', icon: 'question-circle' },
         // { label: 'User Management', screen: 'UserManagement', icon: 'users-cog' },
-        ...commonLinks,
+        // ...commonLinks,
       ];
     }
     return [];
@@ -465,26 +465,7 @@ export function Header() {
 
   const roleLinks = getRoleBasedLinks();
 
-  const handleLogout = () => {
-    Alert.alert(
-      t('logoutTitle', 'Logout'),
-      t('logoutMsg', 'Are you sure?'),
-      [
-        { text: t('cancel', 'Cancel') },
-        {
-          text: t('logout', 'Logout'),
-          style: 'destructive',
-          onPress: async () => {
-            await AsyncStorage.multiRemove(['authToken', 'user']);
-            setToken(null);
-            setUser(null);
-            closeRoleModal();
-            navigation.navigate('Login')
-          },
-        },
-      ]
-    );
-  };
+  
 
   return (
     <>
@@ -644,7 +625,7 @@ export function Header() {
 
             <TouchableOpacity
               style={styles.signOutButton}
-              onPress={handleLogout}
+              onPress={logout}
               activeOpacity={0.8}
             >
               <LinearGradient

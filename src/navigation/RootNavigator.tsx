@@ -8,11 +8,9 @@ import { useState } from 'react';
 export function RootNavigator() {
     const { token } = useAuth();
     const [splashFinished, setSplashFinished] = useState(false);
-
     if (!splashFinished) {
         return <Splash onFinish={() => setSplashFinished(true)} />;
     }
-
     return (
         <NavigationContainer>
             {!token

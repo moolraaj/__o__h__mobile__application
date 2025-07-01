@@ -1,35 +1,28 @@
 import React from 'react';
 import {
-    ScrollView,
     View,
-    Text,
-    Image,
     StyleSheet,
+    ActivityIndicator,
+    useWindowDimensions,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { useGetSingleHabitHealthQuery } from '../../store/services/habithealth/habithealthApi';
 import GradientText from '../../common/GradientText';
-import LinearGradient from 'react-native-linear-gradient';
-import MaskedView from '@react-native-masked-view/masked-view';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { ActivityIndicator } from 'react-native';
 import { AppError } from '../../common/AppError';
-
-interface HabitHealthInnerRepeater {
-    habit_health_suggesion_icon: string;
-    habit_health_suggesion_para: { [key: string]: string };
-}
+import RenderHtml from 'react-native-render-html';
 
 export default function HabitHealthDetails() {
     const { id } = useRoute().params as { id: string };
     const { i18n } = useTranslation();
     const lang = i18n.language;
-    const { data, isLoading, error, refetch } = useGetSingleHabitHealthQuery({ id, lang },
-        {
-            refetchOnMountOrArgChange: true,
-        });
+    const { width } = useWindowDimensions();
+
+    const { data, isLoading, error, refetch } = useGetSingleHabitHealthQuery(
+        { id, lang },
+        { refetchOnMountOrArgChange: true }
+    );
+    const response = data?.result || {};
 
     if (isLoading) {
         return (
@@ -38,207 +31,85 @@ export default function HabitHealthDetails() {
             </View>
         );
     }
-
     if (error || !data) {
-        return <AppError onRetry={() => refetch()} />
+        return <AppError onRetry={refetch} />;
     }
-
-    const { data: item } = data;
-
-    const renderMaskedText = (text: any, colors: string[]) => (
-        <MaskedView maskElement={<Text style={[styles.bulletText, { backgroundColor: 'transparent' }]}>{text}</Text>}>
-            <LinearGradient colors={colors} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
-                <Text style={[styles.bulletText, { opacity: 0 }]}>{text}</Text>
-            </LinearGradient>
-        </MaskedView>
-    );
-
-    const renderBulletIcon = (uri: string) => {
-        if (!uri) {
-            return <FontAwesome5 name="tooth" size={22} color="#56235E" style={styles.bulletIcon} />;
-        }
-        return <Image source={{ uri }} style={styles.bulletIcon} />;
-    };
 
     return (
         <View style={styles.container}>
-            {/* Intro */}
             <View style={styles.sectionContainer}>
-                <View style={styles.textContainer}>
-                    <GradientText text={item.habits_health_heading[lang]} size={22} />
-                    <Text style={styles.paragraph}>{item.habits_health_para[lang]}</Text>
-                </View>
-                <View style={styles.imageWrapper}>
-                    <Image source={{ uri: item.habits_health_icon }} style={styles.sectionIcon} />
-                </View>
+                <GradientText
+                    text={response.habit_health_main_title?.[lang] ?? ''}
+                    size={22}
+                />
             </View>
 
-            <View style={styles.card}>
-                <View style={styles.cardHeader}>
-                    {renderMaskedText(<Icon name="emoji-events" size={24} color="#4CAF50" />, ['#56235E', '#C1392D'])}
-                    <Text style={styles.cardTitle}>{item.habit_health_inner_title[lang]}</Text>
-                </View>
-                {item.habit_health_inner_repeater.map((rep: HabitHealthInnerRepeater, i: number) => (
-                    <View key={i} style={styles.bulletRow}>
-                        {renderBulletIcon(rep.habit_health_suggesion_icon)}
-                        {renderMaskedText(rep.habit_health_suggesion_para[lang], ['#56235E', '#C1392D'])}
-                    </View>
-                ))}
-            </View>
-
-
-            <View style={styles.card}>
-                <View style={styles.cardHeader}>
-                    {renderMaskedText(<Icon name="highlight-off" size={24} color="#FF5722" />, ['#1E90FF', '#FF69B4'])}
-                    <Text style={styles.cardTitle}>{item.bad_habits_health_title[lang]}</Text>
-                </View>
-                <Text style={styles.cardSubtitle}>{item.bad_habits_health_para[lang]}</Text>
-                {item.bad_habits_health_repeater.map((rep: {
-                    bad_habits_repeater_icon: string;
-                    bad_habits_repeater_heading: { [key: string]: string };
-                    bad_habits_repeater_description: { [key: string]: string };
-                }, i: number) => (
-                    <View key={i} style={styles.bulletRow}>
-                        {renderBulletIcon(rep.bad_habits_repeater_icon)}
-                        <View style={{ flex: 1 }}>
-                            {renderMaskedText(rep.bad_habits_repeater_heading[lang], ['#1E90FF', '#FF69B4'])}
-                            <Text style={styles.smallText}>{rep.bad_habits_repeater_description[lang]}</Text>
+            <View style={styles.htmlContainer}>
+                {response.habit_health_repeater?.map((ele, idx) => {
+                    const htmlArray = ele.description?.map(f => f[lang]) ?? [];
+                    const htmlContent = htmlArray.join('');
+                    if (!htmlContent) return null;
+                    return (
+                        <View key={ele._id ?? idx} style={styles.card}>
+                            <RenderHtml
+                                contentWidth={width}
+                                source={{ html: htmlContent }}
+                                baseStyle={styles.htmlContent}
+                                tagsStyles={{
+                                    h1: styles.htmlH1,
+                                    h2: styles.htmlH2,
+                                    h3: styles.htmlH3,
+                                    h4: styles.htmlH4,
+                                    h5: styles.htmlH5,
+                                    h6: styles.htmlH6,
+                                    p: styles.htmlP,
+                                    strong: styles.htmlStrong,
+                                    ul: styles.htmlUl,
+                                    ol: styles.htmlOl,
+                                    li: styles.htmlLi,
+                                }}
+                            />
                         </View>
-                    </View>
-                ))}
-            </View>
-
-
-            <View style={styles.card}>
-                <View style={styles.cardHeader}>
-                    {renderMaskedText(<Icon name="lightbulb" size={24} color="#FFC107" />, ['#4CAF50', '#8E24AA'])}
-                    <Text style={styles.cardTitle}>{item.improve_health_habits_title[lang]}</Text>
-                </View>
-                <Text style={styles.cardSubtitle}>{item.improve_health_habits_description[lang]}</Text>
-                {item.improve_habits_health_repeater.map((rep: {
-                    improve_habits_repeater_icon: string;
-                    improve_habits_repeater_heading: { [key: string]: string };
-                    improve_habits_repeater_description: { [key: string]: string };
-                }, i: number) => (
-                    <View key={i} style={styles.bulletRow}>
-                        {renderBulletIcon(rep.improve_habits_repeater_icon)}
-                        <View style={{ flex: 1 }}>
-                            {renderMaskedText(rep.improve_habits_repeater_heading[lang], ['#4CAF50', '#8E24AA'])}
-                            <Text style={styles.smallText}>{rep.improve_habits_repeater_description[lang]}</Text>
-                        </View>
-                    </View>
-                ))}
+                    );
+                })}
             </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
+    container: { flex: 1, backgroundColor: '#fff', padding: 10 },
     sectionContainer: {
         borderRadius: 12,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 10,
+        padding: 15,
+        backgroundColor: '#f9f9f9',
         marginBottom: 20,
     },
-    textContainer: {
-        alignItems: 'flex-start',
-        width: '80%',
-        flexDirection: 'column',
-        gap: 5,
-        paddingRight: 10,
-    },
-    imageWrapper: {
-        width: '20%',
-        height: 'auto',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    center: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    section: {
-        marginBottom: 15,
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-    },
-    row: {
-        width: '100%',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 20
-    },
-    sectionIcon: {
-        width: 40,
-        height: 40,
-        borderRadius: 20
-    },
-    paragraph: {
-        fontSize: 16,
-        color: '#A1A8B0',
-        letterSpacing: 0.2,
-    },
+    htmlContainer: { flex: 1 },
     card: {
         backgroundColor: '#fff',
         padding: 16,
         borderRadius: 12,
         marginBottom: 20,
-        elevation: 4,
-        margin: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
     },
-    cardHeader: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 12,
-        gap: 10,
-    },
-    cardTitle: {
-        fontSize: 18,
-        fontWeight: '700',
-        color: '#222',
-    },
-    cardSubtitle: {
-        fontSize: 15,
-        color: '#666',
-        marginBottom: 12,
-    },
-    bulletRow: {
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-        marginBottom: 12,
-        paddingBottom: 12,
-        borderBottomWidth: 1.5,
-        borderBottomColor: '#B1D6FF',
-        borderStyle: 'dashed',
-    },
-    bulletIcon: {
-        width: 28,
-        height: 28,
-        marginRight: 12,
-        marginTop: 2,
-        borderRadius: 12,
-    },
-    bulletText: {
-        fontSize: 16,
-        fontWeight: '500',
-        color: '#444',
-    },
-    smallText: {
-        fontSize: 14,
-        color: '#777',
-        marginTop: 2,
-    },
+    htmlContent: { padding: 10 },
+
+    // Headings
+    htmlH1: { fontSize: 26, fontWeight: 'bold', marginVertical: 12 },
+    htmlH2: { fontSize: 22, fontWeight: 'bold', marginVertical: 10 },
+    htmlH3: { fontSize: 20, fontWeight: '600', marginVertical: 8 },
+    htmlH4: { fontSize: 18, fontWeight: '600', marginVertical: 6 },
+    htmlH5: { fontSize: 16, fontWeight: '500', marginVertical: 4 },
+    htmlH6: { fontSize: 14, fontWeight: '500', marginVertical: 2 },
+
+    // Paragraphs & text
+    htmlP: { fontSize: 16, lineHeight: 24, color: '#333', marginBottom: 12 },
+    htmlStrong: { fontWeight: 'bold' },
+
+    // Lists
+    htmlUl: { marginVertical: 8, paddingLeft: 20 },
+    htmlOl: { marginVertical: 8, paddingLeft: 20 },
+    htmlLi: { fontSize: 16, lineHeight: 24, marginBottom: 4 },
+
+    center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 });

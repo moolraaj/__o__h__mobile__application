@@ -17,6 +17,8 @@ import EditUserScreen from '../screens/settings/EditUserScreen';
 import UpdatePasswordScreen from '../screens/settings/ChangePassword';
 import { ForgotPasswordScreen } from '../screens/settings/ForgotPasswordScreen';
 import { SettingForgotPasswordScreen } from '../screens/settings/SettingForgotPasswordScreen';
+import TermConditionScreen from '../screens/TermConditionScreen';
+import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
 
 const Stack = createNativeStackNavigator();
 export const UserStack = () => (
@@ -38,5 +40,7 @@ export const UserStack = () => (
     <Stack.Screen name="SettingChangePassword" component={UpdatePasswordScreen} />
     <Stack.Screen name="SettingForgotPassword" component={ForgotPasswordScreen} />
     <Stack.Screen name="SettingForgotPasswordScreen" component={SettingForgotPasswordScreen} />
+    <Stack.Screen name="TermConditionScreen" component={TermConditionScreen} />
+    <Stack.Screen name="PrivacypoliciesScreen" component={PrivacyPolicyScreen} />
   </Stack.Navigator>
 );

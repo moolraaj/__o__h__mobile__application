@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, Image, FlatList, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, Image,   ActivityIndicator } from 'react-native'
 import { useRoute } from '@react-navigation/native'
 import { useGetSingleFeatureCategoryQuery } from '../store/services/categories/categoryApi'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import Disease from './Disease'
 import GradientText from '../common/GradientText'
 import LinearGradient from 'react-native-linear-gradient'
-import Entypo from 'react-native-vector-icons/Entypo'
+ 
 import { AppError } from '../common/AppError'
 
 const SingleFeature = ({ navigation }: { navigation: any }) => {
@@ -31,6 +31,9 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
         return <AppError onRetry={() => refetch()} />
     }
     const result = data?.data
+
+    console.log(`data`)
+    console.log(data)
     return (
 
         <>
@@ -44,8 +47,7 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
                 >
                     <View style={styles.textContainer}>
                         <GradientText text={result?.feature_inner_title?.[currentLanguage] || 'No Title'} size={22} />
-                        <Text> {result?.feature_slug?.[currentLanguage] || 'No Slug'}
-                        </Text>
+                        <Text> {result?.feature_inner_description?.[currentLanguage] || 'No Description'} </Text>
                     </View>
                     <View style={styles.imageWrapper}>
                         {result?.feature_inner_image ? (
@@ -65,68 +67,6 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
                     </Text>
                     <Disease disease={result?.diseases} currentLanguage={currentLanguage} navigation={navigation} isLoading={isLoading} />
                 </View>
-
-                <View style={styles.section}>
-                    {/* Heading & Description */}
-                    <Text style={styles.heading}>
-                        <GradientText text={result?.feature_myth_facts_title?.[currentLanguage] || null} size={22} />
-                    </Text>
-                    <Text style={styles.description}>{result?.feature_myth_facts_description?.[currentLanguage] || null}</Text>
-                </View>
-
-
-                {/* Myths */}
-                <View style={styles.mythFactsSection}>
-                    <Text style={styles.sectionHeader}>
-                        <GradientText text="Feature Myths" />
-                    </Text>
-                    <LinearGradient
-                        colors={['#F8E4FF', '#FFD7D8']}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        style={styles.mythBox}>
-                        <FlatList
-                            data={result?.feature_myths || []}
-                            keyExtractor={(item, index) =>
-                                item._id ? item._id.toString() : index.toString()
-                            }
-                            renderItem={({ item }) => (
-                                <View style={styles.factRow}>
-                                    <Entypo name="cross" color="#FF473E" size={24} style={styles.icon} />
-                                    <Text style={styles.factText}>{item?.para?.[currentLanguage] || null}</Text>
-                                    <Image source={{ uri: item.icon }} style={{ width: 10, height: 10 }} />
-                                </View>
-                            )}
-                        />
-                    </LinearGradient>
-                </View>
-
-                {/* Facts */}
-                <View style={styles.mythFactsSection}>
-                    <Text style={styles.sectionHeader}>
-                        <GradientText text="Feature Facts" />
-                    </Text>
-                    <LinearGradient
-                        colors={['#E0FAFF', '#F8E2FF']}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        style={styles.factBox}>
-                        <FlatList
-                            data={result?.feature_facts || []}
-                            keyExtractor={(item, index) =>
-                                item._id ? item._id.toString() : index.toString()
-                            }
-                            renderItem={({ item }) => (
-                                <View style={styles.factRow}>
-                                    <Entypo name="check" color="#34A853" size={22} style={styles.icon} />
-                                    <Text style={styles.factText}>{item?.para?.[currentLanguage] || null}</Text>
-                                    <Image source={{ uri: item.icon }} style={{ width: 30, height: 30 }} />
-                                </View>
-                            )}
-                        />
-                    </LinearGradient>
-                </View>
-
             </SafeAreaView >
         </>
 

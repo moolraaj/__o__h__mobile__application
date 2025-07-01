@@ -18,6 +18,10 @@ const DentalEmergencyList = ({ navigation }: { navigation: any }) => {
   }
 
   if (error || !data?.result) {
+
+    
+
+ 
     return (
       <View style={styles.errorContainer}>
         <TouchableOpacity

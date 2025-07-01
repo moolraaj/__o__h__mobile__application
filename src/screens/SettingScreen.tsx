@@ -1,13 +1,13 @@
 import React from 'react';
 import {
   Text,
-  Alert,
+ 
   StyleSheet,
   TouchableOpacity,
   View,
   ScrollView,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+ 
 
 import { Layout } from '../common/Layout';
 import { useAuth } from '../navigation/AuthContext';
@@ -18,28 +18,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 
 const SettingScreen = ({ navigation }: { navigation: any }) => {
-  const { setToken, setUser } = useAuth();
+  const {  logout } = useAuth();
   const { t } = useTranslation();
 
 
-  const handleLogout = () => {
-    Alert.alert(
-      t('logoutTitle', 'Logout'),
-      t('logoutMsg', 'Are you sure?'),
-      [
-        { text: t('cancel', 'Cancel') },
-        {
-          text: t('logout', 'Logout'),
-          style: 'destructive',
-          onPress: async () => {
-            await AsyncStorage.multiRemove(['authToken', 'user']);
-            setToken(null);
-            setUser(null);
-          },
-        },
-      ]
-    );
-  };
+ 
 
   const handleEditProfile = () => {
     navigation.navigate('SettingUpdateUser');
@@ -49,18 +32,18 @@ const SettingScreen = ({ navigation }: { navigation: any }) => {
     navigation.navigate('SettingChangePassword');
   };
 
-  const handleNotifications = () => {
+  // const handleNotifications = () => {
 
+  // };
+
+
+
+  const handleTerms = () => {
+    navigation.navigate('TermConditionScreen');
   };
 
- 
-
-  const handleHelpSupport = () => {
-
-  };
-
-  const handleTermsPolicies = () => {
-
+  const handlePolicies = () => {
+    navigation.navigate('PrivacypoliciesScreen');
   };
 
   return (
@@ -97,7 +80,7 @@ const SettingScreen = ({ navigation }: { navigation: any }) => {
 
         </LinearGradient>
 
-        {/* <Text style={styles.sectionTitle}>Support & Feedback</Text>
+        <Text style={styles.sectionTitle}>Privacy Policies & Term and Conditions</Text>
         <LinearGradient
           colors={['#F8E4FF', '#FFD7D8']}
           locations={[0.2081, 1]}
@@ -105,17 +88,18 @@ const SettingScreen = ({ navigation }: { navigation: any }) => {
           end={{ x: 1, y: 0 }}
           style={styles.sectionContainer}
         >
+
           <SettingOption
-            icon="help-circle-outline"
-            label="Help & Support"
-            onPress={handleHelpSupport}
+            icon="document-text-outline"
+            label="Privacy Policies"
+            onPress={handlePolicies}
           />
           <SettingOption
             icon="document-text-outline"
-            label="Terms And Policies"
-            onPress={handleTermsPolicies}
+            label="Term and Conditions"
+            onPress={handleTerms}
           />
-        </LinearGradient> */}
+        </LinearGradient>
 
         <Text style={styles.sectionTitle}>Logout</Text>
         <LinearGradient
@@ -125,7 +109,7 @@ const SettingScreen = ({ navigation }: { navigation: any }) => {
           end={{ x: 1, y: 0 }}
           style={styles.sectionContainer}
         >
-          <TouchableOpacity style={styles.sectionBtn} onPress={handleLogout}>
+          <TouchableOpacity style={styles.sectionBtn} onPress={logout}>
             <MaterialIcons name="logout" size={24} color="#56235E" />
             <Text style={styles.btnText}>Log Out</Text>
           </TouchableOpacity>

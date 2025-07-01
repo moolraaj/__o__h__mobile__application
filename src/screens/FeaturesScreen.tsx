@@ -1,9 +1,9 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import Features from '../components/Features'
-import HabitHealthDisease from '../components/home/HabitHealth'
 import GradientText from '../common/GradientText'
 import DentalEmergencyScreen from './DentalEmergencyScreen'
+import HabitHealthDisease from '../components/home/HabitHealth'
 
 
 

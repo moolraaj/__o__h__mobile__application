@@ -7,6 +7,8 @@ import { store } from './store/Store/Store';
 import i18n from './i18n';
 import { AuthProvider } from './navigation/AuthContext';
 import { RootNavigator } from './navigation/RootNavigator';
+import { ProfileChecker } from './common/ProfileChecker';
+
 
 export default function App() {
   return (
@@ -14,6 +16,7 @@ export default function App() {
       <I18nextProvider i18n={i18n}>
         <Provider store={store}>
           <AuthProvider>
+            <ProfileChecker />
             <RootNavigator />
             <Toast position="top" autoHide visibilityTime={3000} topOffset={10} />
           </AuthProvider>

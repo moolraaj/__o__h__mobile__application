@@ -1,5 +1,12 @@
-import { View, Text, Image, StyleSheet, ActivityIndicator } from 'react-native';
 import React from 'react';
+import {
+    View,
+    Text,
+    Image,
+    StyleSheet,
+    ActivityIndicator,
+    ScrollView,
+} from 'react-native';
 import { Layout } from '../common/Layout';
 import GradientText from '../common/GradientText';
 import { useGetMythsAndFactsQuery } from '../store/services/mythsfacts/mythfactApi';
@@ -10,76 +17,99 @@ import { AppError } from '../common/AppError';
 
 export default function MythFactScreen() {
     const { i18n } = useTranslation();
-    const lang = i18n.language as keyof Language;
+    const lang = i18n.language as 'en' | 'kn';
     const { data, isLoading, error, refetch } = useGetMythsAndFactsQuery({ page: 1, lang });
-
     const item = data?.result?.[0];
+
+    if (isLoading) {
+        return (
+            <View style={styles.center}>
+                <ActivityIndicator size="large" />
+            </View>
+        );
+    }
+
+    if (error || !item) {
+        return <AppError onRetry={refetch} />;
+    }
 
     return (
         <Layout>
-            {isLoading ? (
-                <View style={styles.center}>
-                    <ActivityIndicator size="large" />
-                </View>
-            ) : error || !data ? (
-                <AppError onRetry={() => refetch()} />
-            ) : (
-                <View style={styles.container}>
-                    {/* Header Section */}
-                    <View style={styles.header}>
-                        <View style={styles.textSection}>
-                            <GradientText text={item?.myth_fact_title?.[lang]} size={22} colors={["#5E346D", "#C13439"]} />
-                            <Text style={styles.bodyText}>{item?.myth_fact_body?.[lang]}</Text>
-                        </View>
-                        {item?.myth_fact_image && (
-                            <Image
-                                source={{ uri: item.myth_fact_image }}
-                                style={styles.image}
-                                resizeMode="cover"
-                            />
-                        )}
+            <ScrollView contentContainerStyle={styles.container}>
+                {/* Header */}
+                <View style={styles.header}>
+                    <View style={styles.textSection}>
+                        <GradientText
+                            text={item.myth_fact_title?.[lang] ?? ''}
+                            size={22}
+                            colors={['#5E346D', '#C13439']}
+                        />
+                        <Text style={styles.bodyText}>
+                            {item.myth_fact_body?.[lang]}
+                        </Text>
                     </View>
-
-                    {/* Heading & Description */}
-                    <Text style={styles.heading}>{item?.myth_fact_heading?.[lang]}</Text>
-                    <Text style={styles.description}>{item?.myth_fact_description?.[lang]}</Text>
-
-                    {/* Myths */}
-                    <LinearGradient
-                        colors={['#F8E4FF', '#FFD7D8']}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        style={styles.mythBox}>
-                        {item?.myths_facts_wrong_fact?.map((wrong, index) => (
-                            <View key={index} style={styles.factRow}>
-                                <Entypo name="cross" color="#FF473E" size={24} style={styles.icon} />
-                                <Text style={styles.factText}>{wrong[lang]}</Text>
-                            </View>
-                        ))}
-                    </LinearGradient>
-
-                    {/* Facts */}
-                    <LinearGradient
-                        colors={['#E0FAFF', '#F8E2FF']}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        style={styles.factBox}>
-                        {item?.myths_facts_right_fact?.map((right, index) => (
-                            <View key={index} style={styles.factRow}>
-                                <Entypo name="check" color="#34A853" size={22} style={styles.icon} />
-                                <Text style={styles.factText}>{right[lang]}</Text>
-                            </View>
-                        ))}
-                    </LinearGradient>
+                    {item.myth_fact_image && (
+                        <Image
+                            source={{ uri: item.myth_fact_image }}
+                            style={styles.image}
+                            resizeMode="cover"
+                        />
+                    )}
                 </View>
-            )}
+
+
+                {item.facts?.map((block, idx) => {
+                    const headingText = block.heading?.[lang] ?? '';
+                    const wrongs = block.myths_facts_wrong_fact ?? [];
+                    const rights = block.myths_facts_right_fact ?? [];
+                    return (
+                        <View key={idx} style={styles.factBlock}>
+                            <Text style={styles.sectionHeading}>
+                                {headingText}
+                            </Text>
+                            <Text>Myths</Text>
+                            <LinearGradient
+                                colors={['#F8E4FF', '#FFD7D8']}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 0 }}
+                                style={[styles.listContainer, styles.wrongContainer]}
+                            >
+                                {wrongs.map((w, i) => (
+                                    <View key={i} style={styles.factRow}>
+                                        <Entypo name="cross" size={20} color="#FF473E" />
+                                        
+                                        <Text style={styles.factText}>
+                                            {w[lang]}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </LinearGradient>
+                             <Text>Facts</Text>
+                            <LinearGradient
+                                colors={['#E0FAFF', '#F8E2FF']}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 0 }}
+                                style={[styles.listContainer, styles.rightContainer]}
+                            >
+                                {rights.map((r, i) => (
+                                    <View key={i} style={styles.factRow}>
+                                        <Entypo name="check" size={20} color="#34A853" />
+                                        <Text style={styles.factText}>
+                                            {r[lang]}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </LinearGradient>
+                        </View>
+                    );
+                })}
+            </ScrollView>
         </Layout>
     );
 }
-
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        padding: 16,
     },
     center: {
         flex: 1,
@@ -88,66 +118,53 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        marginBottom: 24,
         alignItems: 'center',
-        marginBottom: 20,
-        gap: 10,
     },
     textSection: {
-        alignItems: 'flex-start',
         flex: 1,
     },
     bodyText: {
         fontSize: 16,
         color: '#5A5A5A',
         marginTop: 8,
-        lineHeight: 22
+        lineHeight: 22,
     },
     image: {
-        width: 50,
-        height: 50,
+        width: 60,
+        height: 60,
         borderRadius: 12,
+        marginLeft: 12,
     },
-    heading: {
+    factBlock: {
+        marginBottom: 24,
+    },
+    sectionHeading: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#800080',
-        marginBottom: 4,
+        color: '#56235E',
+        marginBottom: 12,
     },
-    description: {
-        fontSize: 15,
-        color: '#5A5A5A',
-        marginBottom: 16,
-        lineHeight: 22
+    listContainer: {
+        padding: 12,
+        borderRadius: 12,
+        marginBottom: 12,
     },
-    mythBox: {
+    wrongContainer: {
         backgroundColor: '#FEE2E2',
-        padding: 16,
-        borderRadius: 12,
-        marginBottom: 16,
     },
-    factBox: {
+    rightContainer: {
         backgroundColor: '#DCFCE7',
-        padding: 16,
-        borderRadius: 12,
     },
     factRow: {
         flexDirection: 'row',
-        marginBottom: 8,
         alignItems: 'flex-start',
-    },
-    icon: {
-        marginRight: 5,
-        marginTop: 2
+        marginBottom: 8,
     },
     factText: {
         flex: 1,
         fontSize: 16,
-        fontWeight: '500',
-        borderBottomWidth: 1,
-        borderBottomColor: '#B1D6FF',
-        borderStyle: 'dashed',
-        paddingBottom: 10,
-        lineHeight: 22
+        lineHeight: 22,
+        marginLeft: 8,
     },
 });

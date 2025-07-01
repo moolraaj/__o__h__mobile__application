@@ -43,6 +43,7 @@ const SingleDentalEmergencyDetail = () => {
     }
 
     const emergency = data?.result
+ 
 
     return (
         <ScrollView style={styles.container}>

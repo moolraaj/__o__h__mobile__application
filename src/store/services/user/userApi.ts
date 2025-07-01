@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiSlice } from '../apiSlice';
 
 export const userApi = apiSlice.injectEndpoints({
@@ -71,6 +72,7 @@ export const userApi = apiSlice.injectEndpoints({
       providesTags: ['User'],
     }),
 
+
     forgotPassword: builder.mutation<{ status: number; message: string }, { email: string }>({
       query: ({ email }) => ({
         url: '/api/auth/forgot-password',
@@ -85,6 +87,16 @@ export const userApi = apiSlice.injectEndpoints({
         body: { otp, newPassword, confirmPassword },
       }),
       invalidatesTags: ['User'],
+    }),
+    getProfile: builder.query({
+      query: () => '/api/auth/profile',
+
+      pollingInterval: 30000,  
+      transformResponse: (response) => {
+       
+        AsyncStorage.setItem('user', JSON.stringify(response.user))
+        return response
+      },
     }),
 
 
@@ -102,4 +114,5 @@ export const {
   useGetSingleUserQuery,
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  useGetProfileQuery
 } = userApi;

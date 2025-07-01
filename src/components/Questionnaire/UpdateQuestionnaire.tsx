@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     Alert,
     ActivityIndicator,
+    Image,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useAuth } from '../../navigation/AuthContext';
@@ -19,6 +20,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
 import RadioButtonGroup from '../../common/RadioButtonGroup';
 import CheckboxGroup from '../../common/CheckboxGroup';
+import * as ImagePicker from 'react-native-image-picker';
+
 
 const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
 
@@ -31,6 +34,9 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
         limit: 100,
         role: 'admin',
     });
+    const [images, setImages] = useState<
+        { uri: string; type?: string; name?: string; isNew: boolean }[]
+    >([]);
 
     const [admins, setAdmins] = useState<Users[]>([]);
     const [showReligionInput, setShowReligionInput] = useState(false);
@@ -125,13 +131,42 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 presenceOfDecayedTeeth: data.presenceOfDecayedTeeth || '',
                 presenceOfGumDisease: data.presenceOfGumDisease || [],
                 presenceOfFluorosis: data.presenceOfFluorosis || '',
+
             });
+            const urls: string[] = questionnaireData.data.images || [];
+            setImages(urls.map((u, i) => ({
+                uri: u,
+                isNew: false,
+                name: `existing_${i}`,
+                type: 'image/jpeg',
+            })));
 
             // Set conditional fields visibility
             setShowReligionInput(data.religion === 'Others');
             setShowTobaccoType(data.tobaccoChewer === 'yes');
         }
     }, [questionnaireData]);
+
+    const selectImages = async () => {
+        const result = await ImagePicker.launchImageLibrary({
+            mediaType: 'photo',
+            quality: 1,
+            selectionLimit: 5,
+            includeBase64: false,
+        });
+        if (!result.didCancel && result.assets) {
+            const picked = result.assets.map((a, i) => ({
+                uri: a.uri!,
+                type: a.type,
+                name: a.fileName || `new_${Date.now()}_${i}`,
+                isNew: true,
+            }));
+            setImages(prev => [...prev, ...picked]);
+        }
+    };
+
+    const removeImage = (index: number) =>
+        setImages(prev => prev.filter((_, i) => i !== index));
 
     const handleChange = (name: string, value: string | number | string[]) => {
         setFormData((prev) => ({ ...prev, [name]: value }));
@@ -210,6 +245,18 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
             }
             formDataToSend.append('submitted_by', user.id);
 
+            formDataToSend.append(
+                'existingImages',
+                JSON.stringify(images.filter(i => !i.isNew).map(i => i.uri))
+            );
+            images.filter(i => i.isNew).forEach(img => {
+                formDataToSend.append('images', {
+                    uri: img.uri,
+                    type: img.type,
+                    name: img.name,
+                });
+            });
+
             await updateQuestionnaire({ id, formData: formDataToSend }).unwrap();
 
             ToastMessage('success', 'Questionnaire updated successfully!');
@@ -244,6 +291,21 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
             <Text style={styles.sectionHeader}>
                 <GradientText text="Personal Information" size={20} />
             </Text>
+
+            <TouchableOpacity onPress={selectImages} style={styles.imageUploadButton}>
+                <Text style={styles.imageUploadButtonText}>Select Images</Text>
+            </TouchableOpacity>
+            <View style={styles.imagePreviewContainer}>
+                {images.map((img, idx) => (
+                    <View key={idx} style={styles.imagePreviewWrapper}>
+                        <Image source={{ uri: img.uri }} style={styles.imagePreview} />
+                        <TouchableOpacity onPress={() => removeImage(idx)} style={styles.removeImageButton}>
+                            <Text style={styles.removeImageButtonText}>×</Text>
+                        </TouchableOpacity>
+                    </View>
+                ))}
+            </View>
+
 
             <Text style={styles.label}>Demographics *</Text>
             <TextInput
@@ -872,6 +934,50 @@ const styles = StyleSheet.create({
         marginVertical: 15,
         color: '#666',
         fontStyle: 'italic',
+    },
+    imageUploadButton: {
+        backgroundColor: '#56235E',
+        padding: 12,
+        borderRadius: 8,
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    imageUploadButtonText: {
+        color: 'white',
+        fontSize: 16,
+    },
+    imagePreviewContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginBottom: 16,
+    },
+    imagePreviewWrapper: {
+        width: 100,
+        height: 100,
+        marginRight: 10,
+        marginBottom: 10,
+        position: 'relative',
+    },
+    imagePreview: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 8,
+    },
+    removeImageButton: {
+        position: 'absolute',
+        top: -5,
+        right: -5,
+        backgroundColor: 'red',
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    removeImageButtonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 });
 

@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useAuth } from '../../navigation/AuthContext';
@@ -19,6 +20,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
 import RadioButtonGroup from '../../common/RadioButtonGroup';
 import CheckboxGroup from '../../common/CheckboxGroup';
+ 
+import * as ImagePicker from 'react-native-image-picker';
 
 const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
   const { user } = useAuth();
@@ -32,6 +35,7 @@ const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
   const [admins, setAdmins] = useState<Users[]>([]);
   const [showReligionInput, setShowReligionInput] = useState(false);
   const [showTobaccoType, setShowTobaccoType] = useState(false);
+  const [images, setImages] = useState<any[]>([]);
 
   const [formData, setFormData] = useState<CreateUpdateQuestionnaire>({
     demographics: '',
@@ -73,6 +77,30 @@ const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
     presenceOfGumDisease: [],
     presenceOfFluorosis: '',
   });
+
+  const selectImages = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibrary({
+        mediaType: 'photo',
+        quality: 1,
+        selectionLimit: 5,
+        includeBase64: true,
+      });
+
+      if (!result.didCancel && !result.errorCode) {
+        const selectedImages = result.assets || [];
+        setImages(prev => [...prev, ...selectedImages]);
+      }
+    } catch (err) {
+      console.error('Image picker error:', err);
+    }
+  };
+
+  const removeImage = (index: number) => {
+    setImages(prev => prev.filter((_, i) => i !== index));
+  };
+
+
 
   useEffect(() => {
     if (adminData?.users) {
@@ -158,6 +186,13 @@ const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
         Alert.alert('Error', 'User information is missing. Please log in again.');
         return;
       }
+      images.forEach((image, index) => {
+        formDataToSend.append('images', {
+          uri: image.uri,
+          type: image.type || 'image/jpeg',
+          name: `image_${index}.jpg`,
+        });
+      });
       await createQuestionnaire(formDataToSend).unwrap();
 
       ToastMessage('success', 'Questionnaire created successfully!')
@@ -184,6 +219,31 @@ const CreateQuestionnaire = ({ navigation }: { navigation: any }) => {
       <Text style={styles.sectionHeader}>
         <GradientText text="Personal Information" size={20} />
       </Text>
+
+      <Text style={styles.sectionHeader}>
+        <GradientText text="Upload Images" size={20} />
+      </Text>
+
+      <TouchableOpacity style={styles.imageUploadButton} onPress={selectImages}>
+        <Text style={styles.imageUploadButtonText}>Select Images (Max 5)</Text>
+      </TouchableOpacity>
+
+      <View style={styles.imagePreviewContainer}>
+        {images.map((image, index) => (
+          <View key={index} style={styles.imagePreviewWrapper}>
+            <Image
+              source={{ uri: image.uri }}
+              style={styles.imagePreview}
+            />
+            <TouchableOpacity
+              style={styles.removeImageButton}
+              onPress={() => removeImage(index)}
+            >
+              <Text style={styles.removeImageButtonText}>×</Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+      </View>
 
       <Text style={styles.label}>Demographics *</Text>
       <TextInput
@@ -807,6 +867,50 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     color: '#666',
     fontStyle: 'italic',
+  },
+  imageUploadButton: {
+    backgroundColor: '#56235E',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  imageUploadButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  imagePreviewContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 16,
+  },
+  imagePreviewWrapper: {
+    width: 100,
+    height: 100,
+    marginRight: 10,
+    marginBottom: 10,
+    position: 'relative',
+  },
+  imagePreview: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
+  },
+  removeImageButton: {
+    position: 'absolute',
+    top: -5,
+    right: -5,
+    backgroundColor: 'red',
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  removeImageButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

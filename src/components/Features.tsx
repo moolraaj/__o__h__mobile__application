@@ -29,6 +29,8 @@ const Features = ({ navigation }: { navigation: any }) => {
     return <CardSkeletonItem count={1} />
   }
 
+ 
+
   if (error || !data?.result) {
     return (
       <View style={styles.container}>

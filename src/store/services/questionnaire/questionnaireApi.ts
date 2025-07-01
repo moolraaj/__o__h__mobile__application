@@ -3,7 +3,7 @@ import { apiSlice } from '../apiSlice';
 export const questionnaireApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getQuestionnaires: builder.query<any, { page?: number; limit?: number }>({
-      query: ({ page = 1, limit = 100 }) => `/api/questionnaire?page=${page}&limit=${limit}`,
+      query: ({ page , limit }) => `/api/questionnaire?page=${page}&limit=${limit}`,
       providesTags: ['Questionnaire'],
     }),
     createQuestionnaire: builder.mutation<any, FormData>({
