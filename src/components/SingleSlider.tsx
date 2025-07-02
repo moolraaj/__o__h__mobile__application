@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   View,
   Text,
@@ -6,35 +6,34 @@ import {
   StyleSheet,
   FlatList,
   ActivityIndicator,
-} from 'react-native'
-import { useRoute, RouteProp } from '@react-navigation/native'
-import { useTranslation } from 'react-i18next'
-import Loader from '../common/Loader'
-import { useGetSingleSliderQuery } from '../store/services/slider/sliderApi'
-import GradientText from '../common/GradientText'
+} from 'react-native';
+import { useRoute, RouteProp } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
+import { useGetSingleSliderQuery } from '../store/services/slider/sliderApi';
+import GradientText from '../common/GradientText';
 
 type RootStackParamList = {
   Product: { id: string }
 }
 
 export const SingleSlider = () => {
-  const route = useRoute<RouteProp<RootStackParamList, 'Product'>>()
-  const { id } = route.params
+  const route = useRoute<RouteProp<RootStackParamList, 'Product'>>();
+  const { id } = route.params;
 
-  const { i18n } = useTranslation()
-  const currentLanguage = i18n.language
+  const { i18n } = useTranslation();
+  const currentLanguage = i18n.language;
 
   const { data, error, isLoading } = useGetSingleSliderQuery({ id, lang: currentLanguage },
     {
       refetchOnMountOrArgChange: true,
-    })
+    });
 
   if (isLoading) {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" />
       </View>
-    )
+    );
   }
 
   if (error || !data) {
@@ -42,10 +41,10 @@ export const SingleSlider = () => {
       <View style={styles.center}>
         <Text style={styles.errorText}>Could not load slider #{id}</Text>
       </View>
-    )
+    );
   }
 
-  const sliderItems = data.data.body
+  const sliderItems = data.data.body;
 
   return (
     <FlatList
@@ -70,12 +69,12 @@ export const SingleSlider = () => {
       contentContainerStyle={styles.listContent}
       ListEmptyComponent={
         <View style={styles.center}>
-          <Text style={{ fontSize: 16, color: '#777' }}>No slider items available.</Text>
+          <Text style={styles.emptyText}>No slider items available.</Text>
         </View>
       }
     />
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   center: {
@@ -128,4 +127,9 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 4,
   },
-})
+  emptyText: {
+    fontSize: 16,
+    color: '#777',
+  },
+});
+

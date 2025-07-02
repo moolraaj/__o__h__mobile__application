@@ -8,11 +8,12 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { Layout } from '../common/Layout';
- 
+
 import { useTranslation } from 'react-i18next';
 import RenderHtml from 'react-native-render-html';
 import { AppError } from '../common/AppError';
 import { useGetPrivacyPolicesQuery } from '../store/services/privacy/privacyApi';
+import GradientText from '../common/GradientText';
 
 export default function PrivacyPolicyScreen() {
   const { i18n } = useTranslation();
@@ -27,26 +28,30 @@ export default function PrivacyPolicyScreen() {
 
   if (isLoading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" />
-      </View>
+      <Layout>
+        <View style={styles.center}>
+          <ActivityIndicator size="large" />
+        </View>
+      </Layout>
     );
   }
 
   if (error || !data?.result?.length) {
-    return <AppError onRetry={refetch} />;
+    return <Layout><AppError onRetry={refetch} /></Layout>;
   }
 
   return (
     <Layout>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView>
         {data.result.map((policyEntry, entryIdx) =>
           policyEntry.privacy_policy_repeater.map((item, idx) => {
             const heading = item.privacy_heading?.[lang] ?? '';
             const html = item.privacy_description?.[lang] ?? '';
             return (
               <View key={`${entryIdx}-${idx}`} style={styles.section}>
-                <Text style={styles.heading}>{heading}</Text>
+                <Text style={styles.heading}>
+                  <GradientText text={heading} size={18} />
+                </Text>
                 <RenderHtml
                   contentWidth={width - 32}
                   source={{ html }}
@@ -62,14 +67,17 @@ export default function PrivacyPolicyScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 16 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  section: { marginBottom: 24 },
-  heading: { fontSize: 20, fontWeight: '600', marginBottom: 8, color: '#333' },
+  section: { marginBottom: 12 },
+  heading: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 12,
+    color: '#3D3D4E',
+  },
   paragraph: {
-    fontSize: 16,
+    fontSize: 15,
     lineHeight: 22,
     color: '#555',
-    marginBottom: 12,
   },
 });

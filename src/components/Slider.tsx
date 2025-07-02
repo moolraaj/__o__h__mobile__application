@@ -7,10 +7,10 @@ import {
   StyleSheet,
   Dimensions,
   Text,
-  Modal,             // ← NEW
-  ActivityIndicator, // ← NEW
+  Modal,
+  TouchableWithoutFeedback,
 } from 'react-native';
-import Video from 'react-native-video'; // ← NEW
+import Video from 'react-native-video';
 import { useGetSlidersQuery } from '../store/services/slider/sliderApi';
 import { useTranslation } from 'react-i18next';
 import LinearGradient from 'react-native-linear-gradient';
@@ -22,7 +22,9 @@ const { width } = Dimensions.get('window');
 const CARD_WIDTH = width * 0.8;
 const CARD_SPACING = 5;
 
-export const Slider = ({ navigation }: { navigation: any }) => {
+const ItemSeparator = () => <View style={{ width: CARD_SPACING }} />;
+
+export const Slider = () => {
   const { i18n } = useTranslation();
   const currentLanguage = i18n.language;
   const { data, error, isLoading, refetch } = useGetSlidersQuery(
@@ -38,7 +40,7 @@ export const Slider = ({ navigation }: { navigation: any }) => {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!data?.result?.length) return;
+    if (!data?.result?.length) { return; }
     const timer = setInterval(() => {
       setCurrentIndex(prevIndex => {
         const nextIndex = (prevIndex + 1) % data.result.length;
@@ -98,7 +100,7 @@ export const Slider = ({ navigation }: { navigation: any }) => {
   };
 
   const renderDots = () => {
-    if (slides.length <= 1) return null;
+    if (slides.length <= 1) { return null; }
 
     const maxVisibleDots = 3;
     let dotsToShow = slides;
@@ -117,9 +119,9 @@ export const Slider = ({ navigation }: { navigation: any }) => {
           const realIndex =
             slides.length > maxVisibleDots
               ? Math.max(
-                  0,
-                  Math.min(currentIndex - 1, slides.length - maxVisibleDots)
-                ) + index
+                0,
+                Math.min(currentIndex - 1, slides.length - maxVisibleDots)
+              ) + index
               : index;
           const isActive = realIndex === currentIndex;
           return (
@@ -184,7 +186,7 @@ export const Slider = ({ navigation }: { navigation: any }) => {
                 colors={colors}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
-                style={{ width: CARD_WIDTH, borderRadius: 16 }}
+                style={[{ width: CARD_WIDTH }, styles.linearGradient]}
               >
                 <View style={styles.content}>
                   <View style={styles.textContainer}>
@@ -202,7 +204,7 @@ export const Slider = ({ navigation }: { navigation: any }) => {
 
                     <TouchableOpacity
                       style={styles.button}
-                      onPress={() => openVideo(item.sliderVideo)}   
+                      onPress={() => openVideo(item.sliderVideo)}
                     >
                       <GradientText text="View" />
                     </TouchableOpacity>
@@ -217,7 +219,7 @@ export const Slider = ({ navigation }: { navigation: any }) => {
             </TouchableOpacity>
           );
         }}
-        ItemSeparatorComponent={() => <View style={{ width: CARD_SPACING }} />}
+        ItemSeparatorComponent={ItemSeparator}
       />
 
       {renderDots()}
@@ -229,24 +231,28 @@ export const Slider = ({ navigation }: { navigation: any }) => {
         onRequestClose={closeVideo}
         transparent
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            {videoUrl && (
-              <Video
-                source={{ uri: videoUrl }}
-                style={styles.video}
-                controls
-                resizeMode="contain"
-                paused={false}
-                onError={console.error}
-                onBuffer={() => <ActivityIndicator size="large" color="#fff" />}
-              />
-            )}
-            <TouchableOpacity style={styles.closeButton} onPress={closeVideo}>
-              <Icon name="times-circle" size={32} color="#fff" />
-            </TouchableOpacity>
+        <TouchableWithoutFeedback onPress={closeVideo}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                {videoUrl && (
+                  <Video
+                    source={{ uri: videoUrl }}
+                    style={styles.video}
+                    controls
+                    resizeMode="contain"
+                    paused={false}
+                    onError={console.error}
+                    onBuffer={() => { }}
+                  />
+                )}
+                <TouchableOpacity style={styles.closeButton} onPress={closeVideo}>
+                  <Icon name="times-circle" size={32} color="#fff" />
+                </TouchableOpacity>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
     </View>
   );
@@ -260,8 +266,8 @@ const styles = StyleSheet.create({
   },
   errorContainer: {
     flex: 1,
-    borderRadius: 12,
-    paddingHorizontal: 12,
+    borderRadius: 8,
+    paddingHorizontal: 10,
     justifyContent: 'center',
     elevation: 8,
     shadowColor: '#FF416C',
@@ -387,7 +393,9 @@ const styles = StyleSheet.create({
   activeDot: {
     backgroundColor: '#56235E',
   },
-
+  linearGradient: {
+    borderRadius: 16,
+  },
   // ← NEW Modal styles
   modalOverlay: {
     flex: 1,
@@ -399,7 +407,7 @@ const styles = StyleSheet.create({
     width: '90%',
     aspectRatio: 16 / 9,
     backgroundColor: '#000',
-    borderRadius: 12,
+    borderRadius: 8,
     overflow: 'hidden',
     justifyContent: 'center',
   },

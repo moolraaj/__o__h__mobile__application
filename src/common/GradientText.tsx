@@ -10,7 +10,7 @@ interface GradientTextProps {
 }
 
 export default function GradientText({ text, size = 16, colors }: GradientTextProps) {
-    const gradientColors = colors || ['#56235E', '#C1392D'];  
+    const gradientColors = colors || ['#56235E', '#C1392D'];
 
     return (
         <MaskedView

@@ -1,53 +1,62 @@
 import {
     View,
     Text,
-    ScrollView,
     Image,
     StyleSheet,
     ActivityIndicator,
-    TouchableOpacity
-} from 'react-native'
-import React, { useState } from 'react'
-import { useGetSingleDentalEmergencyQuery } from '../../store/services/dental_emergency/dentalEmergencyApi'
-import { useRoute } from '@react-navigation/native'
-import { useTranslation } from 'react-i18next'
-import GradientText from '../../common/GradientText'
+    TouchableOpacity,
+    ScrollView,
+} from 'react-native';
+import React, { useState } from 'react';
+import { useGetSingleDentalEmergencyQuery } from '../../store/services/dental_emergency/dentalEmergencyApi';
+import { useRoute } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
+import GradientText from '../../common/GradientText';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
-import LinearGradient from 'react-native-linear-gradient'
-import { AppError } from '../../common/AppError'
+import LinearGradient from 'react-native-linear-gradient';
+import { AppError } from '../../common/AppError';
 
 const SingleDentalEmergencyDetail = () => {
-    const { id } = useRoute().params as { id: string }
-    const { i18n } = useTranslation()
+    const { id } = useRoute().params as { id: string };
+    const { i18n } = useTranslation();
     const currentLanguage = i18n.language as keyof Language;
     const [expandedTab, setExpandedTab] = useState<string | null>(null);
 
-    const { data, isLoading, error, refetch } = useGetSingleDentalEmergencyQuery({ id })
+    const { data, isLoading, error, refetch } = useGetSingleDentalEmergencyQuery({ id });
 
     const toggleTab = (tabIndex: string) => {
-        setExpandedTab(prev => prev === tabIndex ? null : tabIndex)
-    }
+        setExpandedTab(prev => prev === tabIndex ? null : tabIndex);
+    };
+
 
     if (isLoading) {
         return (
             <View style={styles.center}>
-                <ActivityIndicator size="large" />
+                <ActivityIndicator size="large" color="#7E57C2" />
             </View>
-        )
+        );
     }
 
     if (error || !data) {
-        return <AppError onRetry={() => refetch()} />
+        return <AppError onRetry={() => refetch()} />;
     }
 
-    const emergency = data?.result
- 
+    const emergency = data?.result;
 
     return (
-        <ScrollView style={styles.container}>
-            <View style={styles.sectionContainer}>
+        <ScrollView
+            style={styles.container}
+        >
+            {/* Hero Section */}
+            <LinearGradient
+                colors={['#F8E4FF', '#FFD7D8']}
+                locations={[0.2081, 1]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.sectionContainer}
+            >
                 <View style={styles.textContainer}>
                     <Text>
                         <Text style={styles.title}>
@@ -63,73 +72,88 @@ const SingleDentalEmergencyDetail = () => {
                         resizeMode="cover"
                     />
                 </View>
-            </View>
+            </LinearGradient>
 
+            {/* Main Content */}
             <View>
-                {/* Heading Section */}
-                <View style={styles.sectionCard}>
-                    <View style={styles.headingOuter}>
-                        <GradientText text={<Icon name='tooth' size={20} />} size={22} />
-                        <Text style={styles.heading}>
-                            {emergency?.dental_emergency_inner_title?.[currentLanguage]}
+                {/* Overview Section */}
+                <View style={styles.card}>
+                    <View style={styles.cardHeader}>
+                        <View style={styles.iconContainer}>
+                            <Icon name="tooth" size={18} color="#56235E" />
+                        </View>
+                        <Text style={styles.cardTitle}>
+                            <GradientText text={emergency?.dental_emergency_inner_title?.[currentLanguage]} size={20} />
                         </Text>
                     </View>
-                    <Text style={styles.paragraph}>
+                    <Text style={styles.cardBody}>
                         {emergency?.dental_emergency_inner_para?.[currentLanguage]}
                     </Text>
                 </View>
 
-                {/* Main Emergency Content */}
-                <View style={styles.sectionCard}>
-                    <View style={styles.sectionTitleOuter}>
-                        <GradientText text={<AntDesign name='exclamationcircleo' size={20} />} />
-                        <Text style={styles.sectionTitle}>
-                            {emergency?.dental_emer_title?.[currentLanguage]}
+                {/* Emergency Details Section */}
+                <View style={styles.card}>
+                    <View style={styles.cardHeader}>
+                        <View style={styles.iconContainer}>
+                            <AntDesign name="exclamationcircleo" size={18} color="#C1392D" />
+                        </View>
+                        <Text style={styles.cardTitle}>
+                            <GradientText text={emergency?.dental_emer_title?.[currentLanguage]} size={20} />
                         </Text>
                     </View>
-                    <Text style={styles.subTitle}>
-                        <GradientText text={emergency?.dental_emer_sub_title?.[currentLanguage]} size={18} />
+
+                    <Text style={styles.emergencySubtitle}>
+                        {emergency?.dental_emer_sub_title?.[currentLanguage]}
                     </Text>
 
-                    {/* Repeater Sections with Toggle */}
+                    {/* Accordion Sections */}
                     {emergency?.dental_emer_repeater?.map((item, index) => {
                         const tabKey = index.toString();
                         const isExpanded = expandedTab === tabKey;
+                        const questionText = item.dental_emer_tab_title?.[currentLanguage] || '';
 
                         return (
-                            <View style={styles.tabSection} key={index}>
-                                <LinearGradient
-                                    colors={['#F5DAFF', '#FFD7D8']}
-                                    start={{ x: 0, y: 0 }}
-                                    end={{ x: 1, y: 0 }}
-                                    style={styles.tabHeaderGradient}
+                            <View style={styles.accordionContainer} key={index}>
+                                <TouchableOpacity
+                                    activeOpacity={0.8}
+                                    onPress={() => toggleTab(tabKey)}
                                 >
-                                    <TouchableOpacity
-                                        onPress={() => toggleTab(tabKey)}
-                                        style={styles.tabHeader}
+                                    <LinearGradient
+                                        colors={isExpanded ? ['#6e3b7a', '#8e5a9b'] : ['#E8F4FF', '#DDEFFF']}
+                                        start={{ x: 0, y: 0 }}
+                                        end={{ x: 1, y: 0 }}
+                                        style={[
+                                            styles.accordionHeader,
+                                            isExpanded && styles.accordionHeaderActive,
+                                        ]}
                                     >
-                                        <GradientText
-                                            text={item.dental_emer_tab_title?.[currentLanguage]}
-                                            size={20}
-                                            colors={['#56235F', '#C0392E']}
-                                        />
-                                        <Text style={styles.toggleIcon}>
-                                            {isExpanded ? (
-                                                <Entypo name="chevron-up" size={20} />
-                                            ) : (
-                                                <Entypo name="chevron-down" size={20} />
-                                            )}
+                                        <Text
+                                            style={[
+                                                styles.accordionTitle,
+                                                isExpanded && styles.accordionTitleActive,
+                                            ]}
+                                            numberOfLines={2}>
+                                            {questionText}
                                         </Text>
-                                    </TouchableOpacity>
-                                </LinearGradient>
+                                        <View style={[styles.questionIcon, isExpanded && styles.questionIconActive]}>
+                                            <Entypo
+                                                name={isExpanded ? 'minus' : 'plus'}
+                                                size={18}
+                                                color={isExpanded ? '#fff' : '#5D3FD3'}
+                                            />
+                                        </View>
+                                    </LinearGradient>
+                                </TouchableOpacity>
 
                                 {isExpanded && (
-                                    <View style={styles.tabContent}>
+                                    <View style={styles.accordionContent}>
                                         {item.denatl_emer_description_repeater?.map((desc, descIndex) => (
                                             <View key={descIndex} style={styles.descriptionItem}>
-                                                <Text style={styles.descriptionHeading}>
-                                                    <GradientText text={desc.denatl_emer_tab_heading?.[currentLanguage]} />
-                                                </Text>
+                                                {desc.denatl_emer_tab_heading?.[currentLanguage] && (
+                                                    <Text style={styles.descriptionHeading}>
+                                                        {desc.denatl_emer_tab_heading?.[currentLanguage]}
+                                                    </Text>
+                                                )}
                                                 <Text style={styles.descriptionText}>
                                                     {desc.denatl_emer_tab_paragraph?.[currentLanguage]}
                                                 </Text>
@@ -138,28 +162,42 @@ const SingleDentalEmergencyDetail = () => {
                                     </View>
                                 )}
                             </View>
-                        )
+                        );
                     })}
                 </View>
+
+                {/* Emergency Action Card */}
+                {/* <View style={[styles.card, styles.emergencyActionCard]}>
+                    <View style={styles.cardHeader}>
+                        <View style={styles.iconContainer}>
+                            <Icon name="phone-alt" size={18} color="#FF5252" />
+                        </View>
+                        <Text style={styles.cardTitle}>Emergency Action</Text>
+                    </View>
+                    <Text style={styles.cardBody}>
+                        If you're experiencing severe pain or bleeding that won't stop,
+                        contact your dentist immediately or visit the nearest emergency dental clinic.
+                    </Text>
+                    <TouchableOpacity style={styles.emergencyButton}>
+                        <Text style={styles.emergencyButtonText}>Find Nearest Clinic</Text>
+                    </TouchableOpacity>
+                </View> */}
             </View>
         </ScrollView>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-    },
-    center: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     sectionContainer: {
+        padding: 16,
+        borderRadius: 12,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+        gap: 10,
         marginBottom: 20,
     },
     textContainer: {
@@ -199,64 +237,157 @@ const styles = StyleSheet.create({
     },
     paragraph: {
         fontSize: 16,
-        lineHeight: 24,
+        lineHeight: 25,
         marginBottom: 20,
         color: '#555',
     },
-    section: {
-        marginBottom: 25,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-        paddingBottom: 20,
+    center: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    sectionTitleOuter: {
+    heroContainer: {
+        marginBottom: 20,
+    },
+    heroGradient: {
+        borderRadius: 16,
+        padding: 20,
+        shadowColor: '#7E57C2',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.3,
+        shadowRadius: 15,
+        elevation: 8,
+    },
+    heroContent: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 8,
-        marginBottom: 10,
-    },
-    sectionTitle: {
-        fontSize: 20,
-        fontWeight: '600',
-        color: '#333',
-    },
-    subTitle: {
-        fontSize: 18,
-        fontWeight: '400',
-        marginBottom: 15,
-    },
-    tabSection: {
-        overflow: 'hidden',
-    },
-    tabHeaderGradient: {
-        borderRadius: 8,
-        overflow: 'hidden',
-        marginBottom: 15,
-    },
-    tabHeader: {
-        flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 10,
-        paddingHorizontal: 12,
     },
-    tabTitle: {
+    heroTextContainer: {
+        flex: 1,
+        paddingRight: 15,
+    },
+    heroTitle: {
+        fontSize: 24,
+        fontWeight: '700',
+        color: 'white',
+        marginBottom: 8,
+        lineHeight: 30,
+    },
+    heroSubtitle: {
+        fontSize: 15,
+        color: 'rgba(255,255,255,0.9)',
+        lineHeight: 22,
+    },
+    heroIconContainer: {
+        width: 80,
+        height: 80,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    iconCircle: {
+        width: 70,
+        height: 70,
+        backgroundColor: 'rgba(255,255,255,0.2)',
+        borderRadius: 35,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    heroIcon: {
+        width: 40,
+        height: 40,
+        tintColor: 'white',
+    },
+    card: {
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        padding: 20,
+        marginBottom: 20,
+        shadowColor: '#808080',
+        margin: 2,
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.2,
+        shadowRadius: 10,
+        elevation: 3,
+    },
+    cardHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 15,
+    },
+    iconContainer: {
+        width: 30,
+        height: 30,
+        borderRadius: 18,
+        backgroundColor: '#F3E5F5',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 12,
+    },
+    cardTitle: {
         fontSize: 18,
         fontWeight: '600',
+        color: '#424242',
         flex: 1,
     },
-    toggleIcon: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginLeft: 10,
+    cardBody: {
+        fontSize: 15,
+        lineHeight: 24,
+        color: '#616161',
     },
-    tabContent: {
-        paddingHorizontal: 12,
-        paddingBottom: 5,
+    emergencySubtitle: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#7E57C2',
         marginBottom: 20,
-        borderBottomWidth: 1,
-        borderBottomColor: '#B1D6FF',
-        borderStyle: 'dashed',
+        lineHeight: 24,
+    },
+    accordionContainer: {
+        marginBottom: 10,
+        borderRadius: 8,
+        overflow: 'hidden',
+    },
+    accordionHeader: {
+        backgroundColor: '#FAFAFA',
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    accordionHeaderActive: {
+        backgroundColor: '#F3E5F5',
+        color: '#fff',
+    },
+    accordionTitle: {
+        flex: 1,
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#424242',
+        marginRight: 10,
+    },
+    accordionTitleActive: {
+        color: '#ffffff',
+    },
+    questionIcon: {
+        width: 28,
+        height: 28,
+        borderRadius: 14,
+        backgroundColor: '#F0F4FF',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    questionIconActive: {
+        backgroundColor: 'transparent',
+        width: 28,
+        height: 28,
+        borderRadius: 14,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    accordionContent: {
+        backgroundColor: '#FFFFFF',
+        padding: 16,
     },
     descriptionItem: {
         marginBottom: 15,
@@ -264,27 +395,30 @@ const styles = StyleSheet.create({
     descriptionHeading: {
         fontSize: 16,
         fontWeight: '600',
+        color: '#7E57C2',
         marginBottom: 5,
-        color: '#444',
     },
     descriptionText: {
-        fontSize: 15,
+        fontSize: 14,
         lineHeight: 22,
-        color: '#555',
+        color: '#616161',
     },
-    sectionCard: {
-        marginBottom: 20,
-        backgroundColor: '#ffffff',
+    emergencyActionCard: {
+        borderLeftWidth: 4,
+        borderLeftColor: '#FF5252',
+    },
+    emergencyButton: {
+        backgroundColor: '#FF5252',
         padding: 15,
         borderRadius: 8,
-        shadowColor: '#E8F3F1',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 1,
-        shadowRadius: 15,
-        elevation: 4,
-        borderWidth: 1,
-        borderColor: '#E8F3F1',
+        alignItems: 'center',
+        marginTop: 15,
     },
-})
+    emergencyButtonText: {
+        color: 'white',
+        fontWeight: '600',
+        fontSize: 16,
+    },
+});
 
-export default SingleDentalEmergencyDetail
+export default SingleDentalEmergencyDetail;

@@ -1,0 +1,91 @@
+import { StyleSheet } from 'react-native';
+
+export const commonGridStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  contentContainer: {
+    position: 'relative',
+  },
+  columnWrapper: {
+    marginBottom: 5,
+    gap: 5,
+  },
+  cardContainer: {
+    width: '32%',
+  },
+  errorContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 8,
+    gap: 5,
+  },
+  errorCard: {
+    aspectRatio: 1 / 0.8,
+    backgroundColor: '#FFF5F5',
+    borderWidth: 1,
+    borderColor: '#FFCDD2',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  errorContent: {
+    alignItems: 'center',
+    padding: 10,
+  },
+  errorIconContainer: {
+    backgroundColor: '#FFEBEE',
+    width: 30,
+    height: 30,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  errorMessage: {
+    color: '#D32F2F',
+    fontSize: 10,
+    fontWeight: '500',
+    opacity: 0.9,
+    textAlign: 'center',
+    includeFontPadding: false,
+    lineHeight: 16,
+  },
+  card: {
+    width: '100%',
+    aspectRatio: 1 / 0.8,
+    borderRadius: 12,
+    overflow: 'hidden',
+    position: 'relative',
+    backgroundColor: '#eee',
+    marginBottom: 2,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+  titleContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    padding: 10,
+  },
+  title: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+});

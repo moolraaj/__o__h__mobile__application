@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react';
 import {
     View,
     FlatList,
@@ -7,13 +7,13 @@ import {
     StyleSheet,
     Animated,
     Text,
-} from 'react-native'
-import Feather from 'react-native-vector-icons/Feather'
-import { useGetTextSliderQuery } from '../../store/services/textslider/slideTextApi'
-import { useTranslation } from 'react-i18next'
-import LinearGradient from 'react-native-linear-gradient'
-import GradientText from '../../common/GradientText'
-import Shimmer from '../../common/Shimmer'
+} from 'react-native';
+import Feather from 'react-native-vector-icons/Feather';
+import { useGetTextSliderQuery } from '../../store/services/textslider/slideTextApi';
+import { useTranslation } from 'react-i18next';
+import LinearGradient from 'react-native-linear-gradient';
+import GradientText from '../../common/GradientText';
+import Shimmer from '../../common/Shimmer';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 type SliderItem = {
@@ -21,169 +21,186 @@ type SliderItem = {
     slider_text: Record<string, string>
 }
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window')
-const CARD_WIDTH = SCREEN_WIDTH * 0.85
-const CARD_MARGIN = 10
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const CARD_WIDTH = SCREEN_WIDTH * 0.85;
+const CARD_MARGIN = 10;
 
-export default function TextSlide({ navigation }: { navigation: any }) {
-    const { i18n } = useTranslation()
-    const lang = i18n.language
+export default function TextSlide() {
+    const { i18n } = useTranslation();
+    const lang = i18n.language;
 
-    const { data, isLoading, error, refetch } = useGetTextSliderQuery({ page: 1, limit: 10, lang },
-        {
-            refetchOnMountOrArgChange: true,
-        })
-    const slides: SliderItem[] = data?.data ?? []
+    const { data, isLoading, error, refetch } = useGetTextSliderQuery(
+        { page: 1, limit: 10, lang },
+        { refetchOnMountOrArgChange: true }
+    );
+    // Corrected data access - using data?.result instead of data?.data
+    const slides: SliderItem[] = data?.result ?? [];
 
-    const [currentIndex, setCurrentIndex] = useState(0)
-    const flatRef = useRef<FlatList<SliderItem>>(null)
-    const fadeAnim = useRef(new Animated.Value(0)).current
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const flatRef = useRef<FlatList<SliderItem>>(null);
+    const fadeAnim = useRef(new Animated.Value(0)).current;
 
     const scrollTo = (idx: number) => {
-        flatRef.current?.scrollToIndex({ index: idx, animated: true })
-        setCurrentIndex(idx)
-    }
+        flatRef.current?.scrollToIndex({ index: idx, animated: true });
+        setCurrentIndex(idx);
+    };
 
-    const goNext = () => scrollTo((currentIndex + 1) % slides.length)
-    const goPrev = () => scrollTo((currentIndex - 1 + slides.length) % slides.length)
+    const goNext = React.useCallback(() => {
+        if (slides.length === 0) {return; }
+        scrollTo((currentIndex + 1) % slides.length);
+    }, [currentIndex, slides.length]);
+
+    const goPrev = React.useCallback(() => {
+        if (slides.length === 0) {return; }
+        scrollTo((currentIndex - 1 + slides.length) % slides.length);
+    }, [currentIndex, slides.length]);
 
     const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
-        if (viewableItems.length) setCurrentIndex(viewableItems[0].index)
-    })
+        if (viewableItems.length) {
+            setCurrentIndex(viewableItems[0].index);
+        }
+    });
 
-    const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 })
+    const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 });
 
     useEffect(() => {
-        if (slides.length === 0) return
+        if (slides.length === 0) {return; }
         const timer = setInterval(() => {
-            goNext()
-        }, 3500)
-        return () => clearInterval(timer)
-    }, [currentIndex, slides.length])
+            goNext();
+        }, 3500);
+        return () => clearInterval(timer);
+    }, [currentIndex, slides.length, goNext]);
 
     useEffect(() => {
-        fadeAnim.setValue(0)
+        fadeAnim.setValue(0);
         Animated.timing(fadeAnim, {
             toValue: 1,
             duration: 600,
             useNativeDriver: true,
-        }).start()
-    }, [currentIndex])
+        }).start();
+    }, [currentIndex, fadeAnim]);
+
+    if (isLoading) {
+        return (
+            <View style={styles.skeletonWrapper}>
+                <View style={styles.skeletonCard}>
+                    <Shimmer style={styles.skeletonText} />
+
+                    <View style={[styles.arrow, styles.leftArrow]}>
+                        <Shimmer style={styles.skeletonArrow} />
+                    </View>
+
+                    <View style={[styles.arrow, styles.rightArrow]}>
+                        <Shimmer style={styles.skeletonArrow} />
+                    </View>
+                </View>
+
+                <View style={styles.pagination}>
+                    {[...Array(3)].map((_, index) => (
+                        <Shimmer key={index} style={styles.skeletonDot} />
+                    ))}
+                </View>
+            </View>
+        );
+    }
+
+    if (error || !data?.result) {
+        return (
+            <View style={styles.errorWrapper}>
+                <LinearGradient
+                    colors={['#56235E', '#C1392D']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={styles.errorContainer}
+                >
+                    <View style={styles.errorContent}>
+                        <View style={styles.errorIconContainer}>
+                            <LinearGradient
+                                colors={['#fff', '#f8f8f8']}
+                                style={styles.errorIconBackground}
+                            >
+                                <Icon name="exclamation-triangle" size={20} color="#FF416C" />
+                            </LinearGradient>
+                        </View>
+
+                        <View style={styles.errorTextContainer}>
+                            <GradientText
+                                text="Loading Error"
+                                colors={['#fff', '#f8f8f8']}
+                            />
+                            <Text style={styles.errorMessage}>
+                                We couldn't load the slider content. Please try again later.
+                            </Text>
+                        </View>
+
+                        <TouchableOpacity
+                            style={styles.retryButton}
+                            onPress={() => refetch()}
+                        >
+                            <Text style={styles.retryButtonText}>Retry</Text>
+                        </TouchableOpacity>
+                    </View>
+                </LinearGradient>
+            </View>
+        );
+    }
 
     return (
         <View style={styles.wrapper}>
-            {isLoading ?
-                <View style={styles.skeletonWrapper}>
-                    <View style={styles.skeletonCard}>
-                        <Shimmer style={styles.skeletonText} />
+            <FlatList
+                ref={flatRef}
+                data={slides}
+                keyExtractor={item => item._id}
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                onViewableItemsChanged={onViewableItemsChanged.current}
+                viewabilityConfig={viewConfig.current}
+                contentContainerStyle={{ paddingHorizontal: CARD_MARGIN }}
+                snapToInterval={CARD_WIDTH + CARD_MARGIN * 2}
+                decelerationRate="fast"
+                renderItem={({ item }) => (
+                    <LinearGradient
+                        colors={['#FBEAFF', '#FFD6D6']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                        style={styles.slide}
+                    >
+                        <Text style={styles.text}>
+                            {item.slider_text[lang] || item.slider_text.en}
+                        </Text>
 
-                        <View style={[styles.arrow, styles.leftArrow]}>
-                            <Shimmer style={styles.skeletonArrow} />
-                        </View>
+                        <TouchableOpacity onPress={goPrev} style={[styles.arrow, styles.leftArrow]}>
+                            <Feather name="chevron-left" size={14} />
+                        </TouchableOpacity>
 
-                        <View style={[styles.arrow, styles.rightArrow]}>
-                            <Shimmer style={styles.skeletonArrow} />
-                        </View>
-                    </View>
+                        <TouchableOpacity onPress={goNext} style={[styles.arrow, styles.rightArrow]}>
+                            <Feather name="chevron-right" size={14} />
+                        </TouchableOpacity>
+                    </LinearGradient>
+                )}
+            />
 
-                    <View style={styles.pagination}>
-                        {[...Array(3)].map((_, index) => (
-                            <Shimmer key={index} style={styles.skeletonDot} />
-                        ))}
-                    </View>
-                </View>
-                : error || !data.data ?
-                    (<View style={styles.errorWrapper}>
-                        <LinearGradient
-                            colors={['#56235E', '#C1392D']}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 1 }}
-                            style={styles.errorContainer}
-                        >
-                            <View style={styles.errorContent}>
-                                <View style={styles.errorIconContainer}>
-                                    <LinearGradient
-                                        colors={['#fff', '#f8f8f8']}
-                                        style={styles.errorIconBackground}
-                                    >
-                                        <Icon name="exclamation-triangle" size={20} color="#FF416C" />
-                                    </LinearGradient>
-                                </View>
-
-                                <View style={styles.errorTextContainer}>
-                                    <GradientText
-                                        text="Loading Error"
-                                        colors={['#fff', '#f8f8f8']}
-                                    />
-                                    <Text style={styles.errorMessage}>
-                                        We couldn't load the slider content. Please try again later.
-                                    </Text>
-                                </View>
-
-                                <TouchableOpacity
-                                    style={styles.retryButton}
-                                    onPress={() => refetch()}
-                                >
-                                    <Text style={styles.retryButtonText}>Retry</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </LinearGradient>
-                    </View>) :
-                    <>
-                        <FlatList
-                            ref={flatRef}
-                            data={slides}
-                            keyExtractor={i => i._id}
-                            horizontal
-                            pagingEnabled
-                            showsHorizontalScrollIndicator={false}
-                            onViewableItemsChanged={onViewableItemsChanged.current}
-                            viewabilityConfig={viewConfig.current}
-                            contentContainerStyle={{ paddingHorizontal: CARD_MARGIN }}
-                            snapToInterval={CARD_WIDTH + CARD_MARGIN * 2}
-                            decelerationRate="fast"
-                            renderItem={({ item }) => (
-                                <LinearGradient
-                                    colors={['#FBEAFF', '#FFD6D6']}
-                                    start={{ x: 0, y: 0 }}
-                                    end={{ x: 1, y: 0 }}
-                                    style={styles.slide}
-                                >
-                                    <GradientText text={item.slider_text[lang]} />
-
-                                    <TouchableOpacity onPress={goPrev} style={[styles.arrow, styles.leftArrow]}>
-                                        <Feather name="chevron-left" size={14} />
-                                    </TouchableOpacity>
-
-                                    <TouchableOpacity onPress={goNext} style={[styles.arrow, styles.rightArrow]}>
-                                        <Feather name="chevron-right" size={14} />
-                                    </TouchableOpacity>
-                                </LinearGradient>
-                            )}
-                        />
-
-                        <View style={styles.pagination}>
-                            {slides.map((_, index) => (
-                                <View
-                                    key={index}
-                                    style={[
-                                        styles.dot,
-                                        currentIndex === index ? styles.activeDot : {},
-                                    ]}
-                                />
-                            ))}
-                        </View>
-                    </>
-            }
+            <View style={styles.pagination}>
+                {slides.map((_, index) => (
+                    <View
+                        key={index}
+                        style={[
+                            styles.dot,
+                            currentIndex === index ? styles.activeDot : {},
+                        ]}
+                    />
+                ))}
+            </View>
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
     errorWrapper: {
         width: '100%',
         height: 80,
-        overflow: 'hidden'
+        overflow: 'hidden',
     },
     errorContainer: {
         flex: 1,
@@ -199,7 +216,7 @@ const styles = StyleSheet.create({
     errorContent: {
         flexDirection: 'row',
         alignItems: 'center',
-        overflow: 'hidden'
+        overflow: 'hidden',
     },
     errorIconContainer: {
         marginRight: 15,
@@ -214,7 +231,7 @@ const styles = StyleSheet.create({
     errorTextContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     errorHeading: {
         fontSize: 14,
@@ -225,7 +242,7 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 10,
         opacity: 0.9,
-        textAlign: 'center'
+        textAlign: 'center',
     },
     retryButton: {
         backgroundColor: 'rgba(255, 255, 255, 0.2)',
@@ -250,7 +267,7 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: 28,
+        paddingHorizontal: 30,
         margin: 5,
         shadowColor: '#FF8CFF',
         shadowOffset: { width: 0, height: 2 },
@@ -261,8 +278,9 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 14,
         textAlign: 'center',
-        color: '#222',
-        textTransform: 'capitalize'
+        color: '#56235E',
+        textTransform: 'capitalize',
+        fontWeight: 500,
     },
     arrow: {
         position: 'absolute',
@@ -330,4 +348,4 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         backgroundColor: '#e0e0e0',
     },
-})
+});

@@ -15,6 +15,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
 import RenderHtml from 'react-native-render-html';
 import { AppError } from '../common/AppError';
+import GradientText from '../common/GradientText';
+
 
 export default function FaqsScreen() {
   const { i18n } = useTranslation();
@@ -26,30 +28,37 @@ export default function FaqsScreen() {
     lang,
   });
 
-  // Treat data.result as an array of FAQ groups
   const faqGroups = data?.result ?? [];
-  // expanded holds the key "groupIdx-questionIdx" of the open item
   const [expanded, setExpanded] = useState<string | null>(null);
 
   if (isLoading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" />
-      </View>
+      <Layout>
+        <View style={styles.center}>
+          <ActivityIndicator size="large" color="#6e3b7a" />
+        </View>
+      </Layout>
     );
   }
-  if (error) {
-    return <AppError onRetry={refetch} />;
+
+  if (error || !data) {
+    return (
+      <Layout>
+        <AppError onRetry={refetch} />
+      </Layout>
+    );
   }
 
   return (
     <Layout>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+      >
         {faqGroups.map((group, gIdx) => (
           <View key={group._id ?? gIdx} style={styles.groupContainer}>
             {/* Group Title */}
             <Text style={styles.groupTitle}>
-              {group.faqs_title?.[lang] ?? 'FAQs'}
+              <GradientText text={group.faqs_title?.[lang] ?? 'FAQs'} size={20}/>
             </Text>
 
             {/* Questions */}
@@ -63,23 +72,32 @@ export default function FaqsScreen() {
                 <View key={qIdx} style={styles.itemContainer}>
                   {/* Question Header */}
                   <LinearGradient
-                    colors={['#E8F4FF', '#DDEFFF']}
+                    colors={isOpen ? ['#6e3b7a', '#8e5a9b'] : ['#E8F4FF', '#DDEFFF']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
-                    style={styles.questionHeader}
+                    style={[isOpen && styles.activeHeader]}
                   >
                     <TouchableOpacity
                       style={styles.questionRow}
                       onPress={() =>
                         setExpanded(prev => (prev === key ? null : key))
                       }
+                      activeOpacity={0.8}
                     >
-                      <Text style={styles.questionText}>{question}</Text>
-                      <Entypo
-                        name={isOpen ? 'chevron-up' : 'chevron-down'}
-                        size={20}
-                        color="#333"
-                      />
+                      <Text
+                        style={[styles.questionText, isOpen && styles.activeQuestionText]}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {question}
+                      </Text>
+                      <View style={[styles.questionIcon, isOpen && styles.questionIconActive]}>
+                        <Entypo
+                          name={isOpen ? 'minus' : 'plus'}
+                          size={18}
+                          color={isOpen ? '#fff' : '#5D3FD3'}
+                        />
+                      </View>
                     </TouchableOpacity>
                   </LinearGradient>
 
@@ -87,12 +105,15 @@ export default function FaqsScreen() {
                   {isOpen && (
                     <View style={styles.answerContainer}>
                       <RenderHtml
-                        contentWidth={width - 32}
+                        contentWidth={width - 40}
                         source={{ html: answerHtml }}
                         tagsStyles={{
                           p: styles.answerText,
                           br: { height: 8 },
+                          ul: { marginTop: 0, marginBottom: 0 },
+                          li: { marginBottom: 4 },
                         }}
+                        baseStyle={styles.htmlBaseStyle}
                       />
                     </View>
                   )}
@@ -107,51 +128,85 @@ export default function FaqsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-  },
   center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   groupContainer: {
-    marginBottom: 24,
+    marginBottom: 20,
   },
   groupTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 12,
-    color: '#5E346D',
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 20,
+    color: '#6e3b7a',
+    paddingLeft: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: '#6e3b7a',
   },
   itemContainer: {
-    marginBottom: 16,
+    marginBottom: 12,
+    borderRadius: 10,
+    overflow: 'hidden',
+    elevation: 2,
+    shadowColor: '#808080',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    backgroundColor: '#fff',
   },
-  questionHeader: {
-    borderRadius: 8,
+  activeHeader: {
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
   questionRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
   },
   questionText: {
     flex: 1,
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
     color: '#333',
-    marginRight: 8,
+    marginRight: 12,
+  },
+  activeQuestionText: {
+    color: '#fff',
+  },
+  questionIcon: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#F0F4FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  questionIconActive: {
+    backgroundColor: 'transparent',
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   answerContainer: {
-    backgroundColor: '#F9F9F9',
-    padding: 12,
-    borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 8,
+    backgroundColor: '#f9f5fa',
+    padding: 16,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
   },
   answerText: {
-    fontSize: 16,
+    fontSize: 15,
     lineHeight: 22,
-    color: '#444',
+    color: '#555',
+  },
+  htmlBaseStyle: {
+    color: '#555',
+    fontSize: 15,
+    lineHeight: 22,
   },
 });

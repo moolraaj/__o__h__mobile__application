@@ -1,100 +1,3 @@
-// import React from 'react';
-// import { TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
-// import { useNavigation, useRoute, NavigationProp } from '@react-navigation/native';
-// import Ionicons from 'react-native-vector-icons/Ionicons';
-// import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-// import { ICON_SIZE } from '../../src/constants/Variables';
-// import LinearGradient from 'react-native-linear-gradient';
-// import { RootStackParamList } from '../constants/RootStackParamList';
-// import { Platform } from 'react-native';
-
-// export default function BottomBar({
-//     homeScreen = 'Dashboard',
-//     settingsScreen = 'Setting',
-//     AdminScreen = 'Admin',
-//     UserScreen = 'User',
-//     barHeight = 50,
-// }) {
-//     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-//     const route = useRoute();
-
-//     const canGoBack = navigation.canGoBack();
-//     const showBack =
-//         canGoBack &&
-//         route.name !== homeScreen &&
-//         route.name !== AdminScreen &&
-//         route.name !== UserScreen;
-
-//     return (
-//         <SafeAreaView style={styles.safeArea}>
-//             <LinearGradient
-//                 colors={['#56235E', '#C1392D']}
-//                 locations={[0.2081, 1]}
-//                 start={{ x: 0, y: 0 }}
-//                 end={{ x: 1, y: 0 }}
-//                 style={[styles.bar, { height: barHeight }]}
-//             >
-//                 {showBack && (
-//                     <TouchableOpacity onPress={navigation.goBack} style={styles.button}>
-//                         <FontAwesome5 name="arrow-circle-left" size={ICON_SIZE} color="#fff" />
-//                     </TouchableOpacity>
-//                 )}
-//                 <TouchableOpacity
-//                     onPress={() => navigation.navigate(homeScreen as keyof RootStackParamList)}
-//                     style={styles.button}
-//                 >
-//                     <Ionicons name="home" size={ICON_SIZE} color="#fff" />
-//                 </TouchableOpacity>
-//                 <TouchableOpacity
-//                     onPress={() => navigation.navigate(settingsScreen as keyof RootStackParamList)}
-//                     style={styles.button}
-//                 >
-//                     <Ionicons name="settings" size={ICON_SIZE} color="#fff" />
-//                 </TouchableOpacity>
-//             </LinearGradient>
-//         </SafeAreaView>
-//     );
-// }
-
-// const styles = StyleSheet.create({
-//     safeArea: { backgroundColor: '#fff' },
-//     bar: {
-//         flexDirection: 'row',
-//         alignItems: 'center',
-//         justifyContent: 'space-around',
-//         backgroundColor: '#fff',
-//         ...Platform.select({
-//             android: {
-//                 elevation: 6,
-//             },
-//             ios: {
-//                 shadowColor: '#000',
-//                 shadowOffset: { width: 0, height: 2 },
-//                 shadowOpacity: 0.08,
-//                 shadowRadius: 8,
-//             },
-//         }),
-
-//     },
-//     button: { flex: 1, alignItems: 'center', paddingVertical: 10 },
-// });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React from 'react';
 import {
     TouchableOpacity,
@@ -102,15 +5,12 @@ import {
     SafeAreaView,
     View,
     Platform,
-    Dimensions,
 } from 'react-native';
 import { useNavigation, useRoute, NavigationProp } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient';
 import { RootStackParamList } from '../constants/RootStackParamList';
-
-const { width } = Dimensions.get('window');
 const ICON_SIZE = 24;
 
 export default function BottomBar({

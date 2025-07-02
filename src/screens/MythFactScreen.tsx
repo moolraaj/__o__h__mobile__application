@@ -23,27 +23,35 @@ export default function MythFactScreen() {
 
     if (isLoading) {
         return (
-            <View style={styles.center}>
-                <ActivityIndicator size="large" />
-            </View>
+            <Layout>
+                <View style={styles.center}>
+                    <ActivityIndicator size="large" />
+                </View>
+            </Layout>
         );
     }
 
     if (error || !item) {
-        return <AppError onRetry={refetch} />;
+        return (
+            <Layout>
+                <AppError onRetry={refetch} />
+            </Layout>
+        );
     }
 
     return (
         <Layout>
-            <ScrollView contentContainerStyle={styles.container}>
+            <ScrollView>
                 {/* Header */}
                 <View style={styles.header}>
                     <View style={styles.textSection}>
-                        <GradientText
-                            text={item.myth_fact_title?.[lang] ?? ''}
-                            size={22}
-                            colors={['#5E346D', '#C13439']}
-                        />
+                        <View style={styles.titleText}>
+                            <GradientText
+                                text={item.myth_fact_title?.[lang] ?? ''}
+                                size={22}
+                                colors={['#5E346D', '#C13439']}
+                            />
+                        </View>
                         <Text style={styles.bodyText}>
                             {item.myth_fact_body?.[lang]}
                         </Text>
@@ -67,7 +75,9 @@ export default function MythFactScreen() {
                             <Text style={styles.sectionHeading}>
                                 {headingText}
                             </Text>
-                            <Text>Myths</Text>
+                            <Text style={styles.mFheading}>
+                                <GradientText text="Myths" size={18} />
+                            </Text>
                             <LinearGradient
                                 colors={['#F8E4FF', '#FFD7D8']}
                                 start={{ x: 0, y: 0 }}
@@ -77,14 +87,16 @@ export default function MythFactScreen() {
                                 {wrongs.map((w, i) => (
                                     <View key={i} style={styles.factRow}>
                                         <Entypo name="cross" size={20} color="#FF473E" />
-                                        
+
                                         <Text style={styles.factText}>
                                             {w[lang]}
                                         </Text>
                                     </View>
                                 ))}
                             </LinearGradient>
-                             <Text>Facts</Text>
+                            <Text style={styles.mFheading}>
+                                <GradientText text="Facts" size={18} />
+                            </Text>
                             <LinearGradient
                                 colors={['#E0FAFF', '#F8E2FF']}
                                 start={{ x: 0, y: 0 }}
@@ -108,9 +120,6 @@ export default function MythFactScreen() {
     );
 }
 const styles = StyleSheet.create({
-    container: {
-        padding: 16,
-    },
     center: {
         flex: 1,
         justifyContent: 'center',
@@ -123,6 +132,12 @@ const styles = StyleSheet.create({
     },
     textSection: {
         flex: 1,
+    },
+    titleText: {
+        textAlign: 'left',
+        alignSelf: 'flex-start',
+        paddingLeft: 0,
+        marginLeft: 0,
     },
     bodyText: {
         fontSize: 16,
@@ -138,6 +153,10 @@ const styles = StyleSheet.create({
     },
     factBlock: {
         marginBottom: 24,
+    },
+    mFheading: {
+        fontSize: 18,
+        marginBottom: 10,
     },
     sectionHeading: {
         fontSize: 20,

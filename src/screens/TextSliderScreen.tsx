@@ -1,11 +1,9 @@
- 
-import React from 'react'
-import TextSlide from '../components/home/TextSlide'
+import React from 'react';
+import TextSlide from '../components/home/TextSlide';
 
-const TextSliderScreen = ({navigation}:{navigation:any}) => {
+const TextSliderScreen = () => {
   return (
-     <TextSlide navigation={navigation}/>
-  )
-}
-
-export default TextSliderScreen
+     <TextSlide/>
+  );
+};
+export default TextSliderScreen;

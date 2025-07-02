@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, Image,   ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, Image, ActivityIndicator } from 'react-native'
 import { useRoute } from '@react-navigation/native'
 import { useGetSingleFeatureCategoryQuery } from '../store/services/categories/categoryApi'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import Disease from './Disease'
 import GradientText from '../common/GradientText'
 import LinearGradient from 'react-native-linear-gradient'
- 
+
 import { AppError } from '../common/AppError'
 
 const SingleFeature = ({ navigation }: { navigation: any }) => {
@@ -46,7 +46,9 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
                     style={styles.sectionContainer}
                 >
                     <View style={styles.textContainer}>
-                        <GradientText text={result?.feature_inner_title?.[currentLanguage] || 'No Title'} size={22} />
+                        <View style={styles.textTitle}>
+                            <GradientText text={result?.feature_inner_title?.[currentLanguage] || 'No Title'} size={22} />
+                        </View>
                         <Text> {result?.feature_inner_description?.[currentLanguage] || 'No Description'} </Text>
                     </View>
                     <View style={styles.imageWrapper}>
@@ -92,6 +94,12 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         gap: 5,
         paddingRight: 10,
+    },
+    textTitle: {
+        textAlign: 'left',
+        alignSelf: 'flex-start',
+        paddingLeft: 0,
+        marginLeft: 0,
     },
     imageWrapper: {
         width: '20%',
