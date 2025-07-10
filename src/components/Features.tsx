@@ -22,6 +22,8 @@ const Features = ({ navigation }: { navigation: any }) => {
   }
 
   if (error || !data?.result) {
+
+   
     return (
       <View style={gridStyles.errorContainer}>
         {Array(3).fill(null).map((_, index) => (
@@ -44,8 +46,7 @@ const Features = ({ navigation }: { navigation: any }) => {
       </View>
     );
   }
-
-  // If there's only one item, render it full width
+ 
   if (data?.result?.length === 1) {
     const item = data.result[0];
     return (
@@ -71,7 +72,7 @@ const Features = ({ navigation }: { navigation: any }) => {
     );
   }
 
-  // For multiple items, use the standard 3-column grid
+ 
   return (
     <View style={gridStyles.container}>
       <FlatList

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, Image, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, Image, StyleSheet, ActivityIndicator, useWindowDimensions } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useGetSingleDiseasesQuery } from '../store/services/disease/diseaseApi';
 import { useTranslation } from 'react-i18next';
@@ -7,11 +7,13 @@ import GradientText from '../common/GradientText';
 import { AppError } from '../common/AppError';
 import { LinearGradient } from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import RenderHtml from 'react-native-render-html';
 
 const SingleDisease = () => {
     const { id } = useRoute().params as { id: string };
     const { i18n } = useTranslation();
     const currentLanguage = i18n.language as keyof Language;
+    const { width } = useWindowDimensions();
     const { data, isLoading, error, refetch } = useGetSingleDiseasesQuery({ id, lang: currentLanguage },
         {
             refetchOnMountOrArgChange: true,
@@ -30,9 +32,117 @@ const SingleDisease = () => {
 
     const diseaseData = data.data;
 
+
+    const htmlRenderStyles = {
+
+        h1: {
+            fontSize: 24,
+            fontWeight: 'bold',
+            color: '#333',
+            marginTop: 20,
+            marginBottom: 15,
+            lineHeight: 30,
+        },
+        h2: {
+            fontSize: 22,
+            fontWeight: 'bold',
+            color: '#333',
+            marginTop: 18,
+            marginBottom: 14,
+            lineHeight: 28,
+        },
+        h3: {
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: '#333',
+            marginTop: 16,
+            marginBottom: 12,
+            lineHeight: 26,
+        },
+        h4: {
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: '#333',
+            marginTop: 14,
+            marginBottom: 10,
+            lineHeight: 24,
+        },
+        h5: {
+            fontSize: 16,
+            fontWeight: 'bold',
+            color: '#333',
+            marginTop: 12,
+            marginBottom: 8,
+            lineHeight: 22,
+        },
+        h6: {
+            fontSize: 14,
+            fontWeight: 'bold',
+            color: '#333',
+            marginTop: 10,
+            marginBottom: 6,
+            lineHeight: 20,
+        },
+
+        p: {
+            fontSize: 14,
+            lineHeight: 20,
+            color: '#666',
+            marginBottom: 8,
+        },
+        ul: {
+            marginTop: 0,
+            marginBottom: 0,
+        },
+        ol: {
+            marginTop: 0,
+            marginBottom: 0,
+        },
+        li: {
+            marginBottom: 4,
+        },
+        a: {
+            color: '#6e3b7a',
+            textDecorationLine: 'underline',
+        },
+
+        strong: {
+            fontWeight: 'bold',
+        },
+        em: {
+            fontStyle: 'italic',
+        },
+        blockquote: {
+            backgroundColor: '#f9f5fa',
+            borderLeftWidth: 4,
+            borderLeftColor: '#6e3b7a',
+            paddingLeft: 12,
+            marginVertical: 10,
+        },
+        pre: {
+            backgroundColor: '#f5f5f5',
+            padding: 10,
+            borderRadius: 4,
+            overflow: 'hidden',
+        },
+        code: {
+            fontFamily: 'monospace',
+            backgroundColor: '#f5f5f5',
+            padding: 2,
+            borderRadius: 3,
+        },
+        img: {
+            maxWidth: width - 40,
+            height: undefined,
+            aspectRatio: 1,
+            resizeMode: 'contain',
+            marginVertical: 10,
+        }
+    };
+
     return (
         <ScrollView style={styles.container}>
-            {/* Header Section */}
+
             <LinearGradient
                 colors={['#f9f5fa', '#f0e5f5']}
                 style={styles.headerContainer}
@@ -77,26 +187,32 @@ const SingleDisease = () => {
                             ) : (
                                 <Icon name="alert-circle" size={28} color="#6e3b7a" style={styles.cardIcon} />
                             )}
+                            <Text style={styles.itemTitle}>
+                                {cause.cause_title?.[currentLanguage]}
+                            </Text>
                         </View>
 
-                        {cause.cause_repeat?.map((subCause, subIndex) => (
+                        {cause.cause_para && (
+                            <RenderHtml
+                                contentWidth={width - 40}
+                                source={{ html: cause.cause_para?.[currentLanguage] || '' }}
+                                tagsStyles={htmlRenderStyles}
+                            />
+                        )}
+
+                        {cause.cause_repeater?.map((subCause, subIndex) => (
                             <View key={subIndex} style={styles.cardItem}>
                                 <View style={styles.itemHeader}>
-                                    {subCause.cause_repeat_icon ? (
-                                        <Image
-                                            source={{ uri: subCause.cause_repeat_icon }}
-                                            style={styles.itemIcon}
-                                        />
-                                    ) : (
-                                        <Icon name="chevron-right" size={20} color="#8e5a9b" style={styles.itemIcon} />
-                                    )}
+                                  
                                     <Text style={styles.itemTitle}>
                                         {subCause.cause_repeat_title?.[currentLanguage]}
                                     </Text>
                                 </View>
-                                <Text style={styles.itemText}>
-                                    {subCause.cause_repeat_description?.[currentLanguage]}
-                                </Text>
+                                <RenderHtml
+                                    contentWidth={width - 60}
+                                    source={{ html: subCause.description?.[currentLanguage] || '' }}
+                                    tagsStyles={htmlRenderStyles}
+                                />
                             </View>
                         ))}
                     </View>
@@ -111,34 +227,33 @@ const SingleDisease = () => {
                 {diseaseData.symptoms?.map((symptom, index) => (
                     <View key={index} style={styles.card}>
                         <View style={styles.cardHeader}>
-                            {symptom.symptoms_icon ? (
-                                <Image
-                                    source={{ uri: symptom.symptoms_icon }}
-                                    style={styles.cardIcon}
-                                />
-                            ) : (
-                                <Icon name="alert" size={28} color="#6e3b7a" style={styles.cardIcon} />
-                            )}
+
+                            <Text style={styles.itemTitle}>
+                                {symptom.symptoms_title?.[currentLanguage]}
+                            </Text>
                         </View>
-                        <Text style={styles.cardText}>{symptom.symptoms_para?.[currentLanguage]}</Text>
-                        {symptom.symptoms_repeat?.map((subSymptom, subIndex) => (
+
+                        {symptom.symptoms_para && (
+                            <RenderHtml
+                                contentWidth={width - 40}
+                                source={{ html: symptom.symptoms_para?.[currentLanguage] || '' }}
+                                tagsStyles={htmlRenderStyles}
+                            />
+                        )}
+
+                        {symptom.symptoms_repeater?.map((subSymptom, subIndex) => (
                             <View key={subIndex} style={styles.cardItem}>
                                 <View style={styles.itemHeader}>
-                                    {subSymptom.symptoms_repeat_icon ? (
-                                        <Image
-                                            source={{ uri: subSymptom.symptoms_repeat_icon }}
-                                            style={styles.itemIcon}
-                                        />
-                                    ) : (
-                                        <Icon name="minus" size={20} color="#8e5a9b" style={styles.itemIcon} />
-                                    )}
+
                                     <Text style={styles.itemTitle}>
                                         {subSymptom.symptoms_repeat_title?.[currentLanguage]}
                                     </Text>
                                 </View>
-                                <Text style={styles.itemText}>
-                                    {subSymptom.symptoms_repeat_description?.[currentLanguage]}
-                                </Text>
+                                <RenderHtml
+                                    contentWidth={width - 60}
+                                    source={{ html: subSymptom.description?.[currentLanguage] || '' }}
+                                    tagsStyles={htmlRenderStyles}
+                                />
                             </View>
                         ))}
                     </View>
@@ -161,26 +276,32 @@ const SingleDisease = () => {
                             ) : (
                                 <Icon name="shield-check" size={28} color="#6e3b7a" style={styles.cardIcon} />
                             )}
+                            <Text style={styles.itemTitle}>
+                                {tip.prevention_tips_title?.[currentLanguage]}
+                            </Text>
                         </View>
-                        <Text style={styles.cardText}>{tip.prevention_tips_para?.[currentLanguage]}</Text>
-                        {tip.prevention_tips_repeat?.map((subTip, subIndex) => (
+
+                        {tip.prevention_tips_para && (
+                            <RenderHtml
+                                contentWidth={width - 40}
+                                source={{ html: tip.prevention_tips_para?.[currentLanguage] || '' }}
+                                tagsStyles={htmlRenderStyles}
+                            />
+                        )}
+
+                        {tip.prevention_tips_repeater?.map((subTip, subIndex) => (
                             <View key={subIndex} style={styles.cardItem}>
                                 <View style={styles.itemHeader}>
-                                    {subTip.prevention_tips_repeat_icon ? (
-                                        <Image
-                                            source={{ uri: subTip.prevention_tips_repeat_icon }}
-                                            style={styles.itemIcon}
-                                        />
-                                    ) : (
-                                        <Icon name="check" size={20} color="#8e5a9b" style={styles.itemIcon} />
-                                    )}
+
                                     <Text style={styles.itemTitle}>
                                         {subTip.prevention_tips_repeat_title?.[currentLanguage]}
                                     </Text>
                                 </View>
-                                <Text style={styles.itemText}>
-                                    {subTip.prevention_tips_repeat_description?.[currentLanguage]}
-                                </Text>
+                                <RenderHtml
+                                    contentWidth={width - 60}
+                                    source={{ html: subTip.description?.[currentLanguage] || '' }}
+                                    tagsStyles={htmlRenderStyles}
+                                />
                             </View>
                         ))}
                     </View>
@@ -203,26 +324,31 @@ const SingleDisease = () => {
                             ) : (
                                 <Icon name="medical-bag" size={28} color="#6e3b7a" style={styles.cardIcon} />
                             )}
+                            <Text style={styles.itemTitle}>
+                                {option.treatment_option_title?.[currentLanguage]}
+                            </Text>
                         </View>
-                        <Text style={styles.cardText}>{option.treatment_option_para?.[currentLanguage]}</Text>
-                        {option.treatment_option_repeat?.map((subOption, subIndex) => (
+
+                        {option.treatment_option_para && (
+                            <RenderHtml
+                                contentWidth={width - 40}
+                                source={{ html: option.treatment_option_para?.[currentLanguage] || '' }}
+                                tagsStyles={htmlRenderStyles}
+                            />
+                        )}
+
+                        {option.treatment_option_repeater?.map((subOption, subIndex) => (
                             <View key={subIndex} style={styles.cardItem}>
                                 <View style={styles.itemHeader}>
-                                    {subOption.treatment_option_repeat_icon ? (
-                                        <Image
-                                            source={{ uri: subOption.treatment_option_repeat_icon }}
-                                            style={styles.itemIcon}
-                                        />
-                                    ) : (
-                                        <Icon name="pill" size={20} color="#8e5a9b" style={styles.itemIcon} />
-                                    )}
                                     <Text style={styles.itemTitle}>
                                         {subOption.treatment_option_repeat_title?.[currentLanguage]}
                                     </Text>
                                 </View>
-                                <Text style={styles.itemText}>
-                                    {subOption.treatment_option_repeat_description?.[currentLanguage]}
-                                </Text>
+                                <RenderHtml
+                                    contentWidth={width - 60}
+                                    source={{ html: subOption.description?.[currentLanguage] || '' }}
+                                    tagsStyles={htmlRenderStyles}
+                                />
                             </View>
                         ))}
                     </View>

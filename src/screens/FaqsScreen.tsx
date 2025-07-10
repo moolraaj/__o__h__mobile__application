@@ -101,7 +101,7 @@ export default function FaqsScreen() {
                     </TouchableOpacity>
                   </LinearGradient>
 
-                  {/* Answer Body */}
+                 
                   {isOpen && (
                     <View style={styles.answerContainer}>
                       <RenderHtml

@@ -13,7 +13,7 @@ const FeaturesScreen = ({ navigation }: { navigation: any }) => {
   const [currentColorIndex, setCurrentColorIndex] = useState(0);
   const animatedValue = React.useMemo(() => new Animated.Value(0), []);
 
-  // Function to cycle through colors with left-to-right animation
+ 
   useEffect(() => {
     const interval = setInterval(() => {
       Animated.timing(animatedValue, {
@@ -44,7 +44,7 @@ const FeaturesScreen = ({ navigation }: { navigation: any }) => {
 
   return (
     <View style={styles.container}>
-      {/* Header with decorative line */}
+     
       <View style={styles.headerContainer}>
         <GradientText text="Features" size={24} />
         <View style={styles.decorativeLineContainer}>
@@ -61,9 +61,9 @@ const FeaturesScreen = ({ navigation }: { navigation: any }) => {
         </View>
       </View>
 
-      {/* Rest of your component remains exactly the same */}
+ 
       <View style={styles.contentContainer}>
-        {/* Oral Diseases section */}
+   
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Icon name="teeth-open" size={18} color="#C1392D" style={styles.sectionIcon} />
@@ -74,7 +74,7 @@ const FeaturesScreen = ({ navigation }: { navigation: any }) => {
           </View>
         </View>
 
-        {/* Dental Emergency section */}
+    
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Icon name="first-aid" size={18} color="#C1392D" style={styles.sectionIcon} />

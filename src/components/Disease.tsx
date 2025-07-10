@@ -28,6 +28,8 @@ const SingleDisease = ({ disease, currentLanguage, isLoading, navigation }: any)
     return <CardSkeletonItem count={6} />
   }
 
+ 
+
   return (
     <View style={styles.listContainer}>
       <FlatList
