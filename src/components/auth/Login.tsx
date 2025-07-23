@@ -8,9 +8,8 @@ import {
   Dimensions,
   Animated,
   StyleSheet,
-  ScrollView
+  ScrollView,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Feather from 'react-native-vector-icons/Feather';
 import GradientButton from '../../resuable/Button';
 import {
@@ -18,12 +17,10 @@ import {
   useVerifyOtpMutation,
   useLoginUserMutation,
 } from '../../store/services/user/userApi';
-import { useAuth } from '../../navigation/AuthContext';
 import { ToastMessage } from '../../resuable/Toast';
 import BackButton from '../../resuable/BackButton';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
-import Loader from '../../common/Loader';
 import CountryPicker, { Country } from 'react-native-country-picker-modal';
 import SuccessModal from './SuccessModal';
 import { FlatList } from 'react-native';
@@ -171,13 +168,16 @@ export default function Login({ navigation }: { navigation: any }) {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+      >
         {showSuccessModal && <SuccessModal
           visible={showSuccessModal}
           message={
             loginMethod === 'phone'
-              ? "OTP Verified successfully!"
-              : "Logged in successfully!"
+              ? 'OTP Verified successfully!'
+              : 'Logged in successfully!'
           }
           onClose={() => setShowSuccessModal(false)}
           phoneNumber={phoneNumber}
@@ -186,15 +186,16 @@ export default function Login({ navigation }: { navigation: any }) {
           callingCode={callingCode}
           loginMethod={loginMethod}
         />}
-        <View style={{ margin: 20 }}>
-          {loginMethod === 'email' ?
-            <Text style={styles.headerText}>Login via Email</Text>
-            : <Text style={styles.headerText}>Login via Phone</Text>}
-        </View>
-        <View style={{ margin: 20 }}>
-          {loginMethod === 'email' ?
-            <Text style={styles.headerSubtext}>Please enter your email and password to continue</Text> :
-            <Text style={styles.headerSubtext}>Enter your phone number, and we'll send you a confirmation code</Text>}
+        {/* Header Section */}
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>
+            {loginMethod === 'email' ? 'Login via Email' : 'Login via Phone'}
+          </Text>
+          <Text style={styles.headerSubtext}>
+            {loginMethod === 'email'
+              ? 'Please enter your email and password to continue'
+              : "Enter your phone number, and we'll send you a confirmation code"}
+          </Text>
         </View>
 
         <View style={styles.toggleContainer}>
@@ -259,7 +260,7 @@ export default function Login({ navigation }: { navigation: any }) {
           showsHorizontalScrollIndicator={false}
           onMomentumScrollEnd={handleScrollEnd}
           renderItem={({ item }) => (
-            <View style={{ width: SCREEN_WIDTH }}>
+            <View style={styles.contentContainer}>
               {item === 'email' ? (
                 <View style={styles.slide}>
                   <Input
@@ -446,7 +447,7 @@ function Input({
         <TextInput
           style={[
             styles.input,
-            textCenter ? { textAlign: 'center' } : null
+            textCenter ? { textAlign: 'center' } : null,
           ]}
           placeholder={placeholder}
           keyboardType={keyboardType}
@@ -467,9 +468,15 @@ function Input({
 }
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+  },
   wrapper: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  headerContainer: {
+    margin: 20,
   },
   headerText: {
     fontSize: 24,
@@ -481,6 +488,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '500',
     color: '#555',
+  },
+  contentContainer: {
+    flex: 1,
   },
   toggleContainer: {
     alignItems: 'center',
@@ -563,7 +573,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 15,
     alignItems: 'flex-start',
-    color: "#222222",
+    color: '#222222',
   },
   label: {
     marginBottom: 4,
@@ -599,7 +609,7 @@ const styles = StyleSheet.create({
     bottom: -16,
     color: '#DE2027',
     fontSize: 12,
-    marginLeft: 12
+    marginLeft: 12,
   },
   forgotPasswordLink: {
     alignSelf: 'flex-end',
@@ -609,7 +619,7 @@ const styles = StyleSheet.create({
     color: '#6a3093',
     fontSize: 14,
     fontWeight: '500',
-    textDecorationLine: 'underline'
+    textDecorationLine: 'underline',
   },
   footerLink: {
     padding: 18,

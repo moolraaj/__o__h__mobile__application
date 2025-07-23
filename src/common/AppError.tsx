@@ -1,6 +1,6 @@
 // components/AppError.tsx
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
 export const AppError = ({ onRetry }: { onRetry?: () => void }) => {
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
         padding: 20,
         alignItems: 'center',
         justifyContent: 'center',
-        flex: 1
+        flex: 1,
     },
     icon: {
         marginBottom: 20,
