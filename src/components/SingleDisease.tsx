@@ -8,8 +8,10 @@ import { AppError } from '../common/AppError';
 import { LinearGradient } from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RenderHtml from 'react-native-render-html';
+import { DISEASE_ICON_SIZE } from '../constants/Variables';
 
 const SingleDisease = () => {
+    const WRONG = 'No data available for this section'
     const { id } = useRoute().params as { id: string };
     const { i18n } = useTranslation();
     const currentLanguage = i18n.language as keyof Language;
@@ -31,6 +33,9 @@ const SingleDisease = () => {
     }
 
     const diseaseData = data.data;
+
+
+ 
 
 
     const htmlRenderStyles = {
@@ -176,7 +181,7 @@ const SingleDisease = () => {
                 <Text style={styles.sectionTitle}>
                     <GradientText text={diseaseData.common_cause_tab_title?.[currentLanguage]} size={18} />
                 </Text>
-                {diseaseData.common_cause?.map((cause, index) => (
+                {diseaseData.common_cause.length > 0 ? (diseaseData.common_cause?.map((cause, index) => (
                     <View key={index} style={styles.card}>
                         <View style={styles.cardHeader}>
                             {cause.cause_icon ? (
@@ -185,10 +190,10 @@ const SingleDisease = () => {
                                     style={styles.cardIcon}
                                 />
                             ) : (
-                                <Icon name="alert-circle" size={28} color="#6e3b7a" style={styles.cardIcon} />
+                                <Icon name="alert-circle" size={DISEASE_ICON_SIZE} color="#6e3b7a" style={styles.cardIcon} />
                             )}
                             <Text style={styles.itemTitle}>
-                                {cause.cause_title?.[currentLanguage]}
+                                {cause.cause_title?.[currentLanguage] === '' ? (<Text style={styles.error_section}>{WRONG}</Text>) : cause.cause_title?.[currentLanguage]}
                             </Text>
                         </View>
 
@@ -203,7 +208,7 @@ const SingleDisease = () => {
                         {cause.cause_repeater?.map((subCause, subIndex) => (
                             <View key={subIndex} style={styles.cardItem}>
                                 <View style={styles.itemHeader}>
-                                  
+
                                     <Text style={styles.itemTitle}>
                                         {subCause.cause_repeat_title?.[currentLanguage]}
                                     </Text>
@@ -216,7 +221,15 @@ const SingleDisease = () => {
                             </View>
                         ))}
                     </View>
-                ))}
+                ))) : (
+                    <>
+                        <View style={styles.card}>
+                            <View style={styles.cardHeader}>
+                                <Text style={styles.error_section}>{WRONG}</Text>
+                            </View>
+                        </View>
+                    </>
+                )}
             </View>
 
             {/* Symptoms Section */}
@@ -224,12 +237,23 @@ const SingleDisease = () => {
                 <Text style={styles.sectionTitle}>
                     <GradientText text={diseaseData.symptoms_tab_title?.[currentLanguage]} size={18} />
                 </Text>
-                {diseaseData.symptoms?.map((symptom, index) => (
+                {diseaseData.symptoms.length > 0 ? (diseaseData.symptoms?.map((symptom, index) => (
                     <View key={index} style={styles.card}>
                         <View style={styles.cardHeader}>
 
+                            {symptom.symptom_tips_icon ? (
+                                <Image
+                                    source={{ uri: tip.prevention_tips_icon }}
+                                    style={styles.cardIcon}
+                                />
+                            ) : (
+                                <Icon name="shield-check" size={DISEASE_ICON_SIZE} color="#6e3b7a" style={styles.cardIcon} />
+                            )}
+
                             <Text style={styles.itemTitle}>
-                                {symptom.symptoms_title?.[currentLanguage]}
+
+                                {symptom.symptoms_title?.[currentLanguage] === '' ? (<Text style={styles.error_section}>{WRONG}</Text>) : symptom.symptoms_title?.[currentLanguage]}
+
                             </Text>
                         </View>
 
@@ -257,7 +281,15 @@ const SingleDisease = () => {
                             </View>
                         ))}
                     </View>
-                ))}
+                ))) : (
+                    <>
+                        <View style={styles.card}>
+                            <View style={styles.cardHeader}>
+                                <Text style={styles.error_section}>{WRONG}</Text>
+                            </View>
+                        </View>
+                    </>
+                )}
             </View>
 
             {/* Prevention Section */}
@@ -265,7 +297,7 @@ const SingleDisease = () => {
                 <Text style={styles.sectionTitle}>
                     <GradientText text={diseaseData.prevention_tips_tab_title?.[currentLanguage]} size={18} />
                 </Text>
-                {diseaseData.prevention_tips?.map((tip, index) => (
+                {diseaseData.prevention_tips.length > 0 ? (diseaseData.prevention_tips?.map((tip, index) => (
                     <View key={index} style={styles.card}>
                         <View style={styles.cardHeader}>
                             {tip.prevention_tips_icon ? (
@@ -274,10 +306,10 @@ const SingleDisease = () => {
                                     style={styles.cardIcon}
                                 />
                             ) : (
-                                <Icon name="shield-check" size={28} color="#6e3b7a" style={styles.cardIcon} />
+                                <Icon name="shield-check" size={DISEASE_ICON_SIZE} color="#6e3b7a" style={styles.cardIcon} />
                             )}
                             <Text style={styles.itemTitle}>
-                                {tip.prevention_tips_title?.[currentLanguage]}
+                                {tip.prevention_tips_title?.[currentLanguage] === '' ? (<Text style={styles.error_section}>{WRONG}</Text>) : tip.prevention_tips_title?.[currentLanguage]}
                             </Text>
                         </View>
 
@@ -305,7 +337,13 @@ const SingleDisease = () => {
                             </View>
                         ))}
                     </View>
-                ))}
+                ))) : <>
+                    <View style={styles.card}>
+                        <View style={styles.cardHeader}>
+                            <Text style={styles.error_section}>{WRONG}</Text>
+                        </View>
+                    </View>
+                </>}
             </View>
 
             {/* Treatment Section */}
@@ -313,7 +351,7 @@ const SingleDisease = () => {
                 <Text style={styles.sectionTitle}>
                     <GradientText text={diseaseData.treatment_option_tab_title?.[currentLanguage]} size={18} />
                 </Text>
-                {diseaseData.treatment_option?.map((option, index) => (
+                {diseaseData.treatment_option.length > 0 ? (diseaseData.treatment_option?.map((option, index) => (
                     <View key={index} style={styles.card}>
                         <View style={styles.cardHeader}>
                             {option.treatment_option_icon ? (
@@ -322,10 +360,12 @@ const SingleDisease = () => {
                                     style={styles.cardIcon}
                                 />
                             ) : (
-                                <Icon name="medical-bag" size={28} color="#6e3b7a" style={styles.cardIcon} />
+                                <Icon name="medical-bag" size={DISEASE_ICON_SIZE} color="#6e3b7a" style={styles.cardIcon} />
                             )}
                             <Text style={styles.itemTitle}>
-                                {option.treatment_option_title?.[currentLanguage]}
+
+                                {option.treatment_option_title?.[currentLanguage] === '' ? (<Text style={styles.error_section}>{WRONG}</Text>) : option.treatment_option_title?.[currentLanguage]}
+
                             </Text>
                         </View>
 
@@ -352,7 +392,13 @@ const SingleDisease = () => {
                             </View>
                         ))}
                     </View>
-                ))}
+                ))) : (<>
+                    <View style={styles.card}>
+                        <View style={styles.cardHeader}>
+                            <Text style={styles.error_section}>{WRONG}</Text>
+                        </View>
+                    </View>
+                </>)}
             </View>
         </ScrollView>
     );
@@ -436,7 +482,8 @@ const styles = StyleSheet.create({
     },
     cardHeader: {
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
+
         marginBottom: 8,
     },
     cardIcon: {
@@ -465,6 +512,14 @@ const styles = StyleSheet.create({
         marginRight: 8,
     },
     itemTitle: {
+        fontSize: 15,
+        fontWeight: '600',
+        color: '#56235E',
+        flexShrink: 1,
+        flexWrap: 'wrap',
+        flex: 1
+    },
+    error_section: {
         fontSize: 15,
         fontWeight: '600',
         color: '#56235E',

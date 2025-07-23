@@ -16,6 +16,8 @@ export const FONT_SIZE = 18;
 export const BACK_BUTTON_ICON_SIZE = 24;
 export const ICON_SIZE = 24;
 
+export const DISEASE_ICON_SIZE=25
+
 
 // fucntion
 
