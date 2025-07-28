@@ -1,4 +1,4 @@
-// apiSlice.ts
+ 
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { API_BASE_URL } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -14,14 +14,9 @@ const baseQuery = fetchBaseQuery({
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions)
-
-
   if (result?.error?.status === 401 || result?.error?.status === 403) {
-
     await AsyncStorage.multiRemove(['authToken', 'user'])
-
   }
-
   return result
 }
 

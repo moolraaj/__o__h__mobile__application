@@ -10,13 +10,13 @@ import {
   ScrollView,
   StatusBar,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+ 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import Toast from 'react-native-toast-message';
-import Loader from '../../common/Loader';
+ 
 import CountryPicker, { Country } from 'react-native-country-picker-modal';
 import {
   BACK_ARROW_COLOR,
@@ -26,8 +26,10 @@ import {
 import GradientButton from '../../resuable/Button';
 import GradientText from '../../common/GradientText';
 import { useRegisterUserMutation } from '../../store/services/user/userApi';
+import { useSaveFcmToken } from '../../common/saveFcmTokens'; 
 
 export default function Register({ navigation }: { navigation: any }) {
+    const saveFcmToken = useSaveFcmToken();
   const [step, setStep] = useState(1);
   const [user, setUsers] = useState({
     role: '',
@@ -86,6 +88,9 @@ export default function Register({ navigation }: { navigation: any }) {
         email: user.email,
         userId: result.id,
       });
+      if (result) {
+        await saveFcmToken(result?.user?.id);
+      }
     } catch (e: any) {
       const msg =
         e.data?.error || e.error || 'Registration failed. Please try again.';
@@ -174,8 +179,8 @@ export default function Register({ navigation }: { navigation: any }) {
                         field === 'name'
                           ? 'e.g. John Doe'
                           : field === 'email'
-                          ? 'e.g. johndoe@example.com'
-                          : 'e.g. securepassword'
+                            ? 'e.g. johndoe@example.com'
+                            : 'e.g. securepassword'
                       }
                       value={(user as any)[field]}
                       onChangeText={v => onChangeField(field, v)}

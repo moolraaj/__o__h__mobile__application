@@ -35,7 +35,7 @@ const SingleDisease = () => {
     const diseaseData = data.data;
 
 
- 
+
 
 
     const htmlRenderStyles = {

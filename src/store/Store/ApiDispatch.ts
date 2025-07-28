@@ -1,7 +1,7 @@
-// store/ApiDispatch.ts
-import { AppDispatch } from './Store'; // adjust path if needed
+ 
+import { AppDispatch } from './Store';  
 
-// Import all slices
+ 
 import { apiSlice } from '../services/apiSlice'
 
 export const invalidateAllCompanyApis = (dispatch: AppDispatch) => {

@@ -91,12 +91,21 @@ export const userApi = apiSlice.injectEndpoints({
     getProfile: builder.query({
       query: () => '/api/auth/profile',
 
-      pollingInterval: 30000,  
+
       transformResponse: (response) => {
-       
+
         AsyncStorage.setItem('user', JSON.stringify(response.user))
         return response
       },
+    }),
+
+    updateFcmToken: builder.mutation<{ status: number; message: string }, { userId: string; fcmToken: string; headers?: Record<string, string> }>({
+      query: ({ userId, fcmToken, headers }) => ({
+        url: `/api/users/${userId}/fcm-token`,
+        method: "PATCH",
+        body: { fcmToken },
+        headers
+      }),
     }),
 
 
@@ -114,5 +123,6 @@ export const {
   useGetSingleUserQuery,
   useForgotPasswordMutation,
   useResetPasswordMutation,
-  useGetProfileQuery
+  useGetProfileQuery,
+  useUpdateFcmTokenMutation
 } = userApi;

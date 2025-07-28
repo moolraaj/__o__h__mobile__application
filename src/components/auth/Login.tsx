@@ -24,10 +24,14 @@ import GradientText from '../../common/GradientText';
 import CountryPicker, { Country } from 'react-native-country-picker-modal';
 import SuccessModal from './SuccessModal';
 import { FlatList } from 'react-native';
+import { useSaveFcmToken } from '../../common/saveFcmTokens';
+
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function Login({ navigation }: { navigation: any }) {
+
+  const saveFcmToken = useSaveFcmToken();
 
   // NEW: For horizontal scroll tracking
   const flatListRef = useRef<FlatList>(null);
@@ -145,11 +149,15 @@ export default function Login({ navigation }: { navigation: any }) {
       setPasswordError('Password is required');
       return;
     }
-
-
-
     try {
-      await loginUser({ email, password }).unwrap();
+      const result = await loginUser({ email, password }).unwrap();
+      if (result) {
+       const data=await saveFcmToken(result.user.id, result.token);
+        console.log(`result`)
+        console.log(result)
+        console.log(`data`)
+        console.log(data)
+      }
       if (!email || !password) {
         return ToastMessage('error', 'Plese Provide Valid Credentails!');
       }

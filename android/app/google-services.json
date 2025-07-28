@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "562969149333",
+    "project_id": "oral-health-app-2cfb9",
+    "storage_bucket": "oral-health-app-2cfb9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:562969149333:android:1ea0ab5abd73c23478009c",
+        "android_client_info": {
+          "package_name": "com.oralHealth"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHRlUN-bypuAWxbTAID4iNGYpwdxMzVeI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
