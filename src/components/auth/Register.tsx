@@ -88,9 +88,7 @@ export default function Register({ navigation }: { navigation: any }) {
         email: user.email,
         userId: result.id,
       });
-      if (result) {
-        await saveFcmToken(result?.user?.id);
-      }
+       
     } catch (e: any) {
       const msg =
         e.data?.error || e.error || 'Registration failed. Please try again.';

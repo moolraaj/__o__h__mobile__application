@@ -1,62 +1,44 @@
-// import { View, Text } from 'react-native'
-// import React from 'react'
-// import { Layout } from '../common/Layout'
-
-// export default function NotificationScreen() {
-//     return (
-//         <Layout>
-//             <Text>NotificationScreen</Text>
-//         </Layout>
-//     )
-// }
-
-
-
-
-
-
-
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
-import React from 'react'
-import { Layout } from '../common/Layout'
-import  MaterialIcons  from 'react-native-vector-icons/MaterialIcons';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { Layout } from '../common/Layout';
+import { useAuth } from '../navigation/AuthContext';
+import { useGetAllNotificationsQuery } from '../store/services/notifications/notificationsApi';
+import notifee from '@notifee/react-native';
 
 export default function NotificationScreen() {
-    // Dummy notifications data
-    const notifications = [
-        {
-            id: 1,
-            title: "New Update Available",
-            message: "Version 2.3.0 is now available with new features and bug fixes.",
-            time: "2 hours ago",
-            read: false,
-            icon: "update"
-        },
-        {
-            id: 2,
-            title: "Appointment Reminder",
-            message: "Your appointment with Dr. Smith is scheduled for tomorrow at 10:00 AM.",
-            time: "5 hours ago",
-            read: true,
-            icon: "event"
-        },
-        {
-            id: 3,
-            title: "Security Alert",
-            message: "A new device logged into your account from New York. Contact support if this wasn't you.",
-            time: "1 day ago",
-            read: false,
-            icon: "security"
-        },
-        {
-            id: 4,
-            title: "Weekly Summary",
-            message: "Here's your weekly activity summary. You've completed 8 tasks this week!",
-            time: "2 days ago",
-            read: true,
-            icon: "summarize"
-        },
-    ];
+    const { user } = useAuth();
+
+
+
+    const {
+        data: notifications = [],
+        isLoading,
+        refetch,
+    } = useGetAllNotificationsQuery({
+        user_id: user?.id,
+        page: 1,
+        limit: 50,
+    });
+
+ 
+    useEffect(() => {
+        const unsubscribe = messaging().onMessage(async remoteMessage => {
+            refetch();
+        });
+
+        return unsubscribe;
+    }, []);
+    const result = notifications?.data ?? []
+    useEffect(() => {
+        if (!isLoading && notifications?.data?.length === 0) {
+            notifee.cancelDisplayedNotifications(); 
+            console.log('🧹 Cleared system notifications because no backend notifications found.');
+        }
+    }, [notifications, isLoading]);
+
+
 
     return (
         <Layout>
@@ -65,45 +47,54 @@ export default function NotificationScreen() {
                     <View style={styles.header}>
                         <View style={styles.textSection}>
                             <Text style={styles.heading}>Notifications</Text>
-                            <Text style={styles.description}>You have {notifications.filter(n => !n.read).length} unread notifications</Text>
+                            <Text style={styles.description}>
+                                You have {result.filter(n => !n.read).length} unread notifications
+                            </Text>
                         </View>
                     </View>
 
-                    {notifications.map((notification) => (
-                        <View key={notification.id} style={[
-                            styles.mythBox,
-                            notification.read ? { backgroundColor: '#F3F4F6' } : { backgroundColor: '#E0E7FF' }
-                        ]}>
-                            <View style={styles.factRow}>
-                                <MaterialIcons 
-                                    name={notification.icon} 
-                                    size={24} 
-                                    color="#800080" 
-                                    style={styles.icon} 
-                                />
-                                <View style={{ flex: 1 }}>
-                                    <Text style={[styles.factText, { fontWeight: notification.read ? 'normal' : 'bold' }]}>
-                                        {notification.title}
-                                    </Text>
-                                    <Text style={styles.bodyText}>{notification.message}</Text>
-                                    <Text style={[styles.bodyText, { fontSize: 12, marginTop: 4 }]}>{notification.time}</Text>
+                    {result.length === 0 ? (
+                        <Text style={{ textAlign: 'center', marginTop: 20, color: '#999' }}>
+                            No notifications yet.
+                        </Text>
+                    ) : (
+                        result.map((notification) => (
+                            <View
+                                key={notification._id}
+                                style={[
+                                    styles.mythBox,
+                                    notification.read ? { backgroundColor: '#F3F4F6' } : { backgroundColor: '#E0E7FF' },
+                                ]}
+                            >
+                                <View style={styles.factRow}>
+                                    <MaterialIcons
+                                        name={notification.icon || 'notifications'}
+                                        size={24}
+                                        color="#800080"
+                                        style={styles.icon}
+                                    />
+                                    <View style={{ flex: 1 }}>
+                                        <Text
+                                            style={[
+                                                styles.factText,
+                                                { fontWeight: notification.read ? 'normal' : 'bold' },
+                                            ]}
+                                        >
+                                            {notification.title}
+                                        </Text>
+                                        <Text style={styles.bodyText}>{notification.message}</Text>
+                                        <Text style={[styles.bodyText, { fontSize: 12, marginTop: 4 }]}>
+                                            {new Date(notification.createdAt).toLocaleString()}
+                                        </Text>
+                                    </View>
                                 </View>
                             </View>
-                        </View>
-                    ))}
-
-                    <View style={styles.factBox}>
-                        <Text style={styles.heading}>Notification Tips</Text>
-                        <Text style={styles.bodyText}>
-                            • Swipe left to delete notifications{"\n"}
-                            • Tap to mark as read{"\n"}
-                            • Adjust settings to customize notifications
-                        </Text>
-                    </View>
+                        ))
+                    )}
                 </View>
             </ScrollView>
         </Layout>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -130,12 +121,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#5A5A5A',
         marginTop: 8,
-        lineHeight: 22
-    },
-    image: {
-        width: 50,
-        height: 50,
-        borderRadius: 12,
+        lineHeight: 22,
     },
     heading: {
         fontSize: 20,
@@ -147,7 +133,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: '#5A5A5A',
         marginBottom: 16,
-        lineHeight: 22
+        lineHeight: 22,
     },
     mythBox: {
         backgroundColor: '#FEE2E2',
@@ -167,7 +153,7 @@ const styles = StyleSheet.create({
     },
     icon: {
         marginRight: 5,
-        marginTop: 2
+        marginTop: 2,
     },
     factText: {
         flex: 1,
@@ -177,6 +163,6 @@ const styles = StyleSheet.create({
         borderBottomColor: '#B1D6FF',
         borderStyle: 'dashed',
         paddingBottom: 10,
-        lineHeight: 22
+        lineHeight: 22,
     },
 });

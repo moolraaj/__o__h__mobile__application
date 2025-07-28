@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ToastMessage } from '../../resuable/Toast';
 import { useAuth } from '../../navigation/AuthContext';
 import { useLoginUserMutation } from '../../store/services/user/userApi';
-
+import { useSaveFcmToken } from '../../common/saveFcmTokens';
 interface SuccessModalProps {
     visible: boolean;
     message: string;
@@ -30,7 +30,8 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
 }) => {
     const { setToken, setUser } = useAuth();
     const [loginUser, { isLoading: loggingIn }] = useLoginUserMutation();
-    
+    const saveFcmToken = useSaveFcmToken();
+
     const handleModalContinue = async () => {
         try {
             let loginPayload: any = {};
@@ -50,6 +51,17 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
                 ['authToken', loginRes.token],
                 ['user', JSON.stringify(loginRes.user)],
             ]);
+
+            console.log(`loginRes`)
+            console.log(loginRes)
+
+            if (loginRes) {
+                let data = await saveFcmToken(loginRes?.user?.id);
+                console.log(`result`)
+                console.log(loginRes)
+                console.log(`data`)
+                console.log(data)
+            }
 
             setToken(loginRes.token);
             setUser(loginRes.user);

@@ -99,12 +99,11 @@ export const userApi = apiSlice.injectEndpoints({
       },
     }),
 
-    updateFcmToken: builder.mutation<{ status: number; message: string }, { userId: string; fcmToken: string; headers?: Record<string, string> }>({
-      query: ({ userId, fcmToken, headers }) => ({
-        url: `/api/users/${userId}/fcm-token`,
+    updateFcmToken: builder.mutation<{ status: number; message: string }, { userId: string; fcmToken: string }>({
+      query: ({ userId, fcmToken }) => ({
+        url: `/api/auth/users/${userId}/fcm-token`,
         method: "PATCH",
         body: { fcmToken },
-        headers
       }),
     }),
 
