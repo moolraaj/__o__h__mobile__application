@@ -75,12 +75,8 @@ export default function Splash({ onFinish }: SplashProps) {
         const sequence = async () => {
             // Step 1: Animated logo with bounce effect
             await runFirstAnimation();
-            setStep(2);
-
-            // Step 2: Full screen gradient with content
+            setStep(2)
             await runSecondAnimation();
-
-            // Small delay before finishing
             await new Promise<void>(resolve => setTimeout(() => resolve(), 500));
             onFinish();
         };
@@ -88,7 +84,6 @@ export default function Splash({ onFinish }: SplashProps) {
         sequence();
     }, []);
 
-    // Interpolate rotation for the first step
     const rotateInterpolation = rotateAnim.interpolate({
         inputRange: [0, 1],
         outputRange: ['0deg', '360deg'],
@@ -107,20 +102,14 @@ export default function Splash({ onFinish }: SplashProps) {
                     },
                 ]}>
                     <Image
-                        source={require('../images/splash-logo-primary.png')}
+                        source={require('../images/app-icon.jpeg')}
                         style={styles.logoPrimary}
                     />
                 </Animated.View>
             )}
 
             {step === 2 && (
-                <LinearGradient
-                    colors={['#F7C9FF', '#FFBDB9', '#FFE3B0']}
-                    locations={[0.1, 0.5, 0.9]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={styles.gradientContainer}
-                >
+                <>
                     <Animated.View style={[
                         styles.contentContainer,
                         {
@@ -129,7 +118,7 @@ export default function Splash({ onFinish }: SplashProps) {
                         },
                     ]}>
                         <Image
-                            source={require('../images/splash-logo-secondary.png')}
+                            source={require('../images/splash-screen.jpeg')}
                             style={styles.logoSecondary}
                         />
 
@@ -140,18 +129,18 @@ export default function Splash({ onFinish }: SplashProps) {
                                 colors={['#6a11cb', '#2575fc']}
                             />
                         </Text>
+
+
                         <Text style={styles.subtitleText}>
                             <GradientText
                                 text="Of Applied Sciences"
                                 size={18}
-
                                 colors={['#6a11cb', '#2575fc']}
                             />
+
                         </Text>
-                        <View style={styles.taglineContainer}>
-                            <Text style={styles.taglineText}>Innovation • Excellence • Integrity</Text>
-                        </View>
                     </Animated.View>
+
 
                     <Animated.View style={[styles.progressBarContainer, { opacity: fadeAnim }]}>
                         <Animated.View
@@ -166,7 +155,10 @@ export default function Splash({ onFinish }: SplashProps) {
                             ]}
                         />
                     </Animated.View>
-                </LinearGradient>
+
+
+                </>
+
             )}
         </View>
     );
@@ -196,15 +188,16 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     contentContainer: {
-        alignItems: 'center',
+        alignItems: 'flex-start',
         padding: 20,
         width: '100%',
     },
     logoSecondary: {
-        width: 120,
-        height: 120,
+        width: '100%',
+        height: '100%',
         resizeMode: 'contain',
-        marginBottom: 15,
+        top: 0,
+        left: 0,
     },
     universityText: {
         fontWeight: '700',
@@ -214,7 +207,7 @@ const styles = StyleSheet.create({
     subtitleText: {
         fontWeight: '500',
         marginBottom: 20,
-        textAlign: 'center',
+        zIndex: 9999,
     },
     taglineContainer: {
         marginTop: 30,

@@ -1,17 +1,13 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Layout } from '../common/Layout';
 import { useAuth } from '../navigation/AuthContext';
 import { useGetAllNotificationsQuery } from '../store/services/notifications/notificationsApi';
 import notifee from '@notifee/react-native';
-
 export default function NotificationScreen() {
-    const { user } = useAuth();
-
-
-
+    const { user } = useAuth()
     const {
         data: notifications = [],
         isLoading,
@@ -21,23 +17,24 @@ export default function NotificationScreen() {
         page: 1,
         limit: 50,
     });
-
- 
     useEffect(() => {
         const unsubscribe = messaging().onMessage(async remoteMessage => {
             refetch();
         });
-
         return unsubscribe;
     }, []);
     const result = notifications?.data ?? []
     useEffect(() => {
         if (!isLoading && notifications?.data?.length === 0) {
-            notifee.cancelDisplayedNotifications(); 
+            notifee.cancelDisplayedNotifications();
             console.log('🧹 Cleared system notifications because no backend notifications found.');
         }
     }, [notifications, isLoading]);
 
+    const handleClick = () => {
+        
+
+    }
 
 
     return (
@@ -48,7 +45,7 @@ export default function NotificationScreen() {
                         <View style={styles.textSection}>
                             <Text style={styles.heading}>Notifications</Text>
                             <Text style={styles.description}>
-                                You have {result.filter(n => !n.read).length} unread notifications
+                                You have {result.filter(n => n.read === false).length} unread notifications
                             </Text>
                         </View>
                     </View>
@@ -86,11 +83,19 @@ export default function NotificationScreen() {
                                         <Text style={[styles.bodyText, { fontSize: 12, marginTop: 4 }]}>
                                             {new Date(notification.createdAt).toLocaleString()}
                                         </Text>
+
+                                        <TouchableOpacity onPress={handleClick} >
+                                            <Text>Review</Text>
+                                        </TouchableOpacity>
+
                                     </View>
                                 </View>
+
                             </View>
                         ))
                     )}
+
+
                 </View>
             </ScrollView>
         </Layout>

@@ -347,7 +347,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import appLogo from '../images/danta-logo.png';
+import appLogo from '../images/app-icon.jpeg';
 import GradientText from './GradientText';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
