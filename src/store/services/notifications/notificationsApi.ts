@@ -12,15 +12,24 @@ export const notificationsApi = apiSlice.injectEndpoints({
 
     deleteNotification: builder.mutation({
       query: ({ user_id, id }) => ({
-        url: `/api/${user_id}/delete/${id}`,
+        url: `/api/notifications/${user_id}/delete/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Notifications'],
     }),
+    reviewNotification: builder.mutation({
+      query: ({ id }) => ({
+        url: `/api/notifications/update/${id}`,
+        method: 'PATCH',
+      }),
+      invalidatesTags: ['Notifications'],
+    }),
+
   }),
 });
 
 export const {
   useGetAllNotificationsQuery,
   useDeleteNotificationMutation,
+  useReviewNotificationMutation
 } = notificationsApi;

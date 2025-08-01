@@ -26,7 +26,8 @@ export const apiSlice = createApi({
   tagTypes: [
     'User', 'Slider', 'TextSlider', 'Disease', 'Category',
     'HabitHealth', 'Lesions', 'Questions', 'MythsFacts',
-    'Questionnaire', 'Dental', 'Faqs', 'Terms', 'PrivacyPolicy','Notifications'
+    'Questionnaire', 'Dental', 'Faqs', 'Terms', 'PrivacyPolicy','Notifications',
+ 
   ],
   endpoints: () => ({}),
 })

@@ -25,11 +25,14 @@ import CountryPicker, { Country } from 'react-native-country-picker-modal';
 import SuccessModal from './SuccessModal';
 import { FlatList } from 'react-native';
  
-
+import { API_BASE_URL } from '@env'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function Login({ navigation }: { navigation: any }) {
+
+  console.log(`API_BASE_URL`)
+  console.log(API_BASE_URL)
 
  
 
