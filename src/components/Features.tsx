@@ -5,11 +5,13 @@ import { useGetFeatureCategoryQuery } from '../store/services/categories/categor
 import CardSkeletonItem from '../common/CardSkeletonItem';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { commonGridStyles as gridStyles } from '../common/cardStyling';
+import { WHITE } from '../constants/Variables';
+import { GlobalText } from '../constants/GlobalText';
 
 const Features = ({ navigation }: { navigation: any }) => {
   const { i18n } = useTranslation();
   const currentLanguage = i18n.language;
-  const { data, error, isFetching, refetch } = useGetFeatureCategoryQuery({
+  const { data, error, isLoading, refetch } = useGetFeatureCategoryQuery({
     page: 1,
     limit: 10,
     lang: currentLanguage,
@@ -17,7 +19,7 @@ const Features = ({ navigation }: { navigation: any }) => {
     refetchOnMountOrArgChange: true,
   });
 
-  if (isFetching) {
+  if (isLoading) {
     return <CardSkeletonItem count={3} />;
   }
 
@@ -37,9 +39,9 @@ const Features = ({ navigation }: { navigation: any }) => {
               <View style={gridStyles.errorIconContainer}>
                 <Icon name="exclamation-triangle" size={15} color="#FF5E62" />
               </View>
-              <Text style={gridStyles.errorMessage}>
+              <GlobalText style={gridStyles.errorMessage}>
                 Failed to load featured content. Tap to retry.
-              </Text>
+              </GlobalText>
             </View>
           </TouchableOpacity>
         ))}
@@ -63,9 +65,9 @@ const Features = ({ navigation }: { navigation: any }) => {
             />
           )}
           <View style={styles.singleTitleContainer}>
-            <Text style={styles.singleTitle}>
+            <GlobalText style={styles.singleTitle}>
               {item.feature_main_title?.[currentLanguage]}
-            </Text>
+            </GlobalText>
           </View>
         </TouchableOpacity>
       </View>
@@ -95,9 +97,9 @@ const Features = ({ navigation }: { navigation: any }) => {
                 />
               )}
               <View style={gridStyles.titleContainer}>
-                <Text style={gridStyles.title}>
+                <GlobalText style={gridStyles.title}>
                   {item.feature_main_title?.[currentLanguage]}
-                </Text>
+                </GlobalText>
               </View>
             </TouchableOpacity>
           </View>
@@ -136,7 +138,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   singleTitle: {
-    color: '#fff',
+    color: WHITE,
     fontSize: 18,
     fontWeight: '700',
     textAlign: 'center',

@@ -11,6 +11,8 @@ import { useRoute, RouteProp } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { useGetSingleSliderQuery } from '../store/services/slider/sliderApi';
 import GradientText from '../common/GradientText';
+import { WHITE } from '../constants/Variables';
+import { GlobalText } from '../constants/GlobalText';
 
 type RootStackParamList = {
   Product: { id: string }
@@ -39,7 +41,7 @@ export const SingleSlider = () => {
   if (error || !data) {
     return (
       <View style={styles.center}>
-        <Text style={styles.errorText}>Could not load slider #{id}</Text>
+        <GlobalText style={styles.errorText}>Could not load slider #{id}</GlobalText>
       </View>
     );
   }
@@ -60,8 +62,8 @@ export const SingleSlider = () => {
           <View style={styles.titleWrapper}>
             <GradientText text={`${index + 1}`} size={28} />
             <View style={styles.titleContainer}>
-              <Text style={styles.title}>{item.text?.[currentLanguage] || 'No title'}</Text>
-              <Text style={styles.desc}>{item.description?.[currentLanguage] || 'No description'}</Text>
+              <GlobalText style={styles.title}>{item.text?.[currentLanguage] || 'No title'}</GlobalText>
+              <GlobalText style={styles.desc}>{item.description?.[currentLanguage] || 'No description'}</GlobalText>
             </View>
           </View>
         </View>
@@ -69,7 +71,7 @@ export const SingleSlider = () => {
       contentContainerStyle={styles.listContent}
       ListEmptyComponent={
         <View style={styles.center}>
-          <Text style={styles.emptyText}>No slider items available.</Text>
+          <GlobalText style={styles.emptyText}>No slider items available.</GlobalText>
         </View>
       }
     />
@@ -92,7 +94,7 @@ const styles = StyleSheet.create({
   },
   card: {
     marginBottom: 10,
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
     borderRadius: 4,
     padding: 10,
     shadowColor: '#000',

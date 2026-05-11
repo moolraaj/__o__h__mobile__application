@@ -1,3 +1,4 @@
+import { GlobalText } from '../constants/GlobalText';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
@@ -21,7 +22,7 @@ const RadioButtonGroup: React.FC<Props> = ({
 }) => {
     return (
         <>
-            {label && <Text style={styles.label}>{label}</Text>}
+            {label && <GlobalText style={styles.label}>{label}</GlobalText>}
             <View style={styles.radioGroup}>
                 {options.map((option) => (
                     <TouchableOpacity
@@ -36,7 +37,7 @@ const RadioButtonGroup: React.FC<Props> = ({
                         <View style={styles.radioCircle}>
                             {selectedValue === option.value && <View style={styles.selectedDot} />}
                         </View>
-                        <Text style={styles.radioText}>{option.label}</Text>
+                        <GlobalText style={styles.radioText}>{option.label}</GlobalText>
                     </TouchableOpacity>
                 ))}
             </View>

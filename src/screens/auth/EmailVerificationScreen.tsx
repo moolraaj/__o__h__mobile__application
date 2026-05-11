@@ -5,6 +5,7 @@ import { useRoute } from '@react-navigation/native';
 import GradientButton from '../../resuable/Button';
 import { useSendEmailVerificationMutation } from '../../store/services/user/userApi';
 import Loader from '../../common/Loader';
+import { GlobalText } from '../../constants/GlobalText';
 
 const EmailVerificationScreen = ({ navigation }: { navigation: any }) => {
 
@@ -30,16 +31,16 @@ const EmailVerificationScreen = ({ navigation }: { navigation: any }) => {
 
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.infoText}>
+      <GlobalText style={styles.infoText}>
         An email has been sent to {email}. Please verify your account before you log in.
-      </Text>
+      </GlobalText>
 
       {isSendingEmail && <Loader />}
 
       <GradientButton label="Resend Email" onPress={handleResendEmail} />
 
       <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginText}>Login</Text>
+        <GlobalText style={styles.loginText}>Login</GlobalText>
       </TouchableOpacity>
     </View>
   );

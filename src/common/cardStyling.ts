@@ -1,9 +1,10 @@
+import { WHITE } from '../constants/Variables';
 import { StyleSheet } from 'react-native';
 
 export const commonGridStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
   },
   contentContainer: {
     position: 'relative',
@@ -83,7 +84,7 @@ export const commonGridStyles = StyleSheet.create({
     padding: 10,
   },
   title: {
-    color: '#fff',
+    color: WHITE,
     fontSize: 16,
     fontWeight: '700',
     textAlign: 'center',

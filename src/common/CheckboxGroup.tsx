@@ -1,3 +1,5 @@
+import { GlobalText } from '../constants/GlobalText';
+import { WHITE } from '../constants/Variables';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
@@ -29,7 +31,7 @@ const CheckboxGroup: React.FC<Props> = ({
 
     return (
         <>
-            {label && <Text style={styles.label}>{label}</Text>}
+            {label && <GlobalText style={styles.label}>{label}</GlobalText>}
             <View style={styles.checkboxGroup}>
                 {options.map((option) => (
                     <TouchableOpacity
@@ -46,7 +48,7 @@ const CheckboxGroup: React.FC<Props> = ({
                                 <View style={styles.checkboxTick} />
                             )}
                         </View>
-                        <Text style={styles.checkboxText}>{option.label}</Text>
+                        <GlobalText style={styles.checkboxText}>{option.label}</GlobalText>
                     </TouchableOpacity>
                 ))}
             </View>
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderWidth: 1,
         borderColor: '#E0E0E0',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: WHITE,
         minWidth: '48%',
     },
     checkboxButtonSelected: {

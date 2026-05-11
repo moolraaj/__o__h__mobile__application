@@ -24,6 +24,7 @@ import {
 } from '../../store/services/questionnaire/questionnaireApi';
 import { ToastMessage } from '../../resuable/Toast';
 import { Dimensions } from 'react-native';
+import { GlobalText } from '../../constants/GlobalText';
 
 const { width } = Dimensions.get('window');
 
@@ -112,7 +113,7 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
                         end={{ x: 1, y: 0 }}
                         style={styles.modalHeader}
                     >
-                        <Text style={styles.modalTitle}>Questionnaire Details</Text>
+                        <GlobalText style={styles.modalTitle}>Questionnaire Details</GlobalText>
                         <TouchableOpacity onPress={closeModal} style={styles.closeIcon}>
                             <Ionicons name="close" size={24} color="#fff" />
                         </TouchableOpacity>
@@ -129,20 +130,20 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
                                     <Ionicons name="person" size={32} color="#6a3093" />
                                 </View>
                                 <View style={styles.patientInfoText}>
-                                    <Text style={styles.patientName}>{selectedItem.name}</Text>
+                                    <GlobalText style={styles.patientName}>{selectedItem.name}</GlobalText>
                                     <View style={styles.infoRow}>
-                                        <Text style={styles.infoLabel}>Case #:</Text>
-                                        <Text style={styles.infoValue}>{selectedItem.case_number}</Text>
+                                        <GlobalText style={styles.infoLabel}>Case #:</GlobalText>
+                                        <GlobalText style={styles.infoValue}>{selectedItem.case_number}</GlobalText>
                                     </View>
                                     <View style={styles.infoRow}>
-                                        <Text style={styles.infoLabel}>Age/Gender:</Text>
-                                        <Text style={styles.infoValue}>{selectedItem.age} / {selectedItem.gender}</Text>
+                                        <GlobalText style={styles.infoLabel}>Age/Gender:</GlobalText>
+                                        <GlobalText style={styles.infoValue}>{selectedItem.age} / {selectedItem.gender}</GlobalText>
                                     </View>
                                 </View>
                             </View>
 
                             <View style={styles.sectionContainer}>
-                                <Text style={styles.sectionTitle}>Personal Information</Text>
+                                <GlobalText style={styles.sectionTitle}>Personal Information</GlobalText>
                                 <View style={styles.detailsGrid}>
                                     {[
                                         ['Card Number', selectedItem.cardNumber],
@@ -155,15 +156,15 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
                                         ['Income', selectedItem.income],
                                     ].map(([label, value], idx) => (
                                         <View key={`personal-${idx}`} style={styles.detailItem}>
-                                            <Text style={styles.detailLabel}>{label}</Text>
-                                            <Text style={styles.detailValue}>{value || 'N/A'}</Text>
+                                            <GlobalText style={styles.detailLabel}>{label}</GlobalText>
+                                            <GlobalText style={styles.detailValue}>{value || 'N/A'}</GlobalText>
                                         </View>
                                     ))}
                                 </View>
                             </View>
 
                             <View style={styles.sectionContainer}>
-                                <Text style={styles.sectionTitle}>Medical History</Text>
+                                <GlobalText style={styles.sectionTitle}>Medical History</GlobalText>
                                 <View style={styles.detailsGrid}>
                                     {[
                                         ['Family History', selectedItem.familyHistory],
@@ -175,15 +176,15 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
                                         ['Weight Loss', selectedItem.suddenWeightLoss ? 'Yes' : 'No'],
                                     ].map(([label, value], idx) => (
                                         <View key={`medical-${idx}`} style={styles.detailItem}>
-                                            <Text style={styles.detailLabel}>{label}</Text>
-                                            <Text style={styles.detailValue}>{value || 'N/A'}</Text>
+                                            <GlobalText style={styles.detailLabel}>{label}</GlobalText>
+                                            <GlobalText style={styles.detailValue}>{value || 'N/A'}</GlobalText>
                                         </View>
                                     ))}
                                 </View>
                             </View>
 
                             <View style={styles.sectionContainer}>
-                                <Text style={styles.sectionTitle}>Habit History</Text>
+                                <GlobalText style={styles.sectionTitle}>Habit History</GlobalText>
                                 <View style={styles.detailsGrid}>
                                     {[
                                         ['Tobacco Use', selectedItem.tobaccoChewer ? 'Yes' : 'No'],
@@ -194,8 +195,8 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
                                         ['Duration', selectedItem.durationOfDiscontinuingHabit],
                                     ].map(([label, value], idx) => (
                                         <View key={`habit-${idx}`} style={styles.detailItem}>
-                                            <Text style={styles.detailLabel}>{label}</Text>
-                                            <Text style={styles.detailValue}>{value || 'N/A'}</Text>
+                                            <GlobalText style={styles.detailLabel}>{label}</GlobalText>
+                                            <GlobalText style={styles.detailValue}>{value || 'N/A'}</GlobalText>
                                         </View>
                                     ))}
                                 </View>
@@ -209,7 +210,7 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
                                         end={{ x: 1, y: 0 }}
                                         style={styles.feedbackHeader}
                                     >
-                                        <Text style={styles.feedbackTitle}>Feedback details:</Text>
+                                        <GlobalText style={styles.feedbackTitle}>Feedback details:</GlobalText>
                                     </LinearGradient>
                                     <View style={styles.feedbackContent}>
                                         {[
@@ -219,8 +220,8 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
                                             ['Comments', selectedItem.comments_or_notes],
                                         ].map(([label, value], idx) => (
                                             <View key={`feedback-${idx}`} style={styles.feedbackItem}>
-                                                <Text style={styles.feedbackLabel}>{label}</Text>
-                                                <Text style={styles.feedbackValue}>{value || 'N/A'}</Text>
+                                                <GlobalText style={styles.feedbackLabel}>{label}</GlobalText>
+                                                <GlobalText style={styles.feedbackValue}>{value || 'N/A'}</GlobalText>
                                             </View>
                                         ))}
                                     </View>
@@ -259,7 +260,7 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
                 </LinearGradient>
                 <View style={styles.filterRow}>
                     <LinearGradient colors={['#56235E', '#C1392D']} style={styles.filterBtnAll}>
-                        <Text style={styles.filterBtnAllText}>All</Text>
+                        <GlobalText style={styles.filterBtnAllText}>All</GlobalText>
                     </LinearGradient>
 
                     <LinearGradient
@@ -281,14 +282,14 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
                     <ActivityIndicator size="large" />
                 </View>
                 : error ? (
-                    <Text style={styles.errorText}>Failed to load data</Text>
+                    <GlobalText style={styles.errorText}>Failed to load data</GlobalText>
                 ) : (
                     <ScrollView style={{ marginTop: 8, }}>
                         {data?.data?.map((item: QuestionnaireTypes, i: number) => (
                             <View key={item._id || i} style={styles.card}>
                                 <View style={[styles.caseRow, styles.caseNumberRow]}>
-                                    <Text style={styles.caseText}>Case Number :</Text>
-                                    <Text style={styles.caseNumber}>{item?.case_number}</Text>
+                                    <GlobalText style={styles.caseText}>Case Number :</GlobalText>
+                                    <GlobalText style={styles.caseNumber}>{item?.case_number}</GlobalText>
                                 </View>
                                 {[
                                     ['Patient Name', item.name],
@@ -301,7 +302,7 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
                                             size={14}
                                             colors={['#5E346D', '#C13439']}
                                         />
-                                        <Text style={styles.cardText}>{typeof value === 'string' || typeof value === 'number' ? value : 'N/A'}</Text>
+                                        <GlobalText style={styles.cardText}>{typeof value === 'string' || typeof value === 'number' ? value : 'N/A'}</GlobalText>
                                     </View>
                                 ))}
 
@@ -325,9 +326,9 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
                                             size={16}
                                             color={item.status === 'submit' ? '#999' : '#56235E'}
                                         />
-                                        <Text style={[styles.filterBtnText, item.status === 'submit' && styles.disabledButtonColor]}>
+                                        <GlobalText style={[styles.filterBtnText, item.status === 'submit' && styles.disabledButtonColor]}>
                                             Edit
-                                        </Text>
+                                        </GlobalText>
                                     </TouchableOpacity>
 
                                     {/* Send Button */}
@@ -345,9 +346,9 @@ export default function QuestionnaireLists({ navigation }: { navigation: any }) 
                                                 color={item.status === 'submit' ? '#4CAF50' : '#56235E'}
                                             />
                                         )}
-                                        <Text style={[styles.filterBtnText, item.status === 'submit' && styles.disabledButtonColor]}>
+                                        <GlobalText style={[styles.filterBtnText, item.status === 'submit' && styles.disabledButtonColor]}>
                                             {item.status === 'submit' ? ' Sent' : sendingId === item._id ? 'Sending…' : ' Send'}
-                                        </Text>
+                                        </GlobalText>
                                     </TouchableOpacity>
 
                                     {/* Delete Button */}

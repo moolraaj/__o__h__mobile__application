@@ -17,6 +17,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../common/GradientText';
 import SliderSkeleton from '../common/SliderSkeleton';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { WHITE } from '../constants/Variables';
+import { GlobalText } from '../constants/GlobalText';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width * 0.8;
@@ -67,7 +69,7 @@ export const Slider = () => {
           <View style={styles.errorContent}>
             <View style={styles.errorIconContainer}>
               <LinearGradient
-                colors={['#fff', '#f8f8f8']}
+                colors={[WHITE, '#f8f8f8']}
                 style={styles.errorIconBackground}
               >
                 <Icon name="exclamation-triangle" size={28} color="#FF416C" />
@@ -75,14 +77,14 @@ export const Slider = () => {
             </View>
 
             <View style={styles.errorTextContainer}>
-              <GradientText text="Loading Error" colors={['#fff', '#f8f8f8']} />
-              <Text style={styles.errorMessage}>
+              <GradientText text="Loading Error" colors={[WHITE, '#f8f8f8']} />
+              <GlobalText style={styles.errorMessage}>
                 We couldn't load the slider content. Please try again later.
-              </Text>
+              </GlobalText>
             </View>
 
             <TouchableOpacity style={styles.retryButton} onPress={() => refetch()}>
-              <Text style={styles.retryButtonText}>Retry</Text>
+              <GlobalText style={styles.retryButtonText}>Retry</GlobalText>
             </TouchableOpacity>
           </View>
         </LinearGradient>
@@ -190,17 +192,17 @@ export const Slider = () => {
               >
                 <View style={styles.content}>
                   <View style={styles.textContainer}>
-                    <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
+                    <GlobalText style={styles.title} numberOfLines={1} ellipsizeMode="tail">
                       {item.text?.[currentLanguage]}
-                    </Text>
+                    </GlobalText>
 
-                    <Text
+                    <GlobalText
                       style={styles.subtitle}
                       numberOfLines={2}
                       ellipsizeMode="tail"
                     >
                       {item.description?.[currentLanguage]}
-                    </Text>
+                    </GlobalText>
 
                     <TouchableOpacity
                       style={styles.button}
@@ -298,7 +300,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   errorMessage: {
-    color: '#fff',
+    color: WHITE,
     fontSize: 14,
     opacity: 0.9,
   },
@@ -312,7 +314,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   retryButtonText: {
-    color: '#fff',
+    color: WHITE,
     fontWeight: '600',
   },
   slideWrapper: {
@@ -346,7 +348,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   title: {
-    color: '#fff',
+    color: WHITE,
     fontSize: 18,
     fontWeight: '700',
     marginBottom: 4,
@@ -359,7 +361,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   button: {
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
     paddingVertical: 6,
     paddingHorizontal: 14,
     borderRadius: 8,

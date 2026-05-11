@@ -20,6 +20,7 @@ import { useFetchAdminAllQuestionnairesQuery, useTakeoverQuestionnaireMutation }
 import { useAuth } from '../../navigation/AuthContext';
 import { ToastMessage } from '../../resuable/Toast';
 import { useRoute } from '@react-navigation/native';
+import { GlobalText } from '../../constants/GlobalText';
 
 const { width } = Dimensions.get('window');
 
@@ -74,7 +75,7 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                         end={{ x: 1, y: 0 }}
                         style={styles.modalHeader}
                     >
-                        <Text style={styles.modalTitle}>Questionnaire Details</Text>
+                        <GlobalText style={styles.modalTitle}>Questionnaire Details</GlobalText>
                         <TouchableOpacity onPress={closeModal} style={styles.closeIcon}>
                             <Ionicons name="close" size={24} color="#fff" />
                         </TouchableOpacity>
@@ -91,20 +92,20 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                                     <Ionicons name="person" size={32} color="#6a3093" />
                                 </View>
                                 <View style={styles.patientInfoText}>
-                                    <Text style={styles.patientName}>{selectedQuestionnaire.name}</Text>
+                                    <GlobalText style={styles.patientName}>{selectedQuestionnaire.name}</GlobalText>
                                     <View style={styles.infoRow}>
-                                        <Text style={styles.infoLabel}>Case #:</Text>
-                                        <Text style={styles.infoValue}>{selectedQuestionnaire.case_number}</Text>
+                                        <GlobalText style={styles.infoLabel}>Case #:</GlobalText>
+                                        <GlobalText style={styles.infoValue}>{selectedQuestionnaire.case_number}</GlobalText>
                                     </View>
                                     <View style={styles.infoRow}>
-                                        <Text style={styles.infoLabel}>Age/Gender:</Text>
-                                        <Text style={styles.infoValue}>{selectedQuestionnaire.age} / {selectedQuestionnaire.gender}</Text>
+                                        <GlobalText style={styles.infoLabel}>Age/Gender:</GlobalText>
+                                        <GlobalText style={styles.infoValue}>{selectedQuestionnaire.age} / {selectedQuestionnaire.gender}</GlobalText>
                                     </View>
                                 </View>
                             </View>
 
                             <View style={styles.sectionContainer}>
-                                <Text style={styles.sectionTitle}>Personal Information</Text>
+                                <GlobalText style={styles.sectionTitle}>Personal Information</GlobalText>
                                 <View style={styles.detailsGrid}>
                                     {[
                                         ['Card Number', selectedQuestionnaire.cardNumber],
@@ -117,15 +118,15 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                                         ['Income', selectedQuestionnaire.income],
                                     ].map(([label, value], idx) => (
                                         <View key={`personal-${idx}`} style={styles.detailItem}>
-                                            <Text style={styles.detailLabel}>{label}</Text>
-                                            <Text style={styles.detailValue}>{value || 'N/A'}</Text>
+                                            <GlobalText style={styles.detailLabel}>{label}</GlobalText>
+                                            <GlobalText style={styles.detailValue}>{value || 'N/A'}</GlobalText>
                                         </View>
                                     ))}
                                 </View>
                             </View>
 
                             <View style={styles.sectionContainer}>
-                                <Text style={styles.sectionTitle}>Medical History</Text>
+                                <GlobalText style={styles.sectionTitle}>Medical History</GlobalText>
                                 <View style={styles.detailsGrid}>
                                     {[
                                         ['Family History', selectedQuestionnaire.familyHistory],
@@ -137,15 +138,15 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                                         ['Weight Loss', selectedQuestionnaire.suddenWeightLoss ? 'Yes' : 'No'],
                                     ].map(([label, value], idx) => (
                                         <View key={`medical-${idx}`} style={styles.detailItem}>
-                                            <Text style={styles.detailLabel}>{label}</Text>
-                                            <Text style={styles.detailValue}>{value || 'N/A'}</Text>
+                                            <GlobalText style={styles.detailLabel}>{label}</GlobalText>
+                                            <GlobalText style={styles.detailValue}>{value || 'N/A'}</GlobalText>
                                         </View>
                                     ))}
                                 </View>
                             </View>
 
                             <View style={styles.sectionContainer}>
-                                <Text style={styles.sectionTitle}>Habit History</Text>
+                                <GlobalText style={styles.sectionTitle}>Habit History</GlobalText>
                                 <View style={styles.detailsGrid}>
                                     {[
                                         ['Tobacco Use', selectedQuestionnaire.tobaccoChewer ? 'Yes' : 'No'],
@@ -156,8 +157,8 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                                         ['Duration', selectedQuestionnaire.durationOfDiscontinuingHabit],
                                     ].map(([label, value], idx) => (
                                         <View key={`habit-${idx}`} style={styles.detailItem}>
-                                            <Text style={styles.detailLabel}>{label}</Text>
-                                            <Text style={styles.detailValue}>{value || 'N/A'}</Text>
+                                            <GlobalText style={styles.detailLabel}>{label}</GlobalText>
+                                            <GlobalText style={styles.detailValue}>{value || 'N/A'}</GlobalText>
                                         </View>
                                     ))}
                                 </View>
@@ -171,7 +172,7 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                                         end={{ x: 1, y: 0 }}
                                         style={styles.feedbackHeader}
                                     >
-                                        <Text style={styles.feedbackTitle}>Your Given Feedback :</Text>
+                                        <GlobalText style={styles.feedbackTitle}>Your Given Feedback :</GlobalText>
                                     </LinearGradient>
                                     <View style={styles.feedbackContent}>
                                         {[
@@ -181,8 +182,8 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                                             ['Comments', selectedQuestionnaire.comments_or_notes],
                                         ].map(([label, value], idx) => (
                                             <View key={`feedback-${idx}`} style={styles.feedbackItem}>
-                                                <Text style={styles.feedbackLabel}>{label}</Text>
-                                                <Text style={styles.feedbackValue}>{value || 'N/A'}</Text>
+                                                <GlobalText style={styles.feedbackLabel}>{label}</GlobalText>
+                                                <GlobalText style={styles.feedbackValue}>{value || 'N/A'}</GlobalText>
                                             </View>
                                         ))}
                                     </View>
@@ -201,12 +202,12 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                 <View style={styles.headerRow}>
                     <GradientText text="Questionnaires Received" size={22} />
                     <View style={styles.counterBadge}>
-                        <Text style={styles.counterText}>
+                        <GlobalText style={styles.counterText}>
                             <GradientText text={data?.totalResults} size={15} />
-                        </Text>
+                        </GlobalText>
                     </View>
                 </View>
-                <Text style={styles.subHeader}>Review and manage patient questionnaires</Text>
+                <GlobalText style={styles.subHeader}>Review and manage patient questionnaires</GlobalText>
             </View>
 
             <View style={styles.searchContainer}>
@@ -227,7 +228,7 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                 </View>
                 <View style={styles.filterRow}>
                     <LinearGradient colors={['#56235E', '#C1392D']} style={styles.filterBtnAll}>
-                        <Text style={styles.filterBtnAllText}>All</Text>
+                        <GlobalText style={styles.filterBtnAllText}>All</GlobalText>
                     </LinearGradient>
                 </View>
             </View>
@@ -239,9 +240,9 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
             ) : error ? (
                 <View style={styles.errorContainer}>
                     <Ionicons name="alert-circle" size={40} color="#ff6b6b" />
-                    <Text style={styles.errorText}>Failed to load questionnaires</Text>
+                    <GlobalText style={styles.errorText}>Failed to load questionnaires</GlobalText>
                     <TouchableOpacity onPress={refetch} style={styles.retryButton}>
-                        <Text style={styles.retryText}>Retry</Text>
+                        <GlobalText style={styles.retryText}>Retry</GlobalText>
                     </TouchableOpacity>
                 </View>
             ) : (
@@ -249,10 +250,10 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                     {filteredData?.length === 0 ? (
                         <View style={styles.emptyContainer}>
                             <Ionicons name="document-text-outline" size={60} color="#ddd" />
-                            <Text style={styles.emptyText}>No questionnaires found</Text>
+                            <GlobalText style={styles.emptyText}>No questionnaires found</GlobalText>
                             {searchQuery.length > 0 && (
                                 <TouchableOpacity onPress={() => setSearchQuery('')}>
-                                    <Text style={styles.clearSearchText}>Clear search</Text>
+                                    <GlobalText style={styles.clearSearchText}>Clear search</GlobalText>
                                 </TouchableOpacity>
                             )}
                         </View>
@@ -261,14 +262,14 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                             <View key={item._id || i} style={[styles.card,item._id === highlightId ? { backgroundColor: '#EAF4FF' } : null]}  >
                                 
                                 <View style={styles.cardHeader}>
-                                    <Text style={styles.caseNumber}>Case #{item.case_number}</Text>
+                                    <GlobalText style={styles.caseNumber}>Case #{item.case_number}</GlobalText>
                                     <View style={[
                                         styles.statusBadge,
                                         item.adminAction ? styles.approvedBadge : styles.pendingBadge
                                     ]}>
-                                        <Text style={styles.statusText}>
+                                        <GlobalText style={styles.statusText}>
                                             {item.adminAction ? 'Approved' : 'Pending'}
-                                        </Text>
+                                        </GlobalText>
                                     </View>
                                 </View>
 
@@ -279,7 +280,7 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                                             size={14}
                                             colors={['#5E346D', '#C13439']}
                                         />
-                                        <Text style={styles.patientName}>{item.name}</Text>
+                                        <GlobalText style={styles.patientName}>{item.name}</GlobalText>
                                     </View>
                                     <View style={styles.caseRow}>
                                         <GradientText
@@ -287,7 +288,7 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                                             size={14}
                                             colors={['#5E346D', '#C13439']}
                                         />
-                                        <Text style={styles.patientGender}>{item.gender}</Text>
+                                        <GlobalText style={styles.patientGender}>{item.gender}</GlobalText>
                                     </View>
                                     <View style={styles.caseRow}>
                                         <GradientText
@@ -295,7 +296,7 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                                             size={14}
                                             colors={['#5E346D', '#C13439']}
                                         />
-                                        <Text style={styles.patientAge}>{item.age}</Text>
+                                        <GlobalText style={styles.patientAge}>{item.age}</GlobalText>
                                     </View>
                                 </View>
 
@@ -305,7 +306,7 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                                         onPress={() => openModal(item)}
                                     >
                                         <Ionicons name="eye" size={16} color="#6a3093" />
-                                        <Text style={styles.viewButtonText}>View Details</Text>
+                                        <GlobalText style={styles.viewButtonText}>View Details</GlobalText>
                                     </TouchableOpacity>
 
                                     {!item.adminAction ? (
@@ -314,7 +315,7 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                                             onPress={() => handleTakeover(item._id)}
                                         >
                                             <Ionicons name="checkmark-circle" size={16} color="#fff" />
-                                            <Text style={styles.approveButtonText}>Approve</Text>
+                                            <GlobalText style={styles.approveButtonText}>Approve</GlobalText>
                                         </TouchableOpacity>
                                     ) : (
                                         <TouchableOpacity
@@ -330,12 +331,12 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                                                 size={16}
                                                 color="#fff"
                                             />
-                                            <Text style={styles.feedbackButtonText}>
+                                            <GlobalText style={styles.feedbackButtonText}>
                                                 {item.send_email_to_dantasurakshaks
                                                     ? 'Feedback Sent'
                                                     : (item.assignTo?._id === user?.id ? 'Send Feedback' : 'Taken')
                                                 }
-                                            </Text>
+                                            </GlobalText>
                                         </TouchableOpacity>
                                     )}
                                 </View>
@@ -344,11 +345,11 @@ export default function QuestionReceivedList({ navigation }: { navigation: any }
                                     item.adminAction && (
                                         <View style={styles.approvedByContainer}>
                                             <Ionicons name="person-circle" size={14} color="#6a3093" />
-                                            <Text style={styles.approvedByText}>
+                                            <GlobalText style={styles.approvedByText}>
                                                 {item.assignTo?._id === user?.id
                                                     ? 'Approved by you'
                                                     : `Approved by ${item.assignTo?.name || 'admin'}`}
-                                            </Text>
+                                            </GlobalText>
                                         </View>
                                     )
                                 }

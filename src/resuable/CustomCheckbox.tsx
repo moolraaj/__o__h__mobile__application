@@ -1,3 +1,4 @@
+import { GlobalText } from '../constants/GlobalText';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
@@ -25,7 +26,7 @@ export const CustomCheckbox = ({ options, values, onChange }: {
           <View style={[styles.checkboxBox, values.includes(option) && styles.checkboxBoxChecked]}>
             {values.includes(option) && <View style={styles.checkboxTick} />}
           </View>
-          <Text style={styles.label}>{option}</Text>
+          <GlobalText style={styles.label}>{option}</GlobalText>
         </TouchableOpacity>
       ))}
     </View>

@@ -7,6 +7,7 @@ import { ToastMessage } from '../../resuable/Toast';
 import { useAuth } from '../../navigation/AuthContext';
 import { useLoginUserMutation } from '../../store/services/user/userApi';
 import { useSaveFcmToken } from '../../common/saveFcmTokens';
+import { GlobalText } from '../../constants/GlobalText';
 interface SuccessModalProps {
     visible: boolean;
     message: string;
@@ -87,8 +88,8 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
                         <Feather name="check" size={30} color="#fff" />
                     </LinearGradient>
 
-                    <Text style={styles.title}>Success</Text>
-                    <Text style={styles.message}>{message}</Text>
+                    <GlobalText style={styles.title}>Success</GlobalText>
+                    <GlobalText style={styles.message}>{message}</GlobalText>
 
                     <TouchableOpacity
                         onPress={handleModalContinue}
@@ -105,7 +106,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
                             {loggingIn ? (
                                 <ActivityIndicator color="#fff" />
                             ) : (
-                                <Text style={styles.buttonText}>Continue</Text>
+                                <GlobalText style={styles.buttonText}>Continue</GlobalText>
                             )}
                         </LinearGradient>
                     </TouchableOpacity>

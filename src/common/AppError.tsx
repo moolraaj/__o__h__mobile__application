@@ -1,4 +1,5 @@
 // components/AppError.tsx
+import { GlobalText } from '../constants/GlobalText';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
@@ -12,13 +13,13 @@ export const AppError = ({ onRetry }: { onRetry?: () => void }) => {
             disabled={!onRetry}
         >
             <Icon name="alert-circle" size={40} color="#616161" style={styles.icon} />
-            <Text style={styles.title}>Something Went Wrong</Text>
-            <Text style={styles.message}>
+            <GlobalText style={styles.title}>Something Went Wrong</GlobalText>
+            <GlobalText style={styles.message}>
                 We encountered an unexpected issue. Please try again later.
-            </Text>
+            </GlobalText>
             {onRetry && (
                 <View style={styles.retryContainer}>
-                    <Text style={styles.retryHint}>Tap anywhere to retry</Text>
+                    <GlobalText style={styles.retryHint}>Tap anywhere to retry</GlobalText>
                     <Icon name="refresh-cw" size={16} color="#616161" style={styles.retryIcon} />
                 </View>
             )}

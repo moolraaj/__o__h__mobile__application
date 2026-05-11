@@ -1,3 +1,4 @@
+import { GlobalText } from '../constants/GlobalText';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
@@ -17,7 +18,7 @@ export const CustomRadioButton = ({ options, value, onChange }: {
           <View style={[styles.radioOuter, value === option && styles.radioOuterSelected]}>
             {value === option && <View style={styles.radioInner} />}
           </View>
-          <Text style={styles.label}>{option}</Text>
+          <GlobalText style={styles.label}>{option}</GlobalText>
         </TouchableOpacity>
       ))}
     </View>

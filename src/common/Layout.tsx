@@ -12,6 +12,7 @@ import Footer from './Footer';
 import { invalidateAllCompanyApis } from '../store/Store/ApiDispatch';
 import { AppDispatch } from '../store/Store/Store';
 import { useDispatch } from 'react-redux';
+import { WHITE } from '../constants/Variables';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [refreshing, setRefreshing] = useState(false);
@@ -60,7 +61,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
   },
   content: {
     flexGrow: 1,

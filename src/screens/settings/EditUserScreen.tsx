@@ -17,6 +17,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { ToastMessage } from '../../resuable/Toast';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import GradientText from '../../common/GradientText';
+import { GlobalText } from '../../constants/GlobalText';
 
 const EditUserScreen = ({ navigation }: { navigation: any }) => {
   const { user } = useAuth();
@@ -89,7 +90,7 @@ const EditUserScreen = ({ navigation }: { navigation: any }) => {
             >
               <FontAwesome5 name="user-edit" size={24} color="#FFF" />
             </LinearGradient>
-            <Text style={styles.profileHeaderText}>Update Your Information</Text>
+            <GlobalText style={styles.profileHeaderText}>Update Your Information</GlobalText>
           </View>
 
           <View style={[
@@ -103,18 +104,18 @@ const EditUserScreen = ({ navigation }: { navigation: any }) => {
               size={16}
               color="#fff"
             />
-            <Text style={styles.verificationText}>
+            <GlobalText style={styles.verificationText}>
               {data?.isVerified ? 'Verified Account' : 'Pending Verification'}
-            </Text>
+            </GlobalText>
           </View>
 
           <View style={styles.formContainer}>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Full Name</Text>
+              <GlobalText style={styles.label}>Full Name</GlobalText>
               <View style={styles.inputWrapper}>
-                <Text style={styles.inputIcon}>
+                <GlobalText style={styles.inputIcon}>
                   <GradientText text={<Ionicons name="person-outline" size={20} color="#6C63FF" />} size={20} />
-                </Text>
+                </GlobalText>
                 <TextInput
                   style={styles.input}
                   value={formData.name}
@@ -126,11 +127,11 @@ const EditUserScreen = ({ navigation }: { navigation: any }) => {
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Email Address</Text>
+              <GlobalText style={styles.label}>Email Address</GlobalText>
               <View style={styles.inputWrapper}>
-                <Text style={styles.inputIcon}>
+                <GlobalText style={styles.inputIcon}>
                   <GradientText text={<Ionicons name="mail-outline" size={20} color="#6C63FF" />} size={20} />
-                </Text>
+                </GlobalText>
                 <TextInput
                   style={styles.input}
                   value={formData.email}
@@ -144,11 +145,11 @@ const EditUserScreen = ({ navigation }: { navigation: any }) => {
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Phone Number</Text>
+              <GlobalText style={styles.label}>Phone Number</GlobalText>
               <View style={styles.inputWrapper}>
-                <Text style={styles.inputIcon}>
+                <GlobalText style={styles.inputIcon}>
                   <GradientText text={<Ionicons name="call-outline" size={20} color="#6C63FF" />} size={20} />
-                </Text>
+                </GlobalText>
                 <TextInput
                   style={[styles.input, { color: '#888' }]}
                   value={formData.phoneNumber}
@@ -160,11 +161,11 @@ const EditUserScreen = ({ navigation }: { navigation: any }) => {
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Account Role</Text>
+              <GlobalText style={styles.label}>Account Role</GlobalText>
               <View style={styles.inputWrapper}>
-                <Text style={styles.inputIcon}>
+                <GlobalText style={styles.inputIcon}>
                   <GradientText text={<Ionicons name="key-outline" size={20} color="#6C63FF" />} size={20} />
-                </Text>
+                </GlobalText>
                 <TextInput
                   style={[styles.input, { color: '#888' }]}
                   value={data.role}
@@ -194,7 +195,7 @@ const EditUserScreen = ({ navigation }: { navigation: any }) => {
               ) : (
                 <>
                   <Ionicons name="save-outline" size={20} color="#FFF" style={styles.buttonIcon} />
-                  <Text style={styles.saveButtonText}>Save Changes</Text>
+                  <GlobalText style={styles.saveButtonText}>Save Changes</GlobalText>
                 </>
               )}
             </LinearGradient>

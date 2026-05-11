@@ -24,6 +24,7 @@ import {
   useDeleteLesionMutation,
 } from '../../store/services/lesion/createLesionApi';
 import { ToastMessage } from '../../resuable/Toast';
+import { GlobalText } from '../../constants/GlobalText';
 
 const { width } = Dimensions.get('window');
 
@@ -115,7 +116,7 @@ export default function AllLesionsRecords({ navigation }: { navigation: any }) {
             end={{ x: 1, y: 0 }}
             style={styles.modalHeader}
           >
-            <Text style={styles.modalTitle}>Lesion Details</Text>
+            <GlobalText style={styles.modalTitle}>Lesion Details</GlobalText>
             <TouchableOpacity onPress={closeModal} style={styles.closeIcon}>
               <Ionicons name="close" size={24} color="#fff" />
             </TouchableOpacity>
@@ -131,20 +132,20 @@ export default function AllLesionsRecords({ navigation }: { navigation: any }) {
                   <Ionicons name="medical" size={32} color="#6a3093" />
                 </View>
                 <View style={styles.patientInfoText}>
-                  <Text style={styles.patientName}>{selectedLesion.fullname}</Text>
+                  <GlobalText style={styles.patientName}>{selectedLesion.fullname}</GlobalText>
                   <View style={styles.infoRow}>
-                    <Text style={styles.infoLabel}>Case #:</Text>
-                    <Text style={styles.infoValue}>{selectedLesion.case_number}</Text>
+                    <GlobalText style={styles.infoLabel}>Case #:</GlobalText>
+                    <GlobalText style={styles.infoValue}>{selectedLesion.case_number}</GlobalText>
                   </View>
                   <View style={styles.infoRow}>
-                    <Text style={styles.infoLabel}>Age/Gender:</Text>
-                    <Text style={styles.infoValue}>{selectedLesion.age} / {selectedLesion.gender}</Text>
+                    <GlobalText style={styles.infoLabel}>Age/Gender:</GlobalText>
+                    <GlobalText style={styles.infoValue}>{selectedLesion.age} / {selectedLesion.gender}</GlobalText>
                   </View>
                 </View>
               </View>
 
               <View style={styles.sectionContainer}>
-                <Text style={styles.sectionTitle}>Patient Information</Text>
+                <GlobalText style={styles.sectionTitle}>Patient Information</GlobalText>
                 <View style={styles.detailsGrid}>
                   {[
                     ['Patient Name', selectedLesion.fullname],
@@ -154,14 +155,14 @@ export default function AllLesionsRecords({ navigation }: { navigation: any }) {
                     ['Submission Date', selectedLesion.createdAt ? new Date(selectedLesion.createdAt).toLocaleDateString() : 'N/A'],
                   ].map(([label, value], idx) => (
                     <View key={`info-${idx}`} style={styles.detailItem}>
-                      <Text style={styles.detailLabel}>{label}</Text>
-                      <Text style={styles.detailValue}>{value || 'N/A'}</Text>
+                      <GlobalText style={styles.detailLabel}>{label}</GlobalText>
+                      <GlobalText style={styles.detailValue}>{value || 'N/A'}</GlobalText>
                     </View>
                   ))}
                 </View>
               </View>
               <View style={styles.sectionContainer}>
-                <Text style={styles.sectionTitle}>Medical Details</Text>
+                <GlobalText style={styles.sectionTitle}>Medical Details</GlobalText>
                 <View style={styles.detailsGrid}>
                   {[
                     ['Symptoms', Array.isArray(selectedLesion.symptoms) ? selectedLesion.symptoms.join(', ') : selectedLesion.symptoms],
@@ -171,8 +172,8 @@ export default function AllLesionsRecords({ navigation }: { navigation: any }) {
                     ['Disease Time', selectedLesion.disease_time],
                   ].map(([label, value], idx) => (
                     <View key={`medical-${idx}`} style={styles.detailItem}>
-                      <Text style={styles.detailLabel}>{label}</Text>
-                      <Text style={styles.detailValue}>{value || 'N/A'}</Text>
+                      <GlobalText style={styles.detailLabel}>{label}</GlobalText>
+                      <GlobalText style={styles.detailValue}>{value || 'N/A'}</GlobalText>
                     </View>
                   ))}
                 </View>
@@ -213,7 +214,7 @@ export default function AllLesionsRecords({ navigation }: { navigation: any }) {
         </LinearGradient>
         <View style={styles.filterRow}>
           <LinearGradient colors={['#56235E', '#C1392D']} style={styles.filterBtnAll}>
-            <Text style={styles.filterBtnAllText}>All</Text>
+            <GlobalText style={styles.filterBtnAllText}>All</GlobalText>
           </LinearGradient>
           <LinearGradient colors={['#56235E', '#C1392D']} style={styles.addBtnGradient}>
             <TouchableOpacity
@@ -232,14 +233,14 @@ export default function AllLesionsRecords({ navigation }: { navigation: any }) {
           <ActivityIndicator size="large" />
         </View>
       ) : error ? (
-        <Text style={styles.errorText}>Failed to load data</Text>
+        <GlobalText style={styles.errorText}>Failed to load data</GlobalText>
       ) : (
         <ScrollView style={{ marginTop: 8 }}>
           {data?.lesions?.map((item, i) => (
             <View key={item._id || i} style={styles.card}>
               <View style={[styles.caseRow, styles.caseNumberRow]}>
-                <Text style={styles.caseText}>Case Number :</Text>
-                <Text style={styles.caseNumber}>{item.case_number || 'N/A'}</Text>
+                <GlobalText style={styles.caseText}>Case Number :</GlobalText>
+                <GlobalText style={styles.caseNumber}>{item.case_number || 'N/A'}</GlobalText>
               </View>
               {[
                 ['Patient Name', item.fullname],
@@ -252,7 +253,7 @@ export default function AllLesionsRecords({ navigation }: { navigation: any }) {
                     size={14}
                     colors={['#5E346D', '#C13439']}
                   />
-                  <Text style={styles.cardText}>{value || 'N/A'}</Text>
+                  <GlobalText style={styles.cardText}>{value || 'N/A'}</GlobalText>
                 </View>
               ))}
               <View style={styles.cardActions}>
@@ -275,9 +276,9 @@ export default function AllLesionsRecords({ navigation }: { navigation: any }) {
                     size={16}
                     color={item.status === 'submit' ? '#999' : '#56235E'}
                   />
-                  <Text style={[styles.filterBtnText, item.status === 'submit' && styles.disabledButtonColor]}>
+                  <GlobalText style={[styles.filterBtnText, item.status === 'submit' && styles.disabledButtonColor]}>
                     Edit
-                  </Text>
+                  </GlobalText>
                 </TouchableOpacity>
 
                 {/* Send Button */}
@@ -295,9 +296,9 @@ export default function AllLesionsRecords({ navigation }: { navigation: any }) {
                       color={item.status === 'submit' ? '#4CAF50' : '#56235E'}
                     />
                   )}
-                  <Text style={[styles.filterBtnText, item.status === 'submit' && styles.disabledButtonColor]}>
+                  <GlobalText style={[styles.filterBtnText, item.status === 'submit' && styles.disabledButtonColor]}>
                     {item.status === 'submit' ? ' Sent' : sendingId === item._id ? 'Sending…' : ' Send'}
-                  </Text>
+                  </GlobalText>
                 </TouchableOpacity>
 
                 {/* Delete Button */}

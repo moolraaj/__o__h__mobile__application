@@ -19,6 +19,7 @@ import { useGetUsersQuery } from '../../store/services/user/userApi';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
+import { GlobalText } from '../../constants/GlobalText';
 
 type DentalImage = {
   uri: string;
@@ -269,8 +270,8 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
       >
-        <Text style={styles.title}>New Lesion Report</Text>
-        <Text style={styles.subtitle}>Fill in all patient details below</Text>
+        <GlobalText style={styles.title}>New Lesion Report</GlobalText>
+        <GlobalText style={styles.subtitle}>Fill in all patient details below</GlobalText>
       </LinearGradient>
 
       <View style={styles.formContainer}>
@@ -279,14 +280,14 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
           style={styles.formGroup}
           ref={ref => { fieldRefs.current.fullname = ref; }}
         >
-          <Text style={styles.label}>Full Name *</Text>
+          <GlobalText style={styles.label}>Full Name *</GlobalText>
           <View style={[
             styles.inputContainer,
             errors.fullname && styles.inputError
           ]}>
-            <Text style={styles.inputIcon}>
+            <GlobalText style={styles.inputIcon}>
               <GradientText text={<Icon name="person" size={20} color='#56235E' />} size={20} />
-            </Text>
+            </GlobalText>
             <TextInput
               style={styles.input}
               value={formData.fullname}
@@ -295,7 +296,7 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
               placeholderTextColor="#adb5bd"
             />
           </View>
-          {errors.fullname && <Text style={styles.errorText}>{errors.fullname}</Text>}
+          {errors.fullname && <GlobalText style={styles.errorText}>{errors.fullname}</GlobalText>}
         </View>
 
         {/* Age and Gender Row */}
@@ -304,14 +305,14 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
             style={[styles.formGroup, { flex: 1, marginRight: 10 }]}
             ref={ref => { fieldRefs.current.age = ref; }}
           >
-            <Text style={styles.label}>Age *</Text>
+            <GlobalText style={styles.label}>Age *</GlobalText>
             <View style={[
               styles.inputContainer,
               errors.age && styles.inputError
             ]}>
-              <Text style={styles.inputIcon}>
+              <GlobalText style={styles.inputIcon}>
                 <GradientText text={<Icon name="cake" size={20} color='#56235E' />} size={20} />
-              </Text>
+              </GlobalText>
               <TextInput
                 style={styles.input}
                 value={formData.age}
@@ -321,22 +322,22 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
                 keyboardType="numeric"
               />
             </View>
-            {errors.age && <Text style={styles.errorText}>{errors.age}</Text>}
+            {errors.age && <GlobalText style={styles.errorText}>{errors.age}</GlobalText>}
           </View>
 
           <View
             style={[styles.formGroup, { flex: 1 }]}
             ref={ref => { fieldRefs.current.gender = ref; }}
           >
-            <Text style={styles.label}>Gender *</Text>
+            <GlobalText style={styles.label}>Gender *</GlobalText>
             <View style={[
               styles.inputContainer,
               { paddingLeft: 10 },
               errors.gender && styles.inputError
             ]}>
-              <Text style={styles.inputIcon}>
+              <GlobalText style={styles.inputIcon}>
                 <GradientText text={<Icon name="wc" size={20} color='#56235E' />} size={20} />
-              </Text>
+              </GlobalText>
               <View style={styles.pickerContainer}>
                 <Picker
                   selectedValue={formData.gender}
@@ -352,7 +353,7 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
                 </Picker>
               </View>
             </View>
-            {errors.gender && <Text style={styles.errorText}>{errors.gender}</Text>}
+            {errors.gender && <GlobalText style={styles.errorText}>{errors.gender}</GlobalText>}
           </View>
         </View>
 
@@ -361,14 +362,14 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
           style={styles.formGroup}
           ref={ref => { fieldRefs.current.contact_number = ref; }}
         >
-          <Text style={styles.label}>Contact Number *</Text>
+          <GlobalText style={styles.label}>Contact Number *</GlobalText>
           <View style={[
             styles.inputContainer,
             errors.contact_number && styles.inputError
           ]}>
-            <Text style={styles.inputIcon}>
+            <GlobalText style={styles.inputIcon}>
               <GradientText text={<Icon name="phone" size={20} color='#56235E' />} size={20} />
-            </Text>
+            </GlobalText>
             <TextInput
               style={styles.input}
               value={formData.contact_number}
@@ -379,7 +380,7 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
               maxLength={10}
             />
           </View>
-          {errors.contact_number && <Text style={styles.errorText}>{errors.contact_number}</Text>}
+          {errors.contact_number && <GlobalText style={styles.errorText}>{errors.contact_number}</GlobalText>}
         </View>
 
         {/* Location */}
@@ -387,14 +388,14 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
           style={styles.formGroup}
           ref={ref => { fieldRefs.current.location = ref; }}
         >
-          <Text style={styles.label}>Location *</Text>
+          <GlobalText style={styles.label}>Location *</GlobalText>
           <View style={[
             styles.inputContainer,
             errors.location && styles.inputError
           ]}>
-            <Text style={styles.inputIcon}>
+            <GlobalText style={styles.inputIcon}>
               <GradientText text={<Icon name="location-on" size={20} color='#56235E' />} size={20} />
-            </Text>
+            </GlobalText>
             <TextInput
               style={styles.input}
               value={formData.location}
@@ -403,7 +404,7 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
               placeholderTextColor="#adb5bd"
             />
           </View>
-          {errors.location && <Text style={styles.errorText}>{errors.location}</Text>}
+          {errors.location && <GlobalText style={styles.errorText}>{errors.location}</GlobalText>}
         </View>
 
         {/* Symptoms */}
@@ -411,15 +412,15 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
           style={styles.formGroup}
           ref={ref => { fieldRefs.current.symptoms = ref; }}
         >
-          <Text style={styles.label}>Symptoms *</Text>
+          <GlobalText style={styles.label}>Symptoms *</GlobalText>
           <View style={[
             styles.inputContainer,
             styles.textAreaContainer,
             errors.symptoms && styles.inputError
           ]}>
-            <Text style={styles.inputIcon}>
+            <GlobalText style={styles.inputIcon}>
               <GradientText text={<Icon name="healing" size={20} color='#56235E' />} size={20} />
-            </Text>
+            </GlobalText>
             <TextInput
               style={[styles.input, styles.textArea]}
               value={formData.symptoms}
@@ -430,7 +431,7 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
               numberOfLines={4}
             />
           </View>
-          {errors.symptoms && <Text style={styles.errorText}>{errors.symptoms}</Text>}
+          {errors.symptoms && <GlobalText style={styles.errorText}>{errors.symptoms}</GlobalText>}
         </View>
 
         {/* Disease Time */}
@@ -438,14 +439,14 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
           style={styles.formGroup}
           ref={ref => { fieldRefs.current.disease_time = ref; }}
         >
-          <Text style={styles.label}>Duration of Condition *</Text>
+          <GlobalText style={styles.label}>Duration of Condition *</GlobalText>
           <View style={[
             styles.inputContainer,
             errors.disease_time && styles.inputError
           ]}>
-            <Text style={styles.inputIcon}>
+            <GlobalText style={styles.inputIcon}>
               <GradientText text={<Icon name="access-time" size={20} color='#56235E' />} size={20} />
-            </Text>
+            </GlobalText>
             <TextInput
               style={styles.input}
               value={formData.disease_time}
@@ -454,7 +455,7 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
               placeholderTextColor="#adb5bd"
             />
           </View>
-          {errors.disease_time && <Text style={styles.errorText}>{errors.disease_time}</Text>}
+          {errors.disease_time && <GlobalText style={styles.errorText}>{errors.disease_time}</GlobalText>}
         </View>
 
         {/* Existing Habits */}
@@ -462,15 +463,15 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
           style={styles.formGroup}
           ref={ref => { fieldRefs.current.existing_habits = ref; }}
         >
-          <Text style={styles.label}>Existing Habits *</Text>
+          <GlobalText style={styles.label}>Existing Habits *</GlobalText>
           <View style={[
             styles.inputContainer,
             styles.textAreaContainer,
             errors.existing_habits && styles.inputError
           ]}>
-            <Text style={styles.inputIcon}>
+            <GlobalText style={styles.inputIcon}>
               <GradientText text={<Icon name="smoking-rooms" size={20} color='#56235E' />} size={20} />
-            </Text>
+            </GlobalText>
             <TextInput
               style={[styles.input, styles.textArea]}
               value={formData.existing_habits}
@@ -481,7 +482,7 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
               numberOfLines={3}
             />
           </View>
-          {errors.existing_habits && <Text style={styles.errorText}>{errors.existing_habits}</Text>}
+          {errors.existing_habits && <GlobalText style={styles.errorText}>{errors.existing_habits}</GlobalText>}
         </View>
 
         {/* Previous Dental Treatment */}
@@ -489,15 +490,15 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
           style={styles.formGroup}
           ref={ref => { fieldRefs.current.previous_dental_treatement = ref; }}
         >
-          <Text style={styles.label}>Previous Dental Treatment *</Text>
+          <GlobalText style={styles.label}>Previous Dental Treatment *</GlobalText>
           <View style={[
             styles.inputContainer,
             styles.textAreaContainer,
             errors.previous_dental_treatement && styles.inputError
           ]}>
-            <Text style={styles.inputIcon}>
+            <GlobalText style={styles.inputIcon}>
               <GradientText text={<Icon name="medical-services" size={20} color='#56235E' />} size={20} />
-            </Text>
+            </GlobalText>
             <TextInput
               style={[styles.input, styles.textArea]}
               value={formData.previous_dental_treatement}
@@ -508,7 +509,7 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
               numberOfLines={3}
             />
           </View>
-          {errors.previous_dental_treatement && <Text style={styles.errorText}>{errors.previous_dental_treatement}</Text>}
+          {errors.previous_dental_treatement && <GlobalText style={styles.errorText}>{errors.previous_dental_treatement}</GlobalText>}
         </View>
 
         {/* Dental Images */}
@@ -516,8 +517,8 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
           style={styles.formGroup}
           ref={ref => { fieldRefs.current.dental_images = ref; }}
         >
-          <Text style={styles.label}>Dental Images *</Text>
-          <Text style={styles.imageSubtext}>Upload clear photos of the affected area (max 5)</Text>
+          <GlobalText style={styles.label}>Dental Images *</GlobalText>
+          <GlobalText style={styles.imageSubtext}>Upload clear photos of the affected area (max 5)</GlobalText>
 
           <TouchableOpacity
             onPress={pickImage}
@@ -531,11 +532,11 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
               style={styles.imageButton}
             >
               <Icon name="add-a-photo" size={20} color="white" />
-              <Text style={styles.buttonText}> Add Images</Text>
+              <GlobalText style={styles.buttonText}> Add Images</GlobalText>
             </LinearGradient>
           </TouchableOpacity>
 
-          {errors.dental_images && <Text style={styles.errorText}>{errors.dental_images}</Text>}
+          {errors.dental_images && <GlobalText style={styles.errorText}>{errors.dental_images}</GlobalText>}
 
           {formData.dental_images.length > 0 && (
             <View style={styles.imageContainer}>
@@ -557,14 +558,14 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
         {isLoadingAdmins ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="small" color="#4a90e2" />
-            <Text style={styles.loadingText}>Loading admin data...</Text>
+            <GlobalText style={styles.loadingText}>Loading admin data...</GlobalText>
           </View>
         ) : (
           <View style={styles.adminInfoContainer}>
             <GradientText text={<Icon name="admin-panel-settings" size={20} color="#4a90e2" />} size={20} />
-            <Text style={styles.adminInfo}>
+            <GlobalText style={styles.adminInfo}>
               This report will be sent to {admins.length} admin(s)
-            </Text>
+            </GlobalText>
           </View>
         )}
 
@@ -587,7 +588,7 @@ const CreateLesion = ({ navigation }: { navigation: any }) => {
             ) : (
               <>
                 <Icon name="send" size={20} color="white" />
-                <Text style={styles.buttonText}> Submit Report</Text>
+                <GlobalText style={styles.buttonText}> Submit Report</GlobalText>
               </>
             )}
           </LinearGradient>

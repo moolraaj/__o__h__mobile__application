@@ -17,6 +17,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import LinearGradient from 'react-native-linear-gradient';
 import { AppError } from '../../common/AppError';
+import { GlobalText } from '../../constants/GlobalText';
 
 const SingleDentalEmergencyDetail = () => {
     const { id } = useRoute().params as { id: string };
@@ -58,12 +59,12 @@ const SingleDentalEmergencyDetail = () => {
                 style={styles.sectionContainer}
             >
                 <View style={styles.textContainer}>
-                    <Text>
-                        <Text style={styles.title}>
+                    <GlobalText>
+                        <GlobalText style={styles.title}>
                             <GradientText text={emergency?.dental_emergency_title?.[currentLanguage]} size={22} />
-                        </Text>
-                    </Text>
-                    <Text>{emergency?.dental_emergency_para?.[currentLanguage]}</Text>
+                        </GlobalText>
+                    </GlobalText>
+                    <GlobalText>{emergency?.dental_emergency_para?.[currentLanguage]}</GlobalText>
                 </View>
                 <View style={styles.imageWrapper}>
                     <Image
@@ -82,13 +83,13 @@ const SingleDentalEmergencyDetail = () => {
                         <View style={styles.iconContainer}>
                             <Icon name="tooth" size={18} color="#56235E" />
                         </View>
-                        <Text style={styles.cardTitle}>
+                        <GlobalText style={styles.cardTitle}>
                             <GradientText text={emergency?.dental_emergency_inner_title?.[currentLanguage]} size={20} />
-                        </Text>
+                        </GlobalText>
                     </View>
-                    <Text style={styles.cardBody}>
+                    <GlobalText style={styles.cardBody}>
                         {emergency?.dental_emergency_inner_para?.[currentLanguage]}
-                    </Text>
+                    </GlobalText>
                 </View>
 
                 {/* Emergency Details Section */}
@@ -97,14 +98,14 @@ const SingleDentalEmergencyDetail = () => {
                         <View style={styles.iconContainer}>
                             <AntDesign name="exclamationcircleo" size={18} color="#C1392D" />
                         </View>
-                        <Text style={styles.cardTitle}>
+                        <GlobalText style={styles.cardTitle}>
                             <GradientText text={emergency?.dental_emer_title?.[currentLanguage]} size={20} />
-                        </Text>
+                        </GlobalText>
                     </View>
 
-                    <Text style={styles.emergencySubtitle}>
+                    <GlobalText style={styles.emergencySubtitle}>
                         {emergency?.dental_emer_sub_title?.[currentLanguage]}
-                    </Text>
+                    </GlobalText>
 
                     {/* Accordion Sections */}
                     {emergency?.dental_emer_repeater?.map((item, index) => {
@@ -127,14 +128,14 @@ const SingleDentalEmergencyDetail = () => {
                                             isExpanded && styles.accordionHeaderActive,
                                         ]}
                                     >
-                                        <Text
+                                        <GlobalText
                                             style={[
                                                 styles.accordionTitle,
                                                 isExpanded && styles.accordionTitleActive,
                                             ]}
                                             numberOfLines={2}>
                                             {questionText}
-                                        </Text>
+                                        </GlobalText>
                                         <View style={[styles.questionIcon, isExpanded && styles.questionIconActive]}>
                                             <Entypo
                                                 name={isExpanded ? 'minus' : 'plus'}
@@ -150,13 +151,13 @@ const SingleDentalEmergencyDetail = () => {
                                         {item.denatl_emer_description_repeater?.map((desc, descIndex) => (
                                             <View key={descIndex} style={styles.descriptionItem}>
                                                 {desc.denatl_emer_tab_heading?.[currentLanguage] && (
-                                                    <Text style={styles.descriptionHeading}>
+                                                    <GlobalText style={styles.descriptionHeading}>
                                                         {desc.denatl_emer_tab_heading?.[currentLanguage]}
-                                                    </Text>
+                                                    </GlobalText>
                                                 )}
-                                                <Text style={styles.descriptionText}>
+                                                <GlobalText style={styles.descriptionText}>
                                                     {desc.denatl_emer_tab_paragraph?.[currentLanguage]}
-                                                </Text>
+                                                </GlobalText>
                                             </View>
                                         ))}
                                     </View>
@@ -172,14 +173,14 @@ const SingleDentalEmergencyDetail = () => {
                         <View style={styles.iconContainer}>
                             <Icon name="phone-alt" size={18} color="#FF5252" />
                         </View>
-                        <Text style={styles.cardTitle}>Emergency Action</Text>
+                        <GlobalText style={styles.cardTitle}>Emergency Action</GlobalText>
                     </View>
-                    <Text style={styles.cardBody}>
+                    <GlobalText style={styles.cardBody}>
                         If you're experiencing severe pain or bleeding that won't stop,
                         contact your dentist immediately or visit the nearest emergency dental clinic.
-                    </Text>
+                    </GlobalText>
                     <TouchableOpacity style={styles.emergencyButton}>
-                        <Text style={styles.emergencyButtonText}>Find Nearest Clinic</Text>
+                        <GlobalText style={styles.emergencyButtonText}>Find Nearest Clinic</GlobalText>
                     </TouchableOpacity>
                 </View> */}
             </View>

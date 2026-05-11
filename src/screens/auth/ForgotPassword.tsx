@@ -15,6 +15,7 @@ import { ToastMessage } from '../../resuable/Toast';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import GradientText from '../../common/GradientText';
+import { GlobalText } from '../../constants/GlobalText';
 
 
 export const ForgotPasswordScreen = ({ navigation }: { navigation: any }) => {
@@ -70,16 +71,16 @@ export const ForgotPasswordScreen = ({ navigation }: { navigation: any }) => {
                 >
                     <FontAwesome5 name="key" size={24} color="#FFF" />
                 </LinearGradient>
-                <Text style={styles.profileHeaderText}>Forgot Password</Text>
+                <GlobalText style={styles.profileHeaderText}>Forgot Password</GlobalText>
             </View>
 
             <View style={styles.formContainer}>
                 <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Email Address</Text>
+                    <GlobalText style={styles.label}>Email Address</GlobalText>
                     <View style={styles.inputWrapper}>
-                        <Text style={styles.inputIcon}>
+                        <GlobalText style={styles.inputIcon}>
                             <GradientText text={<Ionicons name="mail-outline" size={20} color="#6C63FF" />} size={20} />
-                        </Text>
+                        </GlobalText>
                         <TextInput
                             style={styles.input}
                             keyboardType="email-address"
@@ -111,24 +112,24 @@ export const ForgotPasswordScreen = ({ navigation }: { navigation: any }) => {
                     ) : (
                         <>
                             <Ionicons name="send-outline" size={20} color="#FFF" style={styles.buttonIcon} />
-                            <Text style={styles.saveButtonText}>Send OTP</Text>
+                            <GlobalText style={styles.saveButtonText}>Send OTP</GlobalText>
                         </>
                     )}
                 </LinearGradient>
             </TouchableOpacity>
 
             <View style={styles.footerLink}>
-                <Text style={{ textAlign: 'center' }}>Back to login</Text>
+                <GlobalText style={{ textAlign: 'center' }}>Back to login</GlobalText>
                 <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                     <GradientText text="Login" />
                 </TouchableOpacity>
             </View>
             <View style={styles.bottomContainer}>
-                <Text style={styles.bottomText}>By clicking Continue, you agree to our </Text>
+                <GlobalText style={styles.bottomText}>By clicking Continue, you agree to our </GlobalText>
                 <TouchableOpacity onPress={() => navigation.navigate('TermsOfService')}>
                     <GradientText text="Terms of Service" size={12} />
                 </TouchableOpacity>
-                <Text style={styles.bottomText}> and </Text>
+                <GlobalText style={styles.bottomText}> and </GlobalText>
                 <TouchableOpacity onPress={() => navigation.navigate('PrivacyPolicy')}>
                     <GradientText text="Privacy Policy" size={12} />
                 </TouchableOpacity>

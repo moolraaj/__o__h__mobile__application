@@ -16,6 +16,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
+import { GlobalText } from '../constants/GlobalText';
 
 const SettingScreen = ({ navigation }: { navigation: any }) => {
   const {  logout } = useAuth();
@@ -50,11 +51,11 @@ const SettingScreen = ({ navigation }: { navigation: any }) => {
     <Layout>
       <ScrollView style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Settings</Text>
+          <GlobalText style={styles.title}>Settings</GlobalText>
           <Feather name='settings' size={20} color="#56235E" />
         </View>
 
-        <Text style={styles.sectionTitle}>Account</Text>
+        <GlobalText style={styles.sectionTitle}>Account</GlobalText>
         <LinearGradient
           colors={['#F8E4FF', '#FFD7D8']}
           locations={[0.2081, 1]}
@@ -80,7 +81,7 @@ const SettingScreen = ({ navigation }: { navigation: any }) => {
 
         </LinearGradient>
 
-        <Text style={styles.sectionTitle}>Privacy Policies & Term and Conditions</Text>
+        <GlobalText style={styles.sectionTitle}>Privacy Policies & Term and Conditions</GlobalText>
         <LinearGradient
           colors={['#F8E4FF', '#FFD7D8']}
           locations={[0.2081, 1]}
@@ -101,7 +102,7 @@ const SettingScreen = ({ navigation }: { navigation: any }) => {
           />
         </LinearGradient>
 
-        <Text style={styles.sectionTitle}>Logout</Text>
+        <GlobalText style={styles.sectionTitle}>Logout</GlobalText>
         <LinearGradient
           colors={['#F8E4FF', '#FFD7D8']}
           locations={[0.2081, 1]}
@@ -111,7 +112,7 @@ const SettingScreen = ({ navigation }: { navigation: any }) => {
         >
           <TouchableOpacity style={styles.sectionBtn} onPress={logout}>
             <MaterialIcons name="logout" size={24} color="#56235E" />
-            <Text style={styles.btnText}>Log Out</Text>
+            <GlobalText style={styles.btnText}>Log Out</GlobalText>
           </TouchableOpacity>
         </LinearGradient>
       </ScrollView>
@@ -126,7 +127,7 @@ const SettingOption: React.FC<{
 }> = ({ icon, label, onPress }) => (
   <TouchableOpacity style={styles.sectionBtn} onPress={onPress}>
     <Ionicons name={icon} size={22} color="#56235E" />
-    <Text style={styles.btnText}>{label}</Text>
+    <GlobalText style={styles.btnText}>{label}</GlobalText>
     <View style={{ flex: 1 }} />
     <Ionicons name="chevron-forward" size={20} color="#56235E" />
   </TouchableOpacity>

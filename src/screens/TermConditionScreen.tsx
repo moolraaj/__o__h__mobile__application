@@ -14,6 +14,7 @@ import RenderHtml from 'react-native-render-html';
 import { AppError } from '../common/AppError';
 import { useGetTermsQuery } from '../store/services/terms/termsApi';
 import GradientText from '../common/GradientText';
+import { GlobalText } from '../constants/GlobalText';
 
 export default function TermConditionScreen() {
   const { i18n } = useTranslation();
@@ -49,9 +50,9 @@ export default function TermConditionScreen() {
             const html = item.term_description?.[lang] ?? '';
             return (
               <View key={`${entryIdx}-${idx}`} style={styles.section}>
-                <Text style={styles.heading}>
+                <GlobalText style={styles.heading}>
                   <GradientText text={heading} size={18} />
-                </Text>
+                </GlobalText>
                 <RenderHtml
                   contentWidth={width - 32}
                   source={{ html }}

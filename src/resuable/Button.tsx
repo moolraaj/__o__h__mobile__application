@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, GestureResponderEvent } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { GlobalText } from '../constants/GlobalText';
 
 interface GradientButtonProps {
     label: string;
@@ -18,7 +19,7 @@ const GradientButton: React.FC<GradientButtonProps> = ({ label, onPress = () => 
                 style={styles.button}
 
             >
-                <Text style={styles.buttonText}>{label}</Text>
+                <GlobalText style={styles.buttonText}>{label}</GlobalText>
             </LinearGradient>
         </TouchableOpacity>
     );

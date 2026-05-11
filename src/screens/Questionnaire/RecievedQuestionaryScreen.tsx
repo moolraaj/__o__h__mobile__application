@@ -21,6 +21,7 @@ import GradientText from '../../common/GradientText';
 import { useAuth } from '../../navigation/AuthContext';
 import { useFetchDantaRecievedQuestionnairesQuery } from '../../store/services/questionnaire/questionnaireApi';
 import { AppError } from '../../common/AppError';
+import { GlobalText } from '../../constants/GlobalText';
 
 const { width } = Dimensions.get('window');
 
@@ -69,7 +70,7 @@ export default function RecievedQuestionaryScreen() {
                         end={{ x: 1, y: 0 }}
                         style={styles.modalHeader}
                     >
-                        <Text style={styles.modalTitle}>Feedback Details</Text>
+                        <GlobalText style={styles.modalTitle}>Feedback Details</GlobalText>
                         <TouchableOpacity onPress={closeModal} style={styles.closeIcon}>
                             <Ionicons name="close" size={24} color="#fff" />
                         </TouchableOpacity>
@@ -86,10 +87,10 @@ export default function RecievedQuestionaryScreen() {
                                     <Ionicons name="person" size={25} color="#6a3093" />
                                 </View>
                                 <View style={styles.patientInfoText}>
-                                    <Text style={styles.patientName}>{selectedQuestionnaire.name}</Text>
+                                    <GlobalText style={styles.patientName}>{selectedQuestionnaire.name}</GlobalText>
                                     <View style={styles.infoRow}>
-                                        <Text style={styles.infoLabel}>Case #:</Text>
-                                        <Text style={styles.infoValue}>{selectedQuestionnaire.case_number}</Text>
+                                        <GlobalText style={styles.infoLabel}>Case #:</GlobalText>
+                                        <GlobalText style={styles.infoValue}>{selectedQuestionnaire.case_number}</GlobalText>
                                     </View>
                                 </View>
                             </View>
@@ -109,7 +110,7 @@ export default function RecievedQuestionaryScreen() {
                                                 size={14}
                                                 colors={['#5E346D', '#C13439']}
                                             />
-                                            <Text style={styles.modalText}>{value || 'N/A'}</Text>
+                                            <GlobalText style={styles.modalText}>{value || 'N/A'}</GlobalText>
                                         </View>
                                     ))}
                                 </>
@@ -147,7 +148,7 @@ export default function RecievedQuestionaryScreen() {
                 </LinearGradient>
                 <View style={styles.filterRow}>
                     <LinearGradient colors={['#56235E', '#C1392D']} style={styles.filterBtnAll}>
-                        <Text style={styles.filterBtnAllText}>All</Text>
+                        <GlobalText style={styles.filterBtnAllText}>All</GlobalText>
                     </LinearGradient>
                 </View>
             </View>
@@ -158,9 +159,9 @@ export default function RecievedQuestionaryScreen() {
                 : error || !data ? (
                     <View style={styles.errorContainer}>
                         <Ionicons name="alert-circle" size={40} color="#ff6b6b" />
-                        <Text style={styles.errorText}>Failed to load lesions</Text>
+                        <GlobalText style={styles.errorText}>Failed to load lesions</GlobalText>
                         <TouchableOpacity onPress={refetch} style={styles.retryButton}>
-                            <Text style={styles.retryText}>Retry</Text>
+                            <GlobalText style={styles.retryText}>Retry</GlobalText>
                         </TouchableOpacity>
                     </View>
                 ) : (
@@ -170,10 +171,10 @@ export default function RecievedQuestionaryScreen() {
                                 <View>
                                 </View>
                                 <View style={[styles.caseRow, styles.caseNumberRow]}>
-                                    <Text style={styles.caseText}>Case Number :</Text>
+                                    <GlobalText style={styles.caseText}>Case Number :</GlobalText>
                                     <View style={styles.statusContainer}>
 
-                                        <Text style={styles.caseNumber}>{item.case_number}</Text>
+                                        <GlobalText style={styles.caseNumber}>{item.case_number}</GlobalText>
 
                                     </View>
                                 </View>
@@ -189,7 +190,7 @@ export default function RecievedQuestionaryScreen() {
                                             size={14}
                                             colors={['#5E346D', '#C13439']}
                                         />
-                                        <Text style={styles.cardText}>{value || 'N/A'}</Text>
+                                        <GlobalText style={styles.cardText}>{value || 'N/A'}</GlobalText>
                                     </View>
                                 ))}
 
@@ -198,11 +199,11 @@ export default function RecievedQuestionaryScreen() {
                                     {item.send_email_to_dantasurakshaks === true ?
                                         <View style={styles.approvedByContainer}>
                                             <Ionicons name="person-circle" size={14} color="#6a3093" />
-                                            <Text style={styles.approvedByText}>
+                                            <GlobalText style={styles.approvedByText}>
                                                 {item.assignTo?._id === user?.id && (
                                                     `feedback sent by ${user?.name}`
                                                 )}
-                                            </Text>
+                                            </GlobalText>
                                         </View>
                                         : ''
                                     }
@@ -211,7 +212,7 @@ export default function RecievedQuestionaryScreen() {
                                         onPress={() => openModal(item)}
                                     >
                                         <Ionicons name="eye" size={16} color="#6a3093" />
-                                        <Text style={styles.viewButtonText}>View Details</Text>
+                                        <GlobalText style={styles.viewButtonText}>View Details</GlobalText>
                                     </TouchableOpacity>
                                 </View>
                             </View>

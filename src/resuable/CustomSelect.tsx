@@ -1,3 +1,4 @@
+import { GlobalText } from '../constants/GlobalText';
 import React, { useState } from 'react';
 import {
   View,
@@ -22,7 +23,7 @@ export const CustomSelect = ({ options, value, onChange, placeholder }: {
         style={styles.selectBox}
         onPress={() => setOpen(true)}
       >
-        <Text style={styles.selectText}>{value || placeholder}</Text>
+        <GlobalText style={styles.selectText}>{value || placeholder}</GlobalText>
       </TouchableOpacity>
       <Modal
         transparent
@@ -43,7 +44,7 @@ export const CustomSelect = ({ options, value, onChange, placeholder }: {
                     setOpen(false);
                   }}
                 >
-                  <Text>{item}</Text>
+                  <GlobalText>{item}</GlobalText>
                 </TouchableOpacity>
               )}
             />

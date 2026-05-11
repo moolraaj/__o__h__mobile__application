@@ -1,3 +1,4 @@
+import { WHITE } from '../constants/Variables'
 import CardSkeletonItem from '../common/CardSkeletonItem'
 import React from 'react'
 import {
@@ -9,6 +10,7 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from 'react-native'
+import { GlobalText } from '../constants/GlobalText'
 
 const PADDING_HORIZONTAL = 16
 const CARD_GAP = 8
@@ -53,9 +55,9 @@ const SingleDisease = ({ disease, currentLanguage, isLoading, navigation }: any)
               resizeMode="cover"
             />
             <View style={styles.titleContainer}>
-              <Text style={styles.title}>
+              <GlobalText style={styles.title}>
                 {item?.disease_main_title?.[currentLanguage] || ''}
-              </Text>
+              </GlobalText>
             </View>
           </TouchableOpacity>
         )}
@@ -67,7 +69,7 @@ const SingleDisease = ({ disease, currentLanguage, isLoading, navigation }: any)
 const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
   },
   card: {
     aspectRatio: 1 / 0.9,
@@ -92,7 +94,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   title: {
-    color: '#fff',
+    color: WHITE,
     fontSize: 14,
     fontWeight: '700',
     textAlign: 'center',

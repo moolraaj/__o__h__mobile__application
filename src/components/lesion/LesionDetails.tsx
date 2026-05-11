@@ -1,8 +1,8 @@
+import { GlobalText } from '../../constants/GlobalText';
 import { useGetLesionByIdQuery } from '../../store/services/lesion/createLesionApi';
 import { useRoute } from '@react-navigation/native';
 import React from 'react';
-import { 
-  View, 
+import {  
   Text, 
   ActivityIndicator, 
   FlatList, 
@@ -16,25 +16,25 @@ const LesionDetails = () => {
   const { data, isLoading, error } = useGetLesionByIdQuery(lesionId);
   
   if (isLoading) return <ActivityIndicator size="large" />;
-  if (error) return <Text>Error loading lesion details</Text>;
+  if (error) return <GlobalText>Error loading lesion details</GlobalText>;
   
   const { lesion } = data;
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Patient name: {lesion.fullname}</Text>
-      <Text style={styles.text}>Age: {lesion.age}</Text>
-      <Text style={styles.text}>Symptoms: {lesion.symptoms}</Text>
-      <Text style={styles.text}>Previous dental treatment: {lesion.previous_dental_treatement}</Text>
-      <Text style={styles.text}>Status: {lesion.status}</Text>
-      <Text style={styles.text}>Location: {lesion.location}</Text>
-      <Text style={styles.text}>Gender: {lesion.gender}</Text>
-      <Text style={styles.text}>Existing habits: {lesion.existing_habits}</Text>
-      <Text style={styles.text}>Disease time: {lesion.disease_time}</Text>
-      <Text style={styles.text}>Contact number: {lesion.contact_number}</Text>
+      <GlobalText style={styles.title}>Patient name: {lesion.fullname}</GlobalText>
+      <GlobalText style={styles.text}>Age: {lesion.age}</GlobalText>
+      <GlobalText style={styles.text}>Symptoms: {lesion.symptoms}</GlobalText>
+      <GlobalText style={styles.text}>Previous dental treatment: {lesion.previous_dental_treatement}</GlobalText>
+      <GlobalText style={styles.text}>Status: {lesion.status}</GlobalText>
+      <GlobalText style={styles.text}>Location: {lesion.location}</GlobalText>
+      <GlobalText style={styles.text}>Gender: {lesion.gender}</GlobalText>
+      <GlobalText style={styles.text}>Existing habits: {lesion.existing_habits}</GlobalText>
+      <GlobalText style={styles.text}>Disease time: {lesion.disease_time}</GlobalText>
+      <GlobalText style={styles.text}>Contact number: {lesion.contact_number}</GlobalText>
 
      
-      <Text style={styles.sectionTitle}>Dental Images:</Text>
+      <GlobalText style={styles.sectionTitle}>Dental Images:</GlobalText>
       <FlatList
         horizontal
         data={lesion.dental_images}

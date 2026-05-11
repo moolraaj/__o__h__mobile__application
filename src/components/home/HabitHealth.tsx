@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import CardSkeletonItem from '../../common/CardSkeletonItem';
 import { commonGridStyles as styles } from '../../common/cardStyling';
+import { GlobalText } from '../../constants/GlobalText';
 
 export default function HabitHealthList({ navigation }: { navigation: any }) {
   const { i18n } = useTranslation();
@@ -32,9 +33,9 @@ export default function HabitHealthList({ navigation }: { navigation: any }) {
               <View style={styles.errorIconContainer}>
                 <Icon5 name="exclamation-triangle" size={15} color="#FF5E62" />
               </View>
-              <Text style={styles.errorMessage}>
+              <GlobalText style={styles.errorMessage}>
                 Failed to load health habits
-              </Text>
+              </GlobalText>
             </View>
           </TouchableOpacity>
         ))}
@@ -62,9 +63,9 @@ export default function HabitHealthList({ navigation }: { navigation: any }) {
                 resizeMode="cover"
               />
               <View style={styles.titleContainer}>
-                <Text style={styles.title}>
+                <GlobalText style={styles.title}>
                   {item.habit_health_main_title[lang]}
-                </Text>
+                </GlobalText>
               </View>
             </TouchableOpacity>
           </View>

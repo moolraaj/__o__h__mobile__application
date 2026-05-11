@@ -5,6 +5,7 @@ import { useGetDentalEmergencyQuery } from '../../store/services/dental_emergenc
 import CardSkeletonItem from '../../common/CardSkeletonItem';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { commonGridStyles as styles } from '../../common/cardStyling';
+import { GlobalText } from '../../constants/GlobalText';
 
 const DentalEmergencyList = ({ navigation }: { navigation: any }) => {
   const { i18n } = useTranslation();
@@ -31,9 +32,9 @@ const DentalEmergencyList = ({ navigation }: { navigation: any }) => {
               <View style={styles.errorIconContainer}>
                 <Icon name="exclamation-triangle" size={15} color="#FF5E62" />
               </View>
-              <Text style={styles.errorMessage}>
+              <GlobalText style={styles.errorMessage}>
                 Failed to load featured content. Tap to retry.
-              </Text>
+              </GlobalText>
             </View>
           </TouchableOpacity>
         ))}
@@ -61,9 +62,9 @@ const DentalEmergencyList = ({ navigation }: { navigation: any }) => {
                 resizeMode="cover"
               />
               <View style={styles.titleContainer}>
-                <Text style={styles.title}>
+                <GlobalText style={styles.title}>
                   {item.dental_emergency_title?.[lang]}
-                </Text>
+                </GlobalText>
               </View>
             </TouchableOpacity>
           </View>

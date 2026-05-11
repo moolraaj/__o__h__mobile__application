@@ -16,6 +16,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import RenderHtml from 'react-native-render-html';
 import { AppError } from '../common/AppError';
 import GradientText from '../common/GradientText';
+import { GlobalText } from '../constants/GlobalText';
 
 
 export default function FaqsScreen() {
@@ -57,9 +58,9 @@ export default function FaqsScreen() {
         {faqGroups.map((group, gIdx) => (
           <View key={group._id ?? gIdx} style={styles.groupContainer}>
             {/* Group Title */}
-            <Text style={styles.groupTitle}>
+            <GlobalText style={styles.groupTitle}>
               <GradientText text={group.faqs_title?.[lang] ?? 'FAQs'} size={20}/>
-            </Text>
+            </GlobalText>
 
             {/* Questions */}
             {group.faqs_repeater.map((item, qIdx) => {
@@ -84,13 +85,13 @@ export default function FaqsScreen() {
                       }
                       activeOpacity={0.8}
                     >
-                      <Text
+                      <GlobalText
                         style={[styles.questionText, isOpen && styles.activeQuestionText]}
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
                         {question}
-                      </Text>
+                      </GlobalText>
                       <View style={[styles.questionIcon, isOpen && styles.questionIconActive]}>
                         <Entypo
                           name={isOpen ? 'minus' : 'plus'}

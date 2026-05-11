@@ -1,22 +1,8 @@
 import React, { useState, useRef } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  SafeAreaView,
-  Dimensions,
-  Animated,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
+import { View, TextInput, TouchableOpacity, SafeAreaView, Dimensions, Animated, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, StatusBar } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import GradientButton from '../../resuable/Button';
-import {
-  useSendOtpMutation,
-  useVerifyOtpMutation,
-  useLoginUserMutation,
-} from '../../store/services/user/userApi';
+import { useSendOtpMutation, useVerifyOtpMutation, useLoginUserMutation } from '../../store/services/user/userApi';
 import { ToastMessage } from '../../resuable/Toast';
 import BackButton from '../../resuable/BackButton';
 import LinearGradient from 'react-native-linear-gradient';
@@ -24,8 +10,9 @@ import GradientText from '../../common/GradientText';
 import CountryPicker, { Country } from 'react-native-country-picker-modal';
 import SuccessModal from './SuccessModal';
 import { FlatList } from 'react-native';
- 
 import { API_BASE_URL } from '@env'
+import { GlobalText } from '../../constants/GlobalText';
+import { WHITE } from '../../constants/Variables';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -34,16 +21,14 @@ export default function Login({ navigation }: { navigation: any }) {
   console.log(`API_BASE_URL`)
   console.log(API_BASE_URL)
 
- 
-
-  // NEW: For horizontal scroll tracking
+  // For horizontal scroll tracking
   const flatListRef = useRef<FlatList>(null);
 
   // At the top of your component:
   const [countryCode, setCountryCode] = useState<Country['cca2']>('IN');
   const [callingCode, setCallingCode] = useState<string>('91'); // Not string[]
 
-  // NEW: which method is active?
+  // which method is active?
   const [loginMethod, setLoginMethod] = useState<'phone' | 'email'>('phone');
   const [showPassword, setShowPassword] = useState(false);
 
@@ -90,7 +75,7 @@ export default function Login({ navigation }: { navigation: any }) {
       animated: true,
     });
 
- 
+
     if (method === 'phone') {
       setPhoneNumber('');
       setOtp('');
@@ -154,7 +139,7 @@ export default function Login({ navigation }: { navigation: any }) {
     }
     try {
       const result = await loginUser({ email, password }).unwrap();
-     
+
       if (!email || !password) {
         return ToastMessage('error', 'Plese Provide Valid Credentails!');
       }
@@ -173,240 +158,252 @@ export default function Login({ navigation }: { navigation: any }) {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        showsVerticalScrollIndicator={false}
+      <StatusBar barStyle="dark-content" backgroundColor={WHITE} />
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        {showSuccessModal && <SuccessModal
-          visible={showSuccessModal}
-          message={
-            loginMethod === 'phone'
-              ? 'OTP Verified successfully!'
-              : 'Logged in successfully!'
-          }
-          onClose={() => setShowSuccessModal(false)}
-          phoneNumber={phoneNumber}
-          email={email}
-          password={password}
-          callingCode={callingCode}
-          loginMethod={loginMethod}
-        />}
-        {/* Header Section */}
-        <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>
-            {loginMethod === 'email' ? 'Login via Email' : 'Login via Phone'}
-          </Text>
-          <Text style={styles.headerSubtext}>
-            {loginMethod === 'email'
-              ? 'Please enter your email and password to continue'
-              : "Enter your phone number, and we'll send you a confirmation code"}
-          </Text>
-        </View>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled={true}
+        >
+          {showSuccessModal && <SuccessModal
+            visible={showSuccessModal}
+            message={
+              loginMethod === 'phone'
+                ? 'OTP Verified successfully!'
+                : 'Logged in successfully!'
+            }
+            onClose={() => setShowSuccessModal(false)}
+            phoneNumber={phoneNumber}
+            email={email}
+            password={password}
+            callingCode={callingCode}
+            loginMethod={loginMethod}
+          />}
+          {/* Header Section */}
+          <View style={styles.headerContainer}>
+            <GlobalText style={styles.headerText}>
+              {loginMethod === 'email' ? 'Login via Email' : 'Login via Phone'}
+            </GlobalText>
+            <GlobalText style={styles.headerSubtext}>
+              {loginMethod === 'email'
+                ? 'Please enter your email and password to continue'
+                : "Enter your phone number, and we'll send you a confirmation code"}
+            </GlobalText>
+          </View>
 
-        <View style={styles.toggleContainer}>
-          <LinearGradient
-            colors={['rgba(222, 32, 39, 0.16)', '#E39EFC']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.gradientBackground}
-          >
-            <View style={styles.innerContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.toggleButton,
-                  loginMethod === 'email' && styles.activeButton,
-                ]}
-                onPress={() => {
-                  switchTab(0);
-                }}
-              >
-                <Text
+          <View style={styles.toggleContainer}>
+            <LinearGradient
+              colors={['rgba(222, 32, 39, 0.16)', '#E39EFC']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.gradientBackground}
+            >
+              <View style={styles.innerContainer}>
+                <TouchableOpacity
                   style={[
-                    styles.toggleText,
-                    loginMethod === 'email' && styles.activeText,
+                    styles.toggleButton,
+                    loginMethod === 'email' && styles.activeButton,
                   ]}
+                  onPress={() => {
+                    switchTab(0);
+                  }}
                 >
-                  Email
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.toggleButton,
-                  loginMethod === 'phone' && styles.activeButton,
-                ]}
-                onPress={() => {
-                  switchTab(1);
-                }}
-              >
-                <Text
-                  style={[
-                    styles.toggleText,
-                    loginMethod === 'phone' && styles.activeText,
-                  ]}
-                >
-                  Phone
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </LinearGradient>
-        </View>
-        <FlatList
-          ref={flatListRef}
-          data={['email', 'phone']}
-          horizontal
-          pagingEnabled
-          initialScrollIndex={loginMethod === 'phone' ? 1 : 0}
-          getItemLayout={(data, index) => ({
-            length: SCREEN_WIDTH,
-            offset: SCREEN_WIDTH * index,
-            index,
-          })}
-          showsHorizontalScrollIndicator={false}
-          onMomentumScrollEnd={handleScrollEnd}
-          renderItem={({ item }) => (
-            <View style={styles.contentContainer}>
-              {item === 'email' ? (
-                <View style={styles.slide}>
-                  <Input
-                    placeholder="e.g. johndoe@example.com"
-                    keyboardType="email-address"
-                    value={email}
-                    onChangeText={(text) => {
-                      setEmail(text);
-                      setEmailError('');
-                    }}
-                    icon="mail"
-                    name='Email'
-                    error={emailError}
-                  />
-                  <Input
-                    placeholder="e.g. securepassword"
-                    keyboardType="default"
-                    value={password}
-                    onChangeText={(text) => {
-                      setPassword(text);
-                      setPasswordError('');
-                    }}
-                    icon="lock"
-                    secureTextEntry={!showPassword}
-                    name='Password'
-                    isPassword
-                    showPassword={showPassword}
-                    toggleShowPassword={() => setShowPassword(!showPassword)}
-                    error={passwordError}
-                  />
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate('ForgotPassword')}
-                    style={styles.forgotPasswordLink}
+                  <GlobalText
+                    style={[
+                      styles.toggleText,
+                      loginMethod === 'email' && styles.activeText,
+                    ]}
                   >
-                    <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-                  </TouchableOpacity>
+                    Email
+                  </GlobalText>
+                </TouchableOpacity>
 
-                  <View style={{ marginTop: 30 }}>
-                    <GradientButton
-                      label={loggingIn ? 'Login...' : 'Login'}
-                      onPress={handleEmailLogin}
-                    />
-                  </View>
-                </View>
-              ) : (
-                <Animated.View
-                  style={[styles.slider, { transform: [{ translateX: slideX }] }]}
+                <TouchableOpacity
+                  style={[
+                    styles.toggleButton,
+                    loginMethod === 'phone' && styles.activeButton,
+                  ]}
+                  onPress={() => {
+                    switchTab(1);
+                  }}
                 >
+                  <GlobalText
+                    style={[
+                      styles.toggleText,
+                      loginMethod === 'phone' && styles.activeText,
+                    ]}
+                  >
+                    Phone
+                  </GlobalText>
+                </TouchableOpacity>
+              </View>
+            </LinearGradient>
+          </View>
+          <FlatList
+            ref={flatListRef}
+            data={['email', 'phone']}
+            horizontal
+            pagingEnabled
+            scrollEnabled={true}
+            nestedScrollEnabled={true}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+            initialScrollIndex={loginMethod === 'phone' ? 1 : 0}
+            getItemLayout={(data, index) => ({
+              length: SCREEN_WIDTH,
+              offset: SCREEN_WIDTH * index,
+              index,
+            })}
+            showsHorizontalScrollIndicator={false}
+            onMomentumScrollEnd={handleScrollEnd}
+            renderItem={({ item }) => (
+              <View style={styles.contentContainer}>
+                {item === 'email' ? (
                   <View style={styles.slide}>
-                    <View style={styles.inputWrapper}>
-                      <Text style={styles.label}>Phone Number</Text>
-                      <View style={styles.inputRow}>
-                        <CountryPicker
-                          countryCode={countryCode}
-                          withFlag
-                          withCallingCode
-                          withFilter
-                          withEmoji
-                          onSelect={(country: Country) => {
-                            setCountryCode(country.cca2);
-                            setCallingCode(country.callingCode[0]);
-                          }}
-                        />
-                        <View style={styles.phoneInputField}>
-                          <Text style={styles.prefixText}>+{callingCode}</Text>
-                          <TextInput
-                            style={styles.phoneInput}
-                            placeholder="0000 000 000"
-                            keyboardType="phone-pad"
-                            value={phoneNumber}
-                            onChangeText={(text) => {
-                              setPhoneNumber(text);
-                              setPhoneError('');
-                            }}
-                            maxLength={10}
-                          />
-                        </View>
-                      </View>
-                      {phoneError ? <Text style={styles.errorText}>{phoneError}</Text> : null}
-                    </View>
+                    <Input
+                      placeholder="e.g. johndoe@example.com"
+                      keyboardType="email-address"
+                      value={email}
+                      onChangeText={(text) => {
+                        setEmail(text);
+                        setEmailError('');
+                      }}
+                      icon="mail"
+                      name='Email'
+                      error={emailError}
+                    />
+                    <Input
+                      placeholder="e.g. securepassword"
+                      keyboardType="default"
+                      value={password}
+                      onChangeText={(text) => {
+                        setPassword(text);
+                        setPasswordError('');
+                      }}
+                      icon="lock"
+                      secureTextEntry={!showPassword}
+                      name='Password'
+                      isPassword
+                      showPassword={showPassword}
+                      toggleShowPassword={() => setShowPassword(!showPassword)}
+                      error={passwordError}
+                    />
+                    <TouchableOpacity
+                      onPress={() => navigation.navigate('ForgotPassword')}
+                      style={styles.forgotPasswordLink}
+                    >
+                      <GlobalText style={styles.forgotPasswordText}>Forgot Password?</GlobalText>
+                    </TouchableOpacity>
 
                     <View style={{ marginTop: 30 }}>
                       <GradientButton
-                        label={sending ? 'Sending OTP...' : 'Send OTP'}
-                        onPress={handleSendOtp}
+                        label={loggingIn ? 'Login...' : 'Login'}
+                        onPress={handleEmailLogin}
                       />
                     </View>
                   </View>
-                  <View style={styles.slide}>
-                    <View style={styles.header}>
-                      <BackButton onPress={() => goToSlide(0)} />
-                      <Text style={styles.subtitle}>OTP</Text>
+                ) : (
+                  <Animated.View
+                    style={[styles.slider, { transform: [{ translateX: slideX }] }]}
+                  >
+                    <View style={styles.slide}>
+                      <View style={styles.inputWrapper}>
+                        <GlobalText style={styles.label}>Phone Number</GlobalText>
+                        <View style={styles.inputRow}>
+                          <CountryPicker
+                            countryCode={countryCode}
+                            withFlag
+                            withCallingCode
+                            withFilter
+                            withEmoji
+                            onSelect={(country: Country) => {
+                              setCountryCode(country.cca2);
+                              setCallingCode(country.callingCode[0]);
+                            }}
+                          />
+                          <View style={styles.phoneInputField}>
+                            <GlobalText style={styles.prefixText}>+{callingCode}</GlobalText>
+                            <TextInput
+                              style={styles.phoneInput}
+                              placeholder="0000 000 000"
+                              keyboardType="phone-pad"
+                              value={phoneNumber}
+                              onChangeText={(text) => {
+                                setPhoneNumber(text);
+                                setPhoneError('');
+                              }}
+                              maxLength={10}
+                            />
+                          </View>
+                        </View>
+                        {phoneError ? <GlobalText style={styles.errorText}>{phoneError}</GlobalText> : null}
+                      </View>
+
+                      <View style={{ marginTop: 30 }}>
+                        <GradientButton
+                          label={sending ? 'Sending OTP...' : 'Send OTP'}
+                          onPress={handleSendOtp}
+                        />
+                      </View>
                     </View>
-                    <Input
-                      placeholder="6-digit OTP"
-                      keyboardType="number-pad"
-                      maxLength={6}
-                      value={otp}
-                      name='Enter Otp'
-                      onChangeText={(text) => {
-                        setOtp(text);
-                        setOtpError('');
-                      }}
-                      icon="key"
-                      error={otpError}
-                    />
-                    <GradientButton
-                      label={verifying || loggingIn ? 'verifying...' : 'Verify OTP'}
-                      onPress={handleVerifyOtp}
-                    />
-                    <TouchableOpacity onPress={handleSendOtp} style={{ marginTop: 10 }}>
-                      <Text style={{ textAlign: 'center', color: 'black' }}>
-                        Resend OTP
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </Animated.View>
-              )}
-            </View>
-          )}
-          keyExtractor={(item) => item}
-        />
+                    <View style={styles.slide}>
+                      <View style={styles.header}>
+                        <BackButton onPress={() => goToSlide(0)} />
+                        <GlobalText style={styles.subtitle}>OTP</GlobalText>
+                      </View>
+                      <Input
+                        placeholder="6-digit OTP"
+                        keyboardType="number-pad"
+                        maxLength={6}
+                        value={otp}
+                        name='Enter Otp'
+                        onChangeText={(text) => {
+                          setOtp(text);
+                          setOtpError('');
+                        }}
+                        icon="key"
+                        error={otpError}
+                      />
+                      <GradientButton
+                        label={verifying || loggingIn ? 'verifying...' : 'Verify OTP'}
+                        onPress={handleVerifyOtp}
+                      />
+                      <TouchableOpacity onPress={handleSendOtp} style={{ marginTop: 10 }}>
+                        <GlobalText style={{ textAlign: 'center', color: 'black' }}>
+                          Resend OTP
+                        </GlobalText>
+                      </TouchableOpacity>
+                    </View>
+                  </Animated.View>
+                )}
+              </View>
+            )}
+            keyExtractor={(item) => item}
+          />
 
 
-        <View style={styles.footerLink}>
-          <Text style={{ textAlign: 'center' }}>Do you have an account?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-            <GradientText text="Sign Up" />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.bottomContainer}>
-          <Text style={styles.bottomText}>By clicking Continue, you agree to our </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('TermsOfService')}>
-            <GradientText text="Terms of Service" size={12} />
-          </TouchableOpacity>
-          <Text style={styles.bottomText}> and </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('PrivacyPolicy')}>
-            <GradientText text="Privacy Policy" size={12} />
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+          <View style={styles.footerLink}>
+            <GlobalText style={{ textAlign: 'center' }}>Do you have an account?</GlobalText>
+            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+              <GradientText text="Sign Up" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.bottomContainer}>
+            <GlobalText style={styles.bottomText}>By clicking Continue, you agree to our </GlobalText>
+            <TouchableOpacity onPress={() => navigation.navigate('TermsOfService')}>
+              <GradientText text="Terms of Service" size={12} />
+            </TouchableOpacity>
+            <GlobalText style={styles.bottomText}> and </GlobalText>
+            <TouchableOpacity onPress={() => navigation.navigate('PrivacyPolicy')}>
+              <GradientText text="Privacy Policy" size={12} />
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView >
   );
 }
@@ -442,7 +439,7 @@ function Input({
 }) {
   return (
     <View style={styles.inputWrapper}>
-      <Text style={styles.label}>{name}</Text>
+      <GlobalText style={styles.label}>{name}</GlobalText>
       <View style={[
         styles.inputRow,
         error ? styles.inputError : null,
@@ -467,7 +464,7 @@ function Input({
           </TouchableOpacity>
         )}
       </View>
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      {error ? <GlobalText style={styles.errorText}>{error}</GlobalText> : null}
     </View>
   );
 }
@@ -475,27 +472,31 @@ function Input({
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
+    paddingTop: 20,
+    paddingBottom: 40,
   },
   wrapper: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
   },
   headerContainer: {
     margin: 20,
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 20,
     textAlign: 'center',
     fontWeight: '600',
+    marginBottom: 8,
   },
   headerSubtext: {
-    fontSize: 16,
+    fontSize: 13,
     textAlign: 'center',
     fontWeight: '500',
     color: '#555',
+    lineHeight: 18,
   },
   contentContainer: {
-    flex: 1,
+    width: SCREEN_WIDTH
   },
   toggleContainer: {
     alignItems: 'center',
@@ -521,7 +522,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   activeButton: {
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
   },
   toggleText: {
     color: '#222',
@@ -594,7 +595,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 4,
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
     position: 'relative',
     justifyContent: 'space-between',
   },

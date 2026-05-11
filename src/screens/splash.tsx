@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, StyleSheet, Image, Animated, Easing, Text } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../common/GradientText';
+import { GlobalText } from '../constants/GlobalText';
 
 type SplashProps = {
     onFinish: () => void;
@@ -122,23 +123,23 @@ export default function Splash({ onFinish }: SplashProps) {
                             style={styles.logoSecondary}
                         />
 
-                        <Text style={styles.universityText}>
+                        <GlobalText style={styles.universityText}>
                             <GradientText
                                 text="MS Ramaiah University"
                                 size={24}
                                 colors={['#6a11cb', '#2575fc']}
                             />
-                        </Text>
+                        </GlobalText>
 
 
-                        <Text style={styles.subtitleText}>
+                        <GlobalText style={styles.subtitleText}>
                             <GradientText
                                 text="Of Applied Sciences"
                                 size={18}
                                 colors={['#6a11cb', '#2575fc']}
                             />
 
-                        </Text>
+                        </GlobalText>
                     </Animated.View>
 
 

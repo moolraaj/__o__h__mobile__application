@@ -21,6 +21,7 @@ import GradientText from '../../common/GradientText';
 import RadioButtonGroup from '../../common/RadioButtonGroup';
 import CheckboxGroup from '../../common/CheckboxGroup';
 import * as ImagePicker from 'react-native-image-picker';
+import { GlobalText } from '../../constants/GlobalText';
 
 
 const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
@@ -284,37 +285,37 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
             >
-                <Text style={styles.title}>Patient Questionnaire</Text>
-                <Text style={styles.subtitle}>Fill in the patient details below</Text>
+                <GlobalText style={styles.title}>Patient Questionnaire</GlobalText>
+                <GlobalText style={styles.subtitle}>Fill in the patient details below</GlobalText>
             </LinearGradient>
 
-            <Text style={styles.sectionHeader}>
+            <GlobalText style={styles.sectionHeader}>
                 <GradientText text="Personal Information" size={20} />
-            </Text>
+            </GlobalText>
 
             <TouchableOpacity onPress={selectImages} style={styles.imageUploadButton}>
-                <Text style={styles.imageUploadButtonText}>Select Images</Text>
+                <GlobalText style={styles.imageUploadButtonText}>Select Images</GlobalText>
             </TouchableOpacity>
             <View style={styles.imagePreviewContainer}>
                 {images.map((img, idx) => (
                     <View key={idx} style={styles.imagePreviewWrapper}>
                         <Image source={{ uri: img.uri }} style={styles.imagePreview} />
                         <TouchableOpacity onPress={() => removeImage(idx)} style={styles.removeImageButton}>
-                            <Text style={styles.removeImageButtonText}>×</Text>
+                            <GlobalText style={styles.removeImageButtonText}>×</GlobalText>
                         </TouchableOpacity>
                     </View>
                 ))}
             </View>
 
 
-            <Text style={styles.label}>Demographics *</Text>
+            <GlobalText style={styles.label}>Demographics *</GlobalText>
             <TextInput
                 style={styles.input}
                 value={formData.demographics}
                 onChangeText={(text) => handleChange('demographics', text)}
                 placeholder="Demographics"
             />
-            <Text style={styles.label}>Name *</Text>
+            <GlobalText style={styles.label}>Name *</GlobalText>
             <TextInput
                 style={styles.input}
                 value={formData.name}
@@ -322,7 +323,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 placeholder="Full name"
             />
 
-            <Text style={styles.label}>Age *</Text>
+            <GlobalText style={styles.label}>Age *</GlobalText>
             <View style={styles.pickerWrapper}>
                 <Picker
                     selectedValue={formData.age}
@@ -345,7 +346,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 onChange={(value) => handleChange('gender', value)}
             />
 
-            <Text style={styles.label}>Blood Group *</Text>
+            <GlobalText style={styles.label}>Blood Group *</GlobalText>
             <View style={styles.pickerWrapper}>
                 <Picker
                     selectedValue={formData.bloodGroup}
@@ -363,7 +364,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 </Picker>
             </View>
 
-            <Text style={styles.label}>ID Card Available *</Text>
+            <GlobalText style={styles.label}>ID Card Available *</GlobalText>
             <View style={styles.pickerWrapper}>
                 <Picker
                     selectedValue={formData.idCardAvailable}
@@ -377,7 +378,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 </Picker>
             </View>
 
-            <Text style={styles.label}>Card Number *</Text>
+            <GlobalText style={styles.label}>Card Number *</GlobalText>
             <TextInput
                 style={styles.input}
                 value={formData.cardNumber}
@@ -385,7 +386,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 placeholder="Enter card number"
             />
 
-            <Text style={styles.label}>Religion *</Text>
+            <GlobalText style={styles.label}>Religion *</GlobalText>
             <View style={styles.pickerWrapper}>
                 <Picker
                     selectedValue={formData.religion}
@@ -401,7 +402,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
 
             {showReligionInput && (
                 <>
-                    <Text style={styles.label}>Specify Religion *</Text>
+                    <GlobalText style={styles.label}>Specify Religion *</GlobalText>
                     <TextInput
                         style={styles.input}
                         value={formData.religion_input}
@@ -411,7 +412,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 </>
             )}
 
-            <Text style={styles.label}>Education *</Text>
+            <GlobalText style={styles.label}>Education *</GlobalText>
             <View style={styles.pickerWrapper}>
                 <Picker
                     selectedValue={formData.education}
@@ -428,7 +429,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 </Picker>
             </View>
 
-            <Text style={styles.label}>Occupation *</Text>
+            <GlobalText style={styles.label}>Occupation *</GlobalText>
             <View style={styles.pickerWrapper}>
                 <Picker
                     selectedValue={formData.occupation}
@@ -448,7 +449,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 </Picker>
             </View>
 
-            <Text style={styles.label}>Income *</Text>
+            <GlobalText style={styles.label}>Income *</GlobalText>
             <View style={styles.pickerWrapper}>
                 <Picker
                     selectedValue={formData.income}
@@ -470,7 +471,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 </Picker>
             </View>
 
-            <Text style={styles.label}>Phone Number *</Text>
+            <GlobalText style={styles.label}>Phone Number *</GlobalText>
             <TextInput
                 style={styles.input}
                 value={formData.phoneNumber}
@@ -479,7 +480,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 keyboardType="phone-pad"
             />
 
-            <Text style={styles.label}>Address *</Text>
+            <GlobalText style={styles.label}>Address *</GlobalText>
             <TextInput
                 style={[styles.input, { height: 80 }]}
                 value={formData.address}
@@ -488,7 +489,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 multiline
             />
 
-            <Text style={styles.label}>Family History</Text>
+            <GlobalText style={styles.label}>Family History</GlobalText>
             <TextInput
                 style={[styles.input, { height: 80 }]}
                 value={formData.familyHistory}
@@ -497,7 +498,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 multiline
             />
 
-            <Text style={styles.label}>First Degree Relative with Oral Cancer *</Text>
+            <GlobalText style={styles.label}>First Degree Relative with Oral Cancer *</GlobalText>
             <View style={styles.pickerWrapper}>
                 <Picker
                     selectedValue={formData.firstDegreeRelativeOralCancer}
@@ -510,11 +511,11 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
             </View>
 
             {/* Medical Information */}
-            <Text style={styles.sectionHeader}>
+            <GlobalText style={styles.sectionHeader}>
                 <GradientText text="Medical Information" size={20} />
-            </Text>
+            </GlobalText>
 
-            <Text style={styles.label}>Height (in cm) *</Text>
+            <GlobalText style={styles.label}>Height (in cm) *</GlobalText>
             <View style={styles.pickerWrapper}>
                 <Picker
                     selectedValue={formData.height}
@@ -557,7 +558,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 onChange={(value) => handleChange('dietHistory', value)}
             />
 
-            <Text style={styles.label}>Fruits Consumption *</Text>
+            <GlobalText style={styles.label}>Fruits Consumption *</GlobalText>
             <View style={styles.pickerWrapper}>
                 <Picker
                     selectedValue={formData.fruitsConsumption}
@@ -569,7 +570,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 </Picker>
             </View>
 
-            <Text style={styles.label}>Vegetable Consumption *</Text>
+            <GlobalText style={styles.label}>Vegetable Consumption *</GlobalText>
             <View style={styles.pickerWrapper}>
                 <Picker
                     selectedValue={formData.vegetableConsumption}
@@ -581,7 +582,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 </Picker>
             </View>
 
-            <Text style={styles.label}>Habit History</Text>
+            <GlobalText style={styles.label}>Habit History</GlobalText>
             <TextInput
                 style={[styles.input, { height: 80 }]}
                 value={formData.habitHistory}
@@ -590,7 +591,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 multiline
             />
 
-            <Text style={styles.label}>Tobacco Chewer</Text>
+            <GlobalText style={styles.label}>Tobacco Chewer</GlobalText>
             <View style={styles.pickerWrapper}>
                 <Picker
                     selectedValue={formData.tobaccoChewer}
@@ -605,7 +606,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
 
             {showTobaccoType && (
                 <>
-                    <Text style={styles.label}>Tobacco Type *</Text>
+                    <GlobalText style={styles.label}>Tobacco Type *</GlobalText>
                     <View style={styles.pickerWrapper}>
                         <Picker
                             selectedValue={formData.tobaccoType}
@@ -622,7 +623,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 </>
             )}
 
-            <Text style={styles.label}>Discontinued Habit *</Text>
+            <GlobalText style={styles.label}>Discontinued Habit *</GlobalText>
             <View style={styles.pickerWrapper}>
                 <Picker
                     selectedValue={formData.discontinuedHabit}
@@ -634,7 +635,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 </Picker>
             </View>
 
-            <Text style={styles.label}>Duration of Discontinuing Habit *</Text>
+            <GlobalText style={styles.label}>Duration of Discontinuing Habit *</GlobalText>
             <View style={styles.pickerWrapper}>
                 <Picker
                     selectedValue={formData.durationOfDiscontinuingHabit}
@@ -647,7 +648,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 </Picker>
             </View>
 
-            <Text style={styles.label}>Other Consumption History</Text>
+            <GlobalText style={styles.label}>Other Consumption History</GlobalText>
             <TextInput
                 style={[styles.input, { height: 80 }]}
                 value={formData.otherConsumptionHistory}
@@ -656,7 +657,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 multiline
             />
 
-            <Text style={styles.label}>Alcohol Consumption *</Text>
+            <GlobalText style={styles.label}>Alcohol Consumption *</GlobalText>
             <View style={styles.pickerWrapper}>
                 <Picker
                     selectedValue={formData.alcoholConsumption}
@@ -668,7 +669,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 </Picker>
             </View>
 
-            <Text style={styles.label}>Smoking *</Text>
+            <GlobalText style={styles.label}>Smoking *</GlobalText>
             <View style={styles.pickerWrapper}>
                 <Picker
                     selectedValue={formData.smoking}
@@ -681,11 +682,11 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
             </View>
 
             {/* Oral Examination */}
-            <Text style={styles.sectionHeader}>
+            <GlobalText style={styles.sectionHeader}>
                 <GradientText text="Oral Examination" size={20} />
-            </Text>
+            </GlobalText>
 
-            <Text style={styles.label}>Oral Cavity Examination</Text>
+            <GlobalText style={styles.label}>Oral Cavity Examination</GlobalText>
             <TextInput
                 style={[styles.input, { height: 80 }]}
                 value={formData.oralCavityExamination}
@@ -694,7 +695,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 multiline
             />
 
-            <Text style={styles.label}>Presence of Lesion *</Text>
+            <GlobalText style={styles.label}>Presence of Lesion *</GlobalText>
             <View style={styles.pickerWrapper}>
                 <Picker
                     selectedValue={formData.presenceOfLesion}
@@ -770,9 +771,9 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                 onChange={(value) => handleChange('presenceOfFluorosis', value)}
             />
 
-            <Text style={styles.adminInfo}>
+            <GlobalText style={styles.adminInfo}>
                 This questionnaire will be sent to {admins.length} admin(s)
-            </Text>
+            </GlobalText>
 
             <TouchableOpacity
                 onPress={handleSubmit}
@@ -788,7 +789,7 @@ const UpdateQuestionnaire = ({ navigation }: { navigation: any }) => {
                     {isLoading ? (
                         <ActivityIndicator color="#fff" />
                     ) : (
-                        <Text style={styles.buttonText}>Update Questionnaire</Text>
+                        <GlobalText style={styles.buttonText}>Update Questionnaire</GlobalText>
                     )}
                 </LinearGradient>
             </TouchableOpacity>

@@ -7,7 +7,6 @@ import TextSliderScreen from "./TextSliderScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect } from "react";
 import { View } from "react-native";
-import Searchbar from "../common/Searchbar";
 
 
 const Admin = ({ navigation }: any) => {
@@ -20,10 +19,9 @@ const Admin = ({ navigation }: any) => {
   return (
     <>
       <Layout>
-        <View style={{ marginBottom: 18, marginTop: 2 }}><Searchbar placeholderText="Search..."/></View>
-        <Slider navigation={navigation} />
+        <Slider/>
         <FeaturesScreen navigation={navigation} />
-        <TextSliderScreen navigation={navigation} />
+        <TextSliderScreen/>
       </Layout>
     </>
   )

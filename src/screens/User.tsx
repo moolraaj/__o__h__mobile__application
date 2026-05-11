@@ -1,6 +1,7 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import { Layout } from '../common/Layout'
+import { GlobalText } from '../constants/GlobalText';
 
 const User = () => {
   return (
@@ -8,7 +9,7 @@ const User = () => {
 
    
     <View>
-      <Text>welcome to the User screen</Text>
+      <GlobalText>welcome to the User screen</GlobalText>
     </View>
     </Layout>
   )

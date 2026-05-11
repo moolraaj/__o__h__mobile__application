@@ -8,7 +8,8 @@ import { AppError } from '../common/AppError';
 import { LinearGradient } from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RenderHtml from 'react-native-render-html';
-import { DISEASE_ICON_SIZE } from '../constants/Variables';
+import { DISEASE_ICON_SIZE, WHITE } from '../constants/Variables';
+import { GlobalText } from '../constants/GlobalText';
 
 const SingleDisease = () => {
     const WRONG = 'No data available for this section'
@@ -159,9 +160,9 @@ const SingleDisease = () => {
                             size={22}
                         />
                     </View>
-                    <Text style={styles.diseaseDescription}>
+                    <GlobalText style={styles.diseaseDescription}>
                         {diseaseData.disease_description?.[currentLanguage]}
-                    </Text>
+                    </GlobalText>
                 </View>
                 <View style={styles.iconContainer}>
                     {diseaseData.disease_icon ? (
@@ -178,9 +179,9 @@ const SingleDisease = () => {
 
             {/* Causes Section */}
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>
+                <GlobalText style={styles.sectionTitle}>
                     <GradientText text={diseaseData.common_cause_tab_title?.[currentLanguage]} size={18} />
-                </Text>
+                </GlobalText>
                 {diseaseData.common_cause.length > 0 ? (diseaseData.common_cause?.map((cause, index) => (
                     <View key={index} style={styles.card}>
                         <View style={styles.cardHeader}>
@@ -192,9 +193,9 @@ const SingleDisease = () => {
                             ) : (
                                 <Icon name="alert-circle" size={DISEASE_ICON_SIZE} color="#6e3b7a" style={styles.cardIcon} />
                             )}
-                            <Text style={styles.itemTitle}>
-                                {cause.cause_title?.[currentLanguage] === '' ? (<Text style={styles.error_section}>{WRONG}</Text>) : cause.cause_title?.[currentLanguage]}
-                            </Text>
+                            <GlobalText style={styles.itemTitle}>
+                                {cause.cause_title?.[currentLanguage] === '' ? (<GlobalText style={styles.error_section}>{WRONG}</GlobalText>) : cause.cause_title?.[currentLanguage]}
+                            </GlobalText>
                         </View>
 
                         {cause.cause_para && (
@@ -209,9 +210,9 @@ const SingleDisease = () => {
                             <View key={subIndex} style={styles.cardItem}>
                                 <View style={styles.itemHeader}>
 
-                                    <Text style={styles.itemTitle}>
+                                    <GlobalText style={styles.itemTitle}>
                                         {subCause.cause_repeat_title?.[currentLanguage]}
-                                    </Text>
+                                    </GlobalText>
                                 </View>
                                 <RenderHtml
                                     contentWidth={width - 60}
@@ -225,7 +226,7 @@ const SingleDisease = () => {
                     <>
                         <View style={styles.card}>
                             <View style={styles.cardHeader}>
-                                <Text style={styles.error_section}>{WRONG}</Text>
+                                <GlobalText style={styles.error_section}>{WRONG}</GlobalText>
                             </View>
                         </View>
                     </>
@@ -234,9 +235,9 @@ const SingleDisease = () => {
 
             {/* Symptoms Section */}
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>
+                <GlobalText style={styles.sectionTitle}>
                     <GradientText text={diseaseData.symptoms_tab_title?.[currentLanguage]} size={18} />
-                </Text>
+                </GlobalText>
                 {diseaseData.symptoms.length > 0 ? (diseaseData.symptoms?.map((symptom, index) => (
                     <View key={index} style={styles.card}>
                         <View style={styles.cardHeader}>
@@ -250,11 +251,11 @@ const SingleDisease = () => {
                                 <Icon name="shield-check" size={DISEASE_ICON_SIZE} color="#6e3b7a" style={styles.cardIcon} />
                             )}
 
-                            <Text style={styles.itemTitle}>
+                            <GlobalText style={styles.itemTitle}>
 
-                                {symptom.symptoms_title?.[currentLanguage] === '' ? (<Text style={styles.error_section}>{WRONG}</Text>) : symptom.symptoms_title?.[currentLanguage]}
+                                {symptom.symptoms_title?.[currentLanguage] === '' ? (<GlobalText style={styles.error_section}>{WRONG}</GlobalText>) : symptom.symptoms_title?.[currentLanguage]}
 
-                            </Text>
+                            </GlobalText>
                         </View>
 
                         {symptom.symptoms_para && (
@@ -269,9 +270,9 @@ const SingleDisease = () => {
                             <View key={subIndex} style={styles.cardItem}>
                                 <View style={styles.itemHeader}>
 
-                                    <Text style={styles.itemTitle}>
+                                    <GlobalText style={styles.itemTitle}>
                                         {subSymptom.symptoms_repeat_title?.[currentLanguage]}
-                                    </Text>
+                                    </GlobalText>
                                 </View>
                                 <RenderHtml
                                     contentWidth={width - 60}
@@ -285,7 +286,7 @@ const SingleDisease = () => {
                     <>
                         <View style={styles.card}>
                             <View style={styles.cardHeader}>
-                                <Text style={styles.error_section}>{WRONG}</Text>
+                                <GlobalText style={styles.error_section}>{WRONG}</GlobalText>
                             </View>
                         </View>
                     </>
@@ -294,9 +295,9 @@ const SingleDisease = () => {
 
             {/* Prevention Section */}
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>
+                <GlobalText style={styles.sectionTitle}>
                     <GradientText text={diseaseData.prevention_tips_tab_title?.[currentLanguage]} size={18} />
-                </Text>
+                </GlobalText>
                 {diseaseData.prevention_tips.length > 0 ? (diseaseData.prevention_tips?.map((tip, index) => (
                     <View key={index} style={styles.card}>
                         <View style={styles.cardHeader}>
@@ -308,9 +309,9 @@ const SingleDisease = () => {
                             ) : (
                                 <Icon name="shield-check" size={DISEASE_ICON_SIZE} color="#6e3b7a" style={styles.cardIcon} />
                             )}
-                            <Text style={styles.itemTitle}>
-                                {tip.prevention_tips_title?.[currentLanguage] === '' ? (<Text style={styles.error_section}>{WRONG}</Text>) : tip.prevention_tips_title?.[currentLanguage]}
-                            </Text>
+                            <GlobalText style={styles.itemTitle}>
+                                {tip.prevention_tips_title?.[currentLanguage] === '' ? (<GlobalText style={styles.error_section}>{WRONG}</GlobalText>) : tip.prevention_tips_title?.[currentLanguage]}
+                            </GlobalText>
                         </View>
 
                         {tip.prevention_tips_para && (
@@ -325,9 +326,9 @@ const SingleDisease = () => {
                             <View key={subIndex} style={styles.cardItem}>
                                 <View style={styles.itemHeader}>
 
-                                    <Text style={styles.itemTitle}>
+                                    <GlobalText style={styles.itemTitle}>
                                         {subTip.prevention_tips_repeat_title?.[currentLanguage]}
-                                    </Text>
+                                    </GlobalText>
                                 </View>
                                 <RenderHtml
                                     contentWidth={width - 60}
@@ -340,7 +341,7 @@ const SingleDisease = () => {
                 ))) : <>
                     <View style={styles.card}>
                         <View style={styles.cardHeader}>
-                            <Text style={styles.error_section}>{WRONG}</Text>
+                            <GlobalText style={styles.error_section}>{WRONG}</GlobalText>
                         </View>
                     </View>
                 </>}
@@ -348,9 +349,9 @@ const SingleDisease = () => {
 
             {/* Treatment Section */}
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>
+                <GlobalText style={styles.sectionTitle}>
                     <GradientText text={diseaseData.treatment_option_tab_title?.[currentLanguage]} size={18} />
-                </Text>
+                </GlobalText>
                 {diseaseData.treatment_option.length > 0 ? (diseaseData.treatment_option?.map((option, index) => (
                     <View key={index} style={styles.card}>
                         <View style={styles.cardHeader}>
@@ -362,11 +363,11 @@ const SingleDisease = () => {
                             ) : (
                                 <Icon name="medical-bag" size={DISEASE_ICON_SIZE} color="#6e3b7a" style={styles.cardIcon} />
                             )}
-                            <Text style={styles.itemTitle}>
+                            <GlobalText style={styles.itemTitle}>
 
-                                {option.treatment_option_title?.[currentLanguage] === '' ? (<Text style={styles.error_section}>{WRONG}</Text>) : option.treatment_option_title?.[currentLanguage]}
+                                {option.treatment_option_title?.[currentLanguage] === '' ? (<GlobalText style={styles.error_section}>{WRONG}</GlobalText>) : option.treatment_option_title?.[currentLanguage]}
 
-                            </Text>
+                            </GlobalText>
                         </View>
 
                         {option.treatment_option_para && (
@@ -380,9 +381,9 @@ const SingleDisease = () => {
                         {option.treatment_option_repeater?.map((subOption, subIndex) => (
                             <View key={subIndex} style={styles.cardItem}>
                                 <View style={styles.itemHeader}>
-                                    <Text style={styles.itemTitle}>
+                                    <GlobalText style={styles.itemTitle}>
                                         {subOption.treatment_option_repeat_title?.[currentLanguage]}
-                                    </Text>
+                                    </GlobalText>
                                 </View>
                                 <RenderHtml
                                     contentWidth={width - 60}
@@ -395,7 +396,7 @@ const SingleDisease = () => {
                 ))) : (<>
                     <View style={styles.card}>
                         <View style={styles.cardHeader}>
-                            <Text style={styles.error_section}>{WRONG}</Text>
+                            <GlobalText style={styles.error_section}>{WRONG}</GlobalText>
                         </View>
                     </View>
                 </>)}
@@ -412,7 +413,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: WHITE,
     },
     textTitle: {
         textAlign: 'left',
@@ -468,7 +469,7 @@ const styles = StyleSheet.create({
         borderLeftColor: '#6e3b7a',
     },
     card: {
-        backgroundColor: '#fff',
+        backgroundColor: WHITE,
         borderRadius: 12,
         padding: 12,
         marginBottom: 12,

@@ -15,6 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../../common/GradientText';
 import Shimmer from '../../common/Shimmer';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { GlobalText } from '../../constants/GlobalText';
 
 type SliderItem = {
     _id: string
@@ -128,16 +129,16 @@ export default function TextSlide() {
                                 text="Loading Error"
                                 colors={['#fff', '#f8f8f8']}
                             />
-                            <Text style={styles.errorMessage}>
+                            <GlobalText style={styles.errorMessage}>
                                 We couldn't load the slider content. Please try again later.
-                            </Text>
+                            </GlobalText>
                         </View>
 
                         <TouchableOpacity
                             style={styles.retryButton}
                             onPress={() => refetch()}
                         >
-                            <Text style={styles.retryButtonText}>Retry</Text>
+                            <GlobalText style={styles.retryButtonText}>Retry</GlobalText>
                         </TouchableOpacity>
                     </View>
                 </LinearGradient>
@@ -166,9 +167,9 @@ export default function TextSlide() {
                         end={{ x: 1, y: 0 }}
                         style={styles.slide}
                     >
-                        <Text style={styles.text}>
+                        <GlobalText style={styles.text}>
                             {item.slider_text[lang] || item.slider_text.en}
-                        </Text>
+                        </GlobalText>
 
                         <TouchableOpacity onPress={goPrev} style={[styles.arrow, styles.leftArrow]}>
                             <Feather name="chevron-left" size={14} />

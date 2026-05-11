@@ -1,3 +1,4 @@
+import { GlobalText } from '../constants/GlobalText';
 import React from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -27,9 +28,9 @@ export function PopupModal({ visible, type, message, onClose }: ModelTypes) {
             <View style={styles.overlay}>
                 <View style={styles.container}>
                     <Feather name={iconName} size={60} color={iconColor} style={styles.icon} />
-                    <Text style={styles.message}>{message}</Text>
+                    <GlobalText style={styles.message}>{message}</GlobalText>
                     <TouchableOpacity style={styles.button} onPress={onClose}>
-                        <Text style={styles.buttonText}>OK</Text>
+                        <GlobalText style={styles.buttonText}>OK</GlobalText>
                     </TouchableOpacity>
                 </View>
             </View>

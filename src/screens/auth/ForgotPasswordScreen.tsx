@@ -17,6 +17,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import GradientText from '../../common/GradientText';
+import { GlobalText } from '../../constants/GlobalText';
 
 export const SettingForgotPasswordScreen = ({ navigation }: { navigation: any }) => {
     const { email } = useRoute().params as { email: string };
@@ -88,17 +89,17 @@ export const SettingForgotPasswordScreen = ({ navigation }: { navigation: any })
                 >
                     <FontAwesome5 name="shield-alt" size={24} color="#FFF" />
                 </LinearGradient>
-                <Text style={styles.profileHeaderText}>Reset Your Password</Text>
-                <Text style={styles.emailText}>Email: {email}</Text>
+                <GlobalText style={styles.profileHeaderText}>Reset Your Password</GlobalText>
+                <GlobalText style={styles.emailText}>Email: {email}</GlobalText>
             </View>
 
             {/* OTP Input */}
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>OTP</Text>
+                <GlobalText style={styles.label}>OTP</GlobalText>
                 <View style={[styles.inputWrapper, errors.otp && styles.errorWrapper]}>
-                    <Text style={styles.inputIcon} >
+                    <GlobalText style={styles.inputIcon} >
                         <GradientText text={<Ionicons name="keypad-outline" size={20} color="#6C63FF" />} size={20} />
-                    </Text>
+                    </GlobalText>
                     <TextInput
                         style={styles.input}
                         keyboardType="numeric"
@@ -111,16 +112,16 @@ export const SettingForgotPasswordScreen = ({ navigation }: { navigation: any })
                         placeholderTextColor="#999"
                     />
                 </View>
-                {errors.otp ? <Text style={styles.errorText}>{errors.otp}</Text> : null}
+                {errors.otp ? <GlobalText style={styles.errorText}>{errors.otp}</GlobalText> : null}
             </View>
 
             {/* New Password Input */}
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>New Password</Text>
+                <GlobalText style={styles.label}>New Password</GlobalText>
                 <View style={[styles.inputWrapper, errors.newPassword && styles.errorWrapper]}>
-                    <Text style={styles.inputIcon} >
+                    <GlobalText style={styles.inputIcon} >
                         <GradientText text={<Ionicons name="lock-open-outline" size={20} color="#6C63FF" />} size={20} />
-                    </Text>
+                    </GlobalText>
                     <TextInput
                         style={styles.input}
                         secureTextEntry
@@ -133,16 +134,16 @@ export const SettingForgotPasswordScreen = ({ navigation }: { navigation: any })
                         placeholderTextColor="#999"
                     />
                 </View>
-                {errors.newPassword ? <Text style={styles.errorText}>{errors.newPassword}</Text> : null}
+                {errors.newPassword ? <GlobalText style={styles.errorText}>{errors.newPassword}</GlobalText> : null}
             </View>
 
             {/* Confirm Password Input */}
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Confirm Password</Text>
+                <GlobalText style={styles.label}>Confirm Password</GlobalText>
                 <View style={[styles.inputWrapper, errors.confirmPassword && styles.errorWrapper]}>
-                    <Text style={styles.inputIcon} >
+                    <GlobalText style={styles.inputIcon} >
                         <GradientText text={<Ionicons name="lock-closed-outline" size={20} color="#6C63FF" />} size={20} />
-                    </Text>
+                    </GlobalText>
                     <TextInput
                         style={styles.input}
                         secureTextEntry
@@ -155,7 +156,7 @@ export const SettingForgotPasswordScreen = ({ navigation }: { navigation: any })
                         placeholderTextColor="#999"
                     />
                 </View>
-                {errors.confirmPassword ? <Text style={styles.errorText}>{errors.confirmPassword}</Text> : null}
+                {errors.confirmPassword ? <GlobalText style={styles.errorText}>{errors.confirmPassword}</GlobalText> : null}
             </View>
 
             {/* Submit Button */}
@@ -174,23 +175,23 @@ export const SettingForgotPasswordScreen = ({ navigation }: { navigation: any })
                     ) : (
                         <>
                             <Ionicons name="refresh-outline" size={20} color="#FFF" style={styles.buttonIcon} />
-                            <Text style={styles.saveButtonText}>Reset Password</Text>
+                            <GlobalText style={styles.saveButtonText}>Reset Password</GlobalText>
                         </>
                     )}
                 </LinearGradient>
             </TouchableOpacity>
             <View style={styles.footerLink}>
-                <Text style={{ textAlign: 'center' }}>Back to login</Text>
+                <GlobalText style={{ textAlign: 'center' }}>Back to login</GlobalText>
                 <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                     <GradientText text="Login" />
                 </TouchableOpacity>
             </View>
             <View style={styles.bottomContainer}>
-                <Text style={styles.bottomText}>By clicking Continue, you agree to our </Text>
+                <GlobalText style={styles.bottomText}>By clicking Continue, you agree to our </GlobalText>
                 <TouchableOpacity onPress={() => navigation.navigate('TermsOfService')}>
                     <GradientText text="Terms of Service" size={12} />
                 </TouchableOpacity>
-                <Text style={styles.bottomText}> and </Text>
+                <GlobalText style={styles.bottomText}> and </GlobalText>
                 <TouchableOpacity onPress={() => navigation.navigate('PrivacyPolicy')}>
                     <GradientText text="Privacy Policy" size={12} />
                 </TouchableOpacity>

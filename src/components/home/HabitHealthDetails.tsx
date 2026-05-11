@@ -15,6 +15,7 @@ import { AppError } from '../../common/AppError';
 import RenderHtml from 'react-native-render-html';
 import { LinearGradient } from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { GlobalText } from '../../constants/GlobalText';
 
 export default function HabitHealthDetails() {
     const { id } = useRoute().params as { id: string };
@@ -76,9 +77,9 @@ export default function HabitHealthDetails() {
                                     style={styles.cardIcon}
                                 />
                                 {ele.title?.[lang] && (
-                                    <Text style={styles.cardTitle}>
+                                    <GlobalText style={styles.cardTitle}>
                                         {ele.title?.[lang]}
-                                    </Text>
+                                    </GlobalText>
                                 )}
                             </View>
                             <View style={styles.htmlWrapper}>

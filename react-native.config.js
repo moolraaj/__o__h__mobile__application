@@ -1,4 +1,4 @@
 module.exports = {
-    assets: ['./assets/fonts/Nunito'],
+    assets: ['./assets/fonts/'],
   };
   

@@ -1,10 +1,6 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import {
-  View, StyleSheet, Text, TouchableOpacity,
-  Modal, Animated, Easing, Image, Platform,
-  Alert
-} from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Modal, Animated, Easing, Image, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +13,8 @@ import { useAuth } from '../navigation/AuthContext';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useGetAllNotificationsQuery } from '../store/services/notifications/notificationsApi';
+import { WHITE } from '../constants/Variables';
+import { GlobalText } from '../constants/GlobalText';
 
 export function Header() {
   const { t } = useTranslation();
@@ -151,7 +149,7 @@ export function Header() {
         }}>
           <View style={styles.logoContainer}>
             <Image source={appLogo} style={styles.logo} />
-            <GradientText text="E-DantaSuraksha" size={18} />
+            <GradientText text="E-DantaSuraksha" size={16} />
           </View>
         </TouchableOpacity>
 
@@ -161,9 +159,9 @@ export function Header() {
             style={styles.notificationButton}
           >
             {upcommingNotifications && <View style={styles.notificationBadge}>
-              <Text style={styles.badgeText}>
+              <GlobalText style={styles.badgeText}>
                 {notifications?.data?.filter(n => !n.read).length || null}
-              </Text>
+              </GlobalText>
             </View>}
 
             <FontAwesome name="bell" size={20} color="#6C63FF" />
@@ -175,7 +173,6 @@ export function Header() {
             activeOpacity={0.7}
           >
             <Ionicons name="language" size={18} color="#6C63FF" />
-            <Text style={styles.languageText}>{selectedLanguage.toUpperCase()}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={handleProfileClick} activeOpacity={0.7}>
@@ -186,7 +183,7 @@ export function Header() {
               end={{ x: 1, y: 0 }}
               style={styles.profileCircle}
             >
-              <Text style={styles.profileText}>{getUserInitials(userName)}</Text>
+              <GlobalText style={styles.profileText}>{getUserInitials(userName)}</GlobalText>
             </LinearGradient>
           </TouchableOpacity>
         </View>
@@ -203,7 +200,7 @@ export function Header() {
             style={[styles.modalContent, { transform: [{ translateY: slideAnim }] }]}
           >
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Select Language</Text>
+              <GlobalText style={styles.modalTitle}>Select Language</GlobalText>
               <TouchableOpacity onPress={closeModal}>
                 <Ionicons name="close" size={24} color="#666" />
               </TouchableOpacity>
@@ -219,7 +216,7 @@ export function Header() {
                 onPress={() => onLanguageSelect(lang.value)}
               >
                 <FontAwesome5 name={lang.icon} size={18} color="#6C63FF" />
-                <Text style={styles.modalItemText}>{lang.label}</Text>
+                <GlobalText style={styles.modalItemText}>{lang.label}</GlobalText>
                 {selectedLanguage === lang.value && (
                   <Ionicons name="checkmark" size={20} color="#6C63FF" style={styles.checkIcon} />
                 )}
@@ -260,16 +257,16 @@ export function Header() {
                 end={{ x: 1, y: 0 }}
                 style={styles.modalProfileCircle}
               >
-                <Text style={styles.modalProfileText}>{getUserInitials(userName)}</Text>
+                <GlobalText style={styles.modalProfileText}>{getUserInitials(userName)}</GlobalText>
               </LinearGradient>
               <View style={styles.profileInfo}>
-                <Text style={styles.profileName} numberOfLines={1} ellipsizeMode="tail">
+                <GlobalText style={styles.profileName} numberOfLines={1} ellipsizeMode="tail">
                   {userName}
-                </Text>
+                </GlobalText>
                 <View style={styles.roleBadge}>
-                  <Text style={styles.profileRole}>
+                  <GlobalText style={styles.profileRole}>
                     {user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'User'}
-                  </Text>
+                  </GlobalText>
                 </View>
               </View>
             </View>
@@ -290,7 +287,7 @@ export function Header() {
                   <View style={styles.menuIconContainer}>
                     <FontAwesome5 name={item.icon} size={16} color="#5E35B1" />
                   </View>
-                  <Text style={styles.roleModalText}>{item.label}</Text>
+                  <GlobalText style={styles.roleModalText}>{item.label}</GlobalText>
                   <Ionicons name="chevron-forward" size={16} color="#9E9E9E" />
                 </TouchableOpacity>
               ))}
@@ -307,8 +304,8 @@ export function Header() {
                 end={{ x: 1, y: 0 }}
                 style={styles.signOutGradient}
               >
-                <FontAwesome5 name="sign-out-alt" size={16} color="#FFF" />
-                <Text style={styles.signOutText}>Sign Out</Text>
+                <FontAwesome5 name="sign-out-alt" size={16} color={WHITE} />
+                <GlobalText style={styles.signOutText}>Sign Out</GlobalText>
               </LinearGradient>
             </TouchableOpacity>
 
@@ -326,28 +323,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 12,
-    backgroundColor: '#fff',
-    ...Platform.select({
-      android: {
-        elevation: 6,
-      },
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 8,
-      },
-    }),
+    backgroundColor: WHITE,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
   },
   logoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 8,
   },
   logo: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    marginRight: 8,
   },
   rightContainer: {
     flexDirection: 'row',
@@ -370,7 +358,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   badgeText: {
-    color: '#fff',
+    color: WHITE,
     fontSize: 10,
     fontWeight: 'bold',
   },
@@ -400,8 +388,8 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   profileText: {
-    color: '#fff',
-    fontSize: 16,
+    color: WHITE,
+    fontSize: 14,
     fontWeight: 'bold',
   },
   modalOverlay: {
@@ -410,7 +398,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContent: {
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
     width: '100%',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -469,7 +457,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   roleModalContent: {
-    backgroundColor: '#FFF',
+    backgroundColor: WHITE,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     paddingBottom: 16,
@@ -503,7 +491,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   modalProfileText: {
-    color: '#FFF',
+    color: WHITE,
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -585,7 +573,7 @@ const styles = StyleSheet.create({
   signOutText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#FFF',
+    color: WHITE,
     textAlign: 'center',
   },
 });

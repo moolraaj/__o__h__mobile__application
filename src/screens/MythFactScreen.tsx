@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import LinearGradient from 'react-native-linear-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { AppError } from '../common/AppError';
+import { GlobalText } from '../constants/GlobalText';
 
 export default function MythFactScreen() {
     const { i18n } = useTranslation();
@@ -52,9 +53,9 @@ export default function MythFactScreen() {
                                 colors={['#5E346D', '#C13439']}
                             />
                         </View>
-                        <Text style={styles.bodyText}>
+                        <GlobalText style={styles.bodyText}>
                             {item.myth_fact_body?.[lang]}
-                        </Text>
+                        </GlobalText>
                     </View>
                     {item.myth_fact_image && (
                         <Image
@@ -72,12 +73,12 @@ export default function MythFactScreen() {
                     const rights = block.myths_facts_right_fact ?? [];
                     return (
                         <View key={idx} style={styles.factBlock}>
-                            <Text style={styles.sectionHeading}>
+                            <GlobalText style={styles.sectionHeading}>
                                 {headingText}
-                            </Text>
-                            <Text style={styles.mFheading}>
+                            </GlobalText>
+                            <GlobalText style={styles.mFheading}>
                                 <GradientText text="Myths" size={18} />
-                            </Text>
+                            </GlobalText>
                             <LinearGradient
                                 colors={['#F8E4FF', '#FFD7D8']}
                                 start={{ x: 0, y: 0 }}
@@ -88,15 +89,15 @@ export default function MythFactScreen() {
                                     <View key={i} style={styles.factRow}>
                                         <Entypo name="cross" size={20} color="#FF473E" />
 
-                                        <Text style={styles.factText}>
+                                        <GlobalText style={styles.factText}>
                                             {w[lang]}
-                                        </Text>
+                                        </GlobalText>
                                     </View>
                                 ))}
                             </LinearGradient>
-                            <Text style={styles.mFheading}>
+                            <GlobalText style={styles.mFheading}>
                                 <GradientText text="Facts" size={18} />
-                            </Text>
+                            </GlobalText>
                             <LinearGradient
                                 colors={['#E0FAFF', '#F8E2FF']}
                                 start={{ x: 0, y: 0 }}
@@ -106,9 +107,9 @@ export default function MythFactScreen() {
                                 {rights.map((r, i) => (
                                     <View key={i} style={styles.factRow}>
                                         <Entypo name="check" size={20} color="#34A853" />
-                                        <Text style={styles.factText}>
+                                        <GlobalText style={styles.factText}>
                                             {r[lang]}
-                                        </Text>
+                                        </GlobalText>
                                     </View>
                                 ))}
                             </LinearGradient>

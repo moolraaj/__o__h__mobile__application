@@ -7,6 +7,8 @@ import { useAuth } from '../navigation/AuthContext';
 import { useGetAllNotificationsQuery, useReviewNotificationMutation } from '../store/services/notifications/notificationsApi';
 import notifee from '@notifee/react-native';
 import { ToastMessage } from '../resuable/Toast';
+import { GlobalText } from '../constants/GlobalText';
+
 export default function NotificationScreen({ navigation }: { navigation: any }) {
     const { user } = useAuth()
 
@@ -71,17 +73,17 @@ export default function NotificationScreen({ navigation }: { navigation: any }) 
                     <View style={styles.header}>
                         <View style={styles.textSection}>
                             {upcommingNotifications ? (<>
-                                <Text style={styles.heading}>
+                                <GlobalText style={styles.heading}>
                                     You have {upcommingNotifications} unread notifications
-                                </Text>
-                            </>) : (<Text style={styles.heading}>Notifications</Text>)}
+                                </GlobalText>
+                            </>) : (<GlobalText style={styles.heading}>Notifications</GlobalText>)}
 
                         </View>
                     </View>
                     {result.length === 0 ? (
-                        <Text style={{ textAlign: 'center', marginTop: 20, color: '#999' }}>
+                        <GlobalText style={{ textAlign: 'center', marginTop: 20, color: '#999' }}>
                             No notifications yet.
-                        </Text>
+                        </GlobalText>
                     ) : (
                         result.map((notification) => (
                             <>
@@ -103,18 +105,20 @@ export default function NotificationScreen({ navigation }: { navigation: any }) 
                                                 style={styles.icon}
                                             />
                                             <View style={{ flex: 1 }}>
-                                                <Text
+                                                <GlobalText
                                                     style={[
                                                         styles.factText,
                                                         { fontWeight: notification.read ? 'normal' : 'bold' },
                                                     ]}
                                                 >
                                                     {notification.title}
-                                                </Text>
-                                                <Text style={styles.bodyText}>{notification.message}</Text>
-                                                <Text style={[styles.bodyText, { fontSize: 12, marginTop: 4 }]}>
+                                                </GlobalText>
+                                                <GlobalText style={styles.bodyText}>
+                                                    {notification.message}
+                                                </GlobalText>
+                                                <GlobalText style={[styles.bodyText, { fontSize: 12, marginTop: 4 }]}>
                                                     {new Date(notification.createdAt).toLocaleString()}
-                                                </Text>
+                                                </GlobalText>
 
 
 

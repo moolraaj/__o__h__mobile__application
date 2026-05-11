@@ -9,6 +9,7 @@ import GradientText from '../common/GradientText'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { AppError } from '../common/AppError'
+import { GlobalText } from '../constants/GlobalText'
 
 const SingleFeature = ({ navigation }: { navigation: any }) => {
     const route = useRoute()
@@ -49,7 +50,7 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
                         <View style={styles.textTitle}>
                             <GradientText text={result?.feature_inner_title?.[currentLanguage] || 'No Title'} size={22} />
                         </View>
-                        <Text> {result?.feature_inner_description?.[currentLanguage] || 'No Description'} </Text>
+                        <GlobalText> {result?.feature_inner_description?.[currentLanguage] || 'No Description'} </GlobalText>
                     </View>
                     <View style={styles.imageWrapper}>
                         {result?.feature_inner_image ? (
@@ -58,15 +59,15 @@ const SingleFeature = ({ navigation }: { navigation: any }) => {
                                 style={styles.image}
                             />
                         ) : (
-                            <Text>No Image Available</Text>
+                            <GlobalText>No Image Available</GlobalText>
                         )}
                     </View>
                 </LinearGradient>
 
                 <View>
-                    <Text style={styles.title_field}>
+                    <GlobalText style={styles.title_field}>
                         <GradientText text="Diseases" size={22} />
-                    </Text>
+                    </GlobalText>
                     <Disease disease={result?.diseases} currentLanguage={currentLanguage} navigation={navigation} isLoading={isLoading} />
                 </View>
             </SafeAreaView >

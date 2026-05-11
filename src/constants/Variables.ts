@@ -8,6 +8,7 @@ export const BACK_ARROW_COLOR = '#101623';
 export const INPUT_BORDER_COLOR = '#A1A8B0';
 export const INPUT_ICON_COLOR = '#A1A8B0';
 export const INPUT_BACKGROUND = '#F9FAFB';
+export const WHITE = '#FFFFFF';
 
 
 // font
@@ -123,4 +124,12 @@ export const htmlRenderStyles = {
         resizeMode: 'contain',
         marginVertical: 10,
     },
+};
+
+// fonts
+export const Fonts = {
+  regular: 'Rubik-Regular',
+  medium: 'Rubik-Medium',
+  semiBold: 'Rubik-SemiBold',
+  bold: 'Rubik-Bold',
 };

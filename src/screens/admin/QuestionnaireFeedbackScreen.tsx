@@ -8,6 +8,7 @@ import GradientText from "../../common/GradientText";
 import Loader from '../../common/Loader';
 import { ToastMessage } from '../../resuable/Toast';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { GlobalText } from '../../constants/GlobalText';
 
 export const QuestionnaireFeedbackScreen = ({ navigation }: { navigation: any }) => {
   const route = useRoute();
@@ -72,8 +73,8 @@ export const QuestionnaireFeedbackScreen = ({ navigation }: { navigation: any })
               ['Address', questionnaire.address],
             ].map(([label, value], idx) => (
               <View key={idx} style={styles.row}>
-                <Text style={styles.label}>{label}</Text>
-                <Text style={styles.value}>{value || 'N/A'}</Text>
+                <GlobalText style={styles.label}>{label}</GlobalText>
+                <GlobalText style={styles.value}>{value || 'N/A'}</GlobalText>
               </View>
             ))}
           </View>
@@ -89,8 +90,8 @@ export const QuestionnaireFeedbackScreen = ({ navigation }: { navigation: any })
               ['Hypertension', questionnaire.hypertension],
             ].map(([label, value], idx) => (
               <View key={idx} style={styles.row}>
-                <Text style={styles.label}>{label}</Text>
-                <Text style={styles.value}>{value || 'N/A'}</Text>
+                <GlobalText style={styles.label}>{label}</GlobalText>
+                <GlobalText style={styles.value}>{value || 'N/A'}</GlobalText>
               </View>
             ))}
           </View>
@@ -104,8 +105,8 @@ export const QuestionnaireFeedbackScreen = ({ navigation }: { navigation: any })
               ['Vegetables', questionnaire.vegetableConsumption],
             ].map(([label, value], idx) => (
               <View key={idx} style={styles.row}>
-                <Text style={styles.label}>{label}</Text>
-                <Text style={styles.value}>{value || 'N/A'}</Text>
+                <GlobalText style={styles.label}>{label}</GlobalText>
+                <GlobalText style={styles.value}>{value || 'N/A'}</GlobalText>
               </View>
             ))}
           </View>
@@ -124,8 +125,8 @@ export const QuestionnaireFeedbackScreen = ({ navigation }: { navigation: any })
               ['Smoking', questionnaire.smoking],
             ].map(([label, value], idx) => (
               <View key={idx} style={styles.row}>
-                <Text style={styles.label}>{label}</Text>
-                <Text style={styles.value}>{value || 'N/A'}</Text>
+                <GlobalText style={styles.label}>{label}</GlobalText>
+                <GlobalText style={styles.value}>{value || 'N/A'}</GlobalText>
               </View>
             ))}
           </View>
@@ -144,8 +145,8 @@ export const QuestionnaireFeedbackScreen = ({ navigation }: { navigation: any })
               ['Gum Disease', questionnaire.presenceOfGumDisease?.join(', ')],
             ].map(([label, value], idx) => (
               <View key={idx} style={styles.row}>
-                <Text style={styles.label}>{label}</Text>
-                <Text style={styles.value}>{value || 'N/A'}</Text>
+                <GlobalText style={styles.label}>{label}</GlobalText>
+                <GlobalText style={styles.value}>{value || 'N/A'}</GlobalText>
               </View>
             ))}
           </View>
@@ -163,8 +164,8 @@ export const QuestionnaireFeedbackScreen = ({ navigation }: { navigation: any })
               ['Recommended Actions', questionnaire.recomanded_actions],
             ].map(([label, value], idx) => (
               <View key={idx} style={styles.row}>
-                <Text style={styles.label}>{label}</Text>
-                <Text style={styles.value}>{value || 'N/A'}</Text>
+                <GlobalText style={styles.label}>{label}</GlobalText>
+                <GlobalText style={styles.value}>{value || 'N/A'}</GlobalText>
               </View>
             ))}
           </View>
@@ -182,7 +183,7 @@ export const QuestionnaireFeedbackScreen = ({ navigation }: { navigation: any })
           size={20}
           colors={['#5E346D', '#C13439']}
         />
-        <Text style={styles.headerSubtitle}>Case ID: {questionnaire.case_number}</Text>
+        <GlobalText style={styles.headerSubtitle}>Case ID: {questionnaire.case_number}</GlobalText>
       </View>
 
       <View style={styles.tabsContainer}>
@@ -212,12 +213,12 @@ export const QuestionnaireFeedbackScreen = ({ navigation }: { navigation: any })
                 size={20}
                 color={activeSection === tab.id ? '#fff' : '#660033'}
               />
-              <Text style={[
+              <GlobalText style={[
                 styles.tabText,
                 activeSection === tab.id && styles.tabTextActive
               ]}>
                 {tab.label}
-              </Text>
+              </GlobalText>
             </Pressable>
           ))}
         </ScrollView>
@@ -234,7 +235,7 @@ export const QuestionnaireFeedbackScreen = ({ navigation }: { navigation: any })
           />
 
           <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Questionnaire Type</Text>
+            <GlobalText style={styles.inputLabel}>Questionnaire Type</GlobalText>
             <TextInput
               style={styles.input}
               value={formData.questionary_type}
@@ -244,7 +245,7 @@ export const QuestionnaireFeedbackScreen = ({ navigation }: { navigation: any })
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Diagnosis Notes</Text>
+            <GlobalText style={styles.inputLabel}>Diagnosis Notes</GlobalText>
             <TextInput
               style={[styles.input, styles.textArea]}
               value={formData.diagnosis_notes}
@@ -256,7 +257,7 @@ export const QuestionnaireFeedbackScreen = ({ navigation }: { navigation: any })
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Recommended Actions</Text>
+            <GlobalText style={styles.inputLabel}>Recommended Actions</GlobalText>
             <TextInput
               style={[styles.input, styles.textArea]}
               value={formData.recomanded_actions}
@@ -268,7 +269,7 @@ export const QuestionnaireFeedbackScreen = ({ navigation }: { navigation: any })
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Additional Comments</Text>
+            <GlobalText style={styles.inputLabel}>Additional Comments</GlobalText>
             <TextInput
               style={[styles.input, styles.textArea]}
               value={formData.comments_or_notes}
@@ -287,7 +288,7 @@ export const QuestionnaireFeedbackScreen = ({ navigation }: { navigation: any })
           onPress={() => navigation.goBack()}
           disabled={isLoading}
         >
-          <Text style={styles.footerButtonText}>Cancel</Text>
+          <GlobalText style={styles.footerButtonText}>Cancel</GlobalText>
         </Pressable>
 
         <Pressable
@@ -300,7 +301,7 @@ export const QuestionnaireFeedbackScreen = ({ navigation }: { navigation: any })
           ) : (
             <>
               <MaterialIcons name="send" size={12} color="#fff" />
-              <Text style={styles.submitButtonText}> Submit Feedback</Text>
+              <GlobalText style={styles.submitButtonText}> Submit Feedback</GlobalText>
             </>
           )}
         </Pressable>

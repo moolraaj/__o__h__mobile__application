@@ -1,69 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Animated } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Features from '../components/Features';
 import GradientText from '../common/GradientText';
 import DentalEmergencyScreen from './DentalEmergencyScreen';
 import HabitHealthDisease from '../components/home/HabitHealth';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient';
+import { WHITE } from '../constants/Variables';
+import { GlobalText } from '../constants/GlobalText';
 
 const FeaturesScreen = ({ navigation }: { navigation: any }) => {
-  // Color palette for the decorative line
-  const colorPalette = ['#C1392D', '#56235E', '#3498db', '#2ecc71', '#f39c12'];
-  const [currentColorIndex, setCurrentColorIndex] = useState(0);
-  const animatedValue = React.useMemo(() => new Animated.Value(0), []);
-
- 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      Animated.timing(animatedValue, {
-        toValue: 1,
-        duration: 1500,
-        useNativeDriver: false,
-      }).start(() => {
-        setCurrentColorIndex((prevIndex) => (prevIndex + 1) % colorPalette.length);
-        animatedValue.setValue(0);
-      });
-    }, 1500);
-
-    return () => clearInterval(interval);
-  }, [colorPalette.length, animatedValue]);
-
-  const interpolatedColor = animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: [
-      colorPalette[currentColorIndex],
-      colorPalette[(currentColorIndex + 1) % colorPalette.length],
-    ],
-  });
-
-  const widthInterpolation = animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0%', '100%'],
-  });
 
   return (
     <View style={styles.container}>
-     
-      <View style={styles.headerContainer}>
-        <GradientText text="Features" size={24} />
-        <View style={styles.decorativeLineContainer}>
-          <View style={[styles.decorativeLineBase, { backgroundColor: colorPalette[currentColorIndex] }]} />
-          <Animated.View
-            style={[
-              styles.decorativeLineOverlay,
-              {
-                backgroundColor: interpolatedColor,
-                width: widthInterpolation,
-              },
-            ]}
-          />
-        </View>
-      </View>
 
- 
+
       <View style={styles.contentContainer}>
-   
+
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Icon name="teeth-open" size={18} color="#C1392D" style={styles.sectionIcon} />
@@ -74,7 +27,7 @@ const FeaturesScreen = ({ navigation }: { navigation: any }) => {
           </View>
         </View>
 
-    
+
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Icon name="first-aid" size={18} color="#C1392D" style={styles.sectionIcon} />
@@ -113,7 +66,7 @@ const FeaturesScreen = ({ navigation }: { navigation: any }) => {
               text={<Icon name="lightbulb" size={20} style={styles.buttonIcon} />}
               size={20}
             />
-            <Text style={styles.buttonText}>Myths & Facts</Text>
+            <GlobalText style={styles.buttonText}>Myths & Facts</GlobalText>
           </TouchableOpacity>
         </LinearGradient>
 
@@ -131,7 +84,7 @@ const FeaturesScreen = ({ navigation }: { navigation: any }) => {
               text={<Icon name="question-circle" size={20} style={styles.buttonIcon} />}
               size={20}
             />
-            <Text style={styles.buttonText}>FAQs</Text>
+            <GlobalText style={styles.buttonText}>FAQs</GlobalText>
           </TouchableOpacity>
         </LinearGradient>
       </View>
@@ -144,30 +97,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
   },
-  headerContainer: {
-    marginBottom: 16,
-    paddingBottom: 5,
-  },
-  decorativeLineContainer: {
-    height: 4,
-    width: 60,
-    position: 'relative',
-    marginTop: 2,
-  },
-  decorativeLineBase: {
-    position: 'absolute',
-    height: '100%',
-    width: '100%',
-    borderRadius: 2,
-  },
-  decorativeLineOverlay: {
-    position: 'absolute',
-    height: '100%',
-    borderRadius: 2,
-  },
   contentContainer: {
     borderRadius: 12,
-    shadowColor: '#fff',
+    shadowColor: WHITE,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
@@ -175,7 +107,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   section: {
-    marginBottom: 10,
+    marginBottom: 20,
   },
   sectionHeader: {
     flexDirection: 'row',
